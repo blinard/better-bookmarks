@@ -28,4 +28,5 @@ Chrome Extension Ideas:
     Easily add bookmark using shortcut key or by opening browser toolbar button (detects current tab link and allows u to just enter a key)
     Maybe handle bookmark groups too?
     Typescript
-
+    https://www.npmjs.com/package/@types/chrome
+    See Chrome Extension examples previously downloaded
