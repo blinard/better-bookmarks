@@ -1,0 +1,10 @@
+{
+  "name": "Better Bookmarks",
+  "description" : "To use, type 'bb' plus a bookmark key into the Omnibox.",
+  "version": "1.0",
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "omnibox": { "keyword" : "bb" },
+  "manifest_version": 2
+}
