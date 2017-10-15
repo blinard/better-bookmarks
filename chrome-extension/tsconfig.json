@@ -1,9 +1,9 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "es2015",
         "noImplicitAny": true,
-        "target": "es2016",
+        "target": "es2015",
         "outDir": "./dist",
         "declaration": true
     },

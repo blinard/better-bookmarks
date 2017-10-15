@@ -1,6 +1,8 @@
 var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var merge = require('merge2');
+var del = require('del');
+var exec = require('child_process').exec;
 var tsProject = ts.createProject('tsconfig.json');
 
 gulp.task('build:typescript', function() {
@@ -18,4 +20,16 @@ gulp.task('copy:manifest', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build', ['build:typescript', 'copy:manifest']);
+gulp.task('clean:dist', function() {
+    return del(['dist/**/*']);
+});
+
+gulp.task('webpack', function (cb) {
+    exec('./node_modules/.bin/webpack', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+})
+
+gulp.task('build', ['webpack', 'copy:manifest']);
