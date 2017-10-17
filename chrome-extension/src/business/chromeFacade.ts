@@ -1,3 +1,5 @@
+import { injectable } from "../../node_modules/inversify/dts/inversify";
+import "reflect-metadata";
 import { BookmarkMap } from "../models/bookmarkMap";
 import { IBookmarkDataAccess } from "../dataAccess/IBookmarkDataAccess";
 import * as Rx from "../../node_modules/rxjs/Rx";
@@ -10,6 +12,7 @@ export interface IChromeFacade {
     navigateCurrentTab(url: string): void
 }
 
+@injectable()
 export class ChromeFacade implements IChromeFacade, IBookmarkDataAccess {
     constructor() {
     }

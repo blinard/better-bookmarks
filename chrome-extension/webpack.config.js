@@ -12,7 +12,13 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: [ ".ts", ".js" ]
+    modules: ["node_modules", path.resolve(__dirname, "src")],
+    extensions: [".ts", ".js"],
+    alias: {
+        "../node_modules/inversify/dts/inversify": "../node_modules/inversify/lib/inversify",
+        "../../node_modules/inversify/dts/inversify": "../../node_modules/inversify/lib/inversify"
+    }
+    //fallback: "./node_modules/inversify/dts/inversify"
   },
   output: {
     filename: 'bundle.js',

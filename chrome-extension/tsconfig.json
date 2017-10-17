@@ -5,7 +5,11 @@
         "noImplicitAny": true,
         "target": "es2015",
         "outDir": "./dist",
-        "declaration": true
+        "declaration": true,
+        "lib": ["es6", "dom"],
+        "types": ["reflect-metadata", "chrome"],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true
     },
     "include": [
         "src/**/*"
