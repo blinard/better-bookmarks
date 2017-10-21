@@ -8,7 +8,8 @@
   "omnibox": { "keyword" : "bb" },
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "manifest_version": 2
 }

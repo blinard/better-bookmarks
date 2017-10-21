@@ -20,6 +20,11 @@ gulp.task('copy:manifest', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('copy:images', function() {
+    return gulp.src('images/bb-icon.png')
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('clean:dist', function() {
     return del(['dist/**/*']);
 });
@@ -32,4 +37,4 @@ gulp.task('webpack', function (cb) {
     });
 })
 
-gulp.task('build', ['webpack', 'copy:manifest']);
+gulp.task('build', ['webpack', 'copy:manifest', 'copy:images']);

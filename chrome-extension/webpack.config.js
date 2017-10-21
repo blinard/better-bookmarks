@@ -18,7 +18,6 @@ module.exports = {
         "../node_modules/inversify/dts/inversify": "../node_modules/inversify/lib/inversify",
         "../../node_modules/inversify/dts/inversify": "../../node_modules/inversify/lib/inversify"
     }
-    //fallback: "./node_modules/inversify/dts/inversify"
   },
   output: {
     filename: 'bundle.js',

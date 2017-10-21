@@ -40,6 +40,16 @@ export class ChromeFacade implements IChromeFacade, IBookmarkDataAccess {
         return new OmniboxObservables(inputChangedObservable, inputEnteredObservable);
     }
 
+    postNotification(title: string, message: string, iconUrl: string): void {
+        let opts: chrome.notifications.NotificationOptions = {
+            type: "basic",
+            title: title,
+            message: message,
+            iconUrl: iconUrl
+        };
+        chrome.notifications.create("bookmark-saved", opts);
+    }
+
     getCurrentTabUrl(): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             chrome.tabs.query({active: true, currentWindow: true}, (tabs) => {
