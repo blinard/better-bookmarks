@@ -21,8 +21,15 @@ namespace Background {
             let key = entry.replace("go ", "");
             bookmarkManager.getBookmark(key)
                 .then((bookmark) => {
-                    if (!bookmark || !bookmark.url) 
+                    if (!bookmark) {
+                        chromeFacade.postNotification("Bookmark not found", `No bookmark could be found for ${key}`);
                         return;
+                    }
+                    if (!bookmark.url) {
+                        chromeFacade.postNotification("Invalid bookmark", `${key} is an invalid bookmark`);
+                        return;
+                    }
+
                     chromeFacade.navigateCurrentTab(bookmark.url);
                 });
             return; //Handle go as a tab navigation in the future.

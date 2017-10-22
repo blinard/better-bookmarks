@@ -10,6 +10,7 @@ export interface IChromeFacade {
     addOmniboxListeners(): OmniboxObservables
     getCurrentTabUrl(): Promise<string>
     navigateCurrentTab(url: string): void
+    postNotification(title: string, message: string, key?: string, iconUrl?: string): void
 }
 
 @injectable()
@@ -40,14 +41,14 @@ export class ChromeFacade implements IChromeFacade, IBookmarkDataAccess {
         return new OmniboxObservables(inputChangedObservable, inputEnteredObservable);
     }
 
-    postNotification(title: string, message: string, iconUrl: string): void {
+    postNotification(title: string, message: string, key?: string, iconUrl?: string): void {
         let opts: chrome.notifications.NotificationOptions = {
             type: "basic",
             title: title,
             message: message,
-            iconUrl: iconUrl
+            iconUrl: iconUrl || "bb-icon.png"
         };
-        chrome.notifications.create("bookmark-saved", opts);
+        chrome.notifications.create(key, opts);
     }
 
     getCurrentTabUrl(): Promise<string> {

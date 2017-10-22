@@ -28,6 +28,9 @@ export class BookmarkRepository implements IBookmarkRepository {
 
         return this._bookmarkMap
             .then((bookmarkMap: BookmarkMap) => {
+                if (!bookmarkMap[key])
+                    return null;
+                    
                 return Bookmark.hydrateNewBookmark(bookmarkMap[key]);
             });
     }
