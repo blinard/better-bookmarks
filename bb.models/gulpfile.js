@@ -20,6 +20,10 @@ gulp.task('clean:dist', function() {
     return del(['dist/**/*']);
 });
 
+gulp.task('clean:packages', function() {
+    return del(['packages/**/*']);
+});
+
 gulp.task('version', function (cb) {
     exec('npm version patch', function (err, stdout, stderr) {
         console.log(stdout);
@@ -44,7 +48,9 @@ gulp.task('move:package', function (cb) {
     });
 });
 
-gulp.task('build', ['clean:dist', 'build:typescript']);
+gulp.task('build', function(cb) {
+    runSequence(['clean:dist', 'build:typescript'], 'version', cb);
+});
 gulp.task('pack', function (cb) {
-    runSequence('version', 'pack:local', 'move:package', cb);
+    runSequence(['clean:packages', 'version'], 'pack:local', 'move:package', cb);
 });

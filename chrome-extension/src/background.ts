@@ -6,7 +6,7 @@ import {IBookmarkManager} from "./business/bookmarkManager";
 import container from "./inversify.config";
 import "reflect-metadata";
 import TYPES from "./types";
-import { Bookmark } from './models/bookmark';
+import { Bookmark } from "../node_modules/bb.models/dist/bb.models"
 
 namespace Background {
     let chromeFacade = container.resolve(ChromeFacade); //new ChromeFacade();
@@ -15,7 +15,7 @@ namespace Background {
 
     let omniboxObservables = chromeFacade.addOmniboxListeners();
     
-    omniboxObservables.inputEntered.subscribe(txt => {
+    omniboxObservables.inputEntered.subscribe((txt: string) => {
         let entry = txt.trim();
         if (entry.startsWith("go ")) {
             let key = entry.replace("go ", "");

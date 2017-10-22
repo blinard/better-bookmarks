@@ -1,10 +1,8 @@
 import { injectable, inject } from "../../node_modules/inversify/dts/inversify";
 import "reflect-metadata";
 import TYPES from "../types";
-import { Bookmark } from "../models/bookmark";
+import { Bookmark, BookmarkMap, Dictionary } from "../../node_modules/bb.models/dist/bb.models";
 import { IBookmarkDataAccess } from "./IBookmarkDataAccess";
-import { BookmarkMap } from "../models/bookmarkMap";
-import { Dictionary } from "../models/dictionary";
 
 export interface IBookmarkRepository {
     getByKey(key: string): Promise<Bookmark>
