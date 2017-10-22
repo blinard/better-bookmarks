@@ -1,0 +1,24 @@
+{
+  "name": "bb.models",
+  "version": "1.0.3",
+  "description": "",
+  "main": "dist/bb.models.js",
+  "types": "dist/bb.models.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brad Linard",
+  "license": "ISC",
+  "devDependencies": {
+    "del": "^3.0.0",
+    "gulp": "^3.9.1",
+    "gulp-typescript": "^3.2.2",
+    "merge2": "^1.2.0",
+    "run-sequence": "^2.2.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
+  },
+  "dependencies": {
+    "rxjs": "5.4.3"
+  }
+}
