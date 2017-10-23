@@ -1,15 +1,14 @@
-import {ChromeFacade} from './business/chromeFacade';
 import * as Rx from "rxjs/Rx";
-
 import {BookmarkRepository} from "bb.dataaccess";
 import {IBookmarkManager} from "bb.business";
 import container from "./inversify.config";
 import "reflect-metadata";
 import { Bookmark } from "bb.models"
-import { Types as busTypes } from "bb.business";
+import { Types as busTypes, IBrowserFacade } from "bb.business";
 
 namespace Background {
-    let chromeFacade = container.resolve(ChromeFacade);
+    //let chromeFacade = container.resolve(ChromeFacade);
+    let chromeFacade = container.get<IBrowserFacade>(busTypes.IBrowserFacade);
     let bookmarkManager = container.get<IBookmarkManager>(busTypes.IBookmarkManager); //new BookmarkManager(bookmarkRepository);
 
     let omniboxObservables = chromeFacade.addOmniboxListeners();

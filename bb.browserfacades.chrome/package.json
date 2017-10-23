@@ -1,8 +1,9 @@
 {
-  "name": "better-bookmarks",
-  "version": "1.0.0",
+  "name": "bb.browserfacades.chrome",
+  "version": "1.0.2",
   "description": "",
-  "main": "index.js",
+  "main": "dist/bb.browserfacades.chrome.js",
+  "types": "dist/bb.browserfacades.chrome.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -14,14 +15,11 @@
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.2",
     "merge2": "^1.2.0",
-    "ts-loader": "^2.3.7",
-    "tslint": "^5.7.0",
-    "typescript": "^2.5.3",
-    "webpack": "^3.7.1",
-    "webpack-dev-server": "^2.9.1"
+    "run-sequence": "^2.2.0",
+    "tslint": "^5.8.0",
+    "typescript": "^2.5.3"
   },
   "dependencies": {
-    "bb.browserfacades.chrome": "file:../bb.browserfacades.chrome/packages/bb.browserfacades.chrome-1.0.2.tgz",
     "bb.business": "file:../bb.business/packages/bb.business-1.0.3.tgz",
     "bb.dataaccess": "file:../bb.dataaccess/packages/bb.dataaccess-1.0.10.tgz",
     "bb.models": "file:../bb.models/packages/bb.models-1.0.27.tgz",

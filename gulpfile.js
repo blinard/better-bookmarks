@@ -57,8 +57,15 @@ createLocalPackageInstallTask(
     "bb.business"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:models:bfchrome",
+    projectBasePath + "bb.models/packages/",
+    "bb.browserfacades.chrome"
+);
+
+
 gulp.task('build:models', function(cb) {
-    runSequence('build:models:core', ['updatedependencies:models:chromeextension', 'updatedependencies:models:dataaccess', 'updatedependencies:models:business'], cb)
+    runSequence('build:models:core', ['updatedependencies:models:chromeextension', 'updatedependencies:models:dataaccess', 'updatedependencies:models:business', 'updatedependencies:models:bfchrome'], cb)
 });
 
 gulp.task('clean:models:files', function() {
@@ -67,7 +74,7 @@ gulp.task('clean:models:files', function() {
 
 createShellTask(
     'clean:models:packages', 
-    'cd bb.dataaccess && npm uninstall bb.models && cd ../chrome-extension && npm uninstall bb.models && cd ../business && npm uninstall bb.models'
+    'cd bb.dataaccess && npm uninstall bb.models && cd ../chrome-extension && npm uninstall bb.models && cd ../bb.business && npm uninstall bb.models && cd ../bb.browserfacades.chrome && npm uninstall bb.models'
 );
 
 gulp.task('clean:models', function(cb) {
@@ -93,8 +100,14 @@ createLocalPackageInstallTask(
     "bb.business"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:dataaccess:bfchrome",
+    projectBasePath + "bb.dataaccess/packages/",
+    "bb.browserfacades.chrome"
+);
+
 gulp.task('build:dataaccess', function(cb) {
-    runSequence('build:dataaccess:core', ['updatedependencies:dataaccess:chromeextension', 'updatedependencies:dataaccess:business'], cb)
+    runSequence('build:dataaccess:core', ['updatedependencies:dataaccess:chromeextension', 'updatedependencies:dataaccess:business', 'updatedependencies:dataaccess:bfchrome'], cb)
 });
 
 gulp.task('clean:dataaccess:files', function() {
@@ -103,7 +116,7 @@ gulp.task('clean:dataaccess:files', function() {
 
 createShellTask(
     'clean:dataaccess:packages', 
-    'cd bb.business && npm uninstall bb.dataaccess && cd ../chrome-extension && npm uninstall bb.dataaccess'
+    'cd bb.business && npm uninstall bb.dataaccess && cd ../chrome-extension && npm uninstall bb.dataaccess && cd ../bb.browserfacades.chrome && npm uninstall bb.dataaccess'
 );
 
 gulp.task('clean:dataaccess', function(cb) {
@@ -122,8 +135,14 @@ createLocalPackageInstallTask(
     "chrome-extension"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:business:bfchrome",
+    projectBasePath + "bb.business/packages/",
+    "bb.browserfacades.chrome"
+);
+
 gulp.task('build:business', function(cb) {
-    runSequence('build:business:core', ['updatedependencies:business:chromeextension'], cb)
+    runSequence('build:business:core', ['updatedependencies:business:chromeextension', 'updatedependencies:business:bfchrome'], cb)
 });
 
 gulp.task('clean:business:files', function() {
@@ -132,11 +151,40 @@ gulp.task('clean:business:files', function() {
 
 createShellTask(
     'clean:business:packages', 
-    'cd chrome-extension && npm uninstall bb.business'
+    'cd chrome-extension && npm uninstall bb.business && cd ../bb.browserfacades.chrome && npm uninstall bb.business'
 );
 
 gulp.task('clean:business', function(cb) {
     runSequence('clean:business:packages', 'clean:business:files', cb);
+});
+
+//BrowserFacades.Chrome
+createShellTask(
+    'build:bfchrome:core', 
+    'gulp build --gulpfile bb.browserfacades.chrome/gulpfile.js && gulp pack --gulpfile bb.browserfacades.chrome/gulpfile.js'
+);
+
+createLocalPackageInstallTask(
+    "updatedependencies:bfchrome:chromeextension",
+    projectBasePath + "bb.browserfacades.chrome/packages/",
+    "chrome-extension"
+);
+
+gulp.task('build:bfchrome', function(cb) {
+    runSequence('build:bfchrome:core', ['updatedependencies:bfchrome:chromeextension'], cb)
+});
+
+gulp.task('clean:bfchrome:files', function() {
+    return del(['bb.browserfacades.chrome/dist/**/*', 'bb.browserfacades.chrome/packages/**/*']);
+});
+
+createShellTask(
+    'clean:bfchrome:packages', 
+    'cd chrome-extension && npm uninstall bb.browserfacades.chrome'
+);
+
+gulp.task('clean:bfchrome', function(cb) {
+    runSequence('clean:bfchrome:packages', 'clean:bfchrome:files', cb);
 });
 
 //Chrome Extension
@@ -146,7 +194,13 @@ createShellTask(
 );
 
 gulp.task('build:chromeextension', function(cb) {
-    runSequence('build:models', 'build:dataaccess', 'build:business', 'build:chromeextension:core', cb)
+    runSequence(
+        'build:models', 
+        'build:dataaccess', 
+        'build:business', 
+        'build:bfchrome', 
+        'build:chromeextension:core', 
+        cb)
 });
 
 gulp.task('clean:chromeextension', function() {
@@ -158,6 +212,6 @@ gulp.task('build', function(cb) {
 });
 
 gulp.task('clean', function(cb) {
-    runSequence(['clean:models', 'clean:dataaccess', 'clean:business', 'clean:chromeextension'], cb)
+    runSequence(['clean:models', 'clean:dataaccess', 'clean:business', 'clean:bfchrome', 'clean:chromeextension'], cb)
 });
 
