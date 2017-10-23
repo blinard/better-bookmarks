@@ -1,12 +1,12 @@
 import {ChromeFacade} from './business/chromeFacade';
-import * as Rx from "../node_modules/rxjs/Rx";
+import * as Rx from "rxjs/Rx";
 
-import {BookmarkRepository} from "./dataAccess/bookmarkRepository";
+import {BookmarkRepository} from "bb.dataaccess";
 import {IBookmarkManager} from "./business/bookmarkManager";
 import container from "./inversify.config";
 import "reflect-metadata";
 import TYPES from "./types";
-import { Bookmark } from "../node_modules/bb.models/dist/bb.models"
+import { Bookmark } from "bb.models"
 
 namespace Background {
     let chromeFacade = container.resolve(ChromeFacade); //new ChromeFacade();

@@ -1,8 +1,8 @@
-import { injectable } from "../../node_modules/inversify/dts/inversify";
+import { injectable } from "inversify";
 import "reflect-metadata";
-import { IBookmarkDataAccess } from "../dataAccess/IBookmarkDataAccess";
-import * as Rx from "../../node_modules/rxjs/Rx";
-import { BookmarkMap, OmniboxInputChangedData, OmniboxObservables } from "../../node_modules/bb.models/dist/bb.models";
+import { IBookmarkDataAccess } from "bb.dataaccess";
+import * as Rx from "rxjs/Rx";
+import { BookmarkMap, OmniboxInputChangedData, OmniboxObservables } from "bb.models";
 
 export interface IChromeFacade {
     addOmniboxListeners(): OmniboxObservables

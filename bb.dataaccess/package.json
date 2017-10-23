@@ -1,0 +1,26 @@
+{
+    "name": "bb.dataaccess",
+    "version": "1.0.8",
+    "description": "",
+    "main": "dist/bb.dataaccess.js",
+    "types": "dist/bb.dataaccess.d.ts",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Brad Linard",
+    "license": "ISC",
+    "dependencies": {
+        "bb.models": "file:../bb.models/packages/bb.models-1.0.18.tgz",
+        "inversify": "^4.3.0",
+        "reflect-metadata": "^0.1.10"
+    },
+    "devDependencies": {
+        "del": "^3.0.0",
+        "gulp": "^3.9.1",
+        "gulp-typescript": "^3.2.2",
+        "merge2": "^1.2.0",
+        "run-sequence": "^2.2.0",
+        "tslint": "^5.8.0",
+        "typescript": "^2.5.3"
+    }
+}

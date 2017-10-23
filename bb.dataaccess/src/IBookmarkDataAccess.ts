@@ -1,4 +1,4 @@
-import { BookmarkMap } from "../../node_modules/bb.models/dist/bb.models";
+import { BookmarkMap } from "bb.models";
 
 export interface IBookmarkDataAccess {
     getData(): Promise<BookmarkMap>

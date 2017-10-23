@@ -1,4 +1,4 @@
-import * as Rx from "../node_modules/rxjs/Rx";
+import * as Rx from "rxjs/Rx";
 import { OmniboxInputChangedData } from "./omniboxInputChangedData";
 
 export class OmniboxObservables {

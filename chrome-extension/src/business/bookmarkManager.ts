@@ -1,8 +1,9 @@
-import { injectable, inject } from "../../node_modules/inversify/dts/inversify";
+import { injectable, inject } from "inversify";
 import "reflect-metadata";
 import TYPES from "../types";
-import { IBookmarkRepository } from "../dataAccess/bookmarkRepository";
-import { Bookmark } from "../../node_modules/bb.models/dist/bb.models";
+import { IBookmarkRepository } from "bb.dataaccess";
+import { Types as daTypes } from "bb.dataaccess";
+import { Bookmark } from "bb.models";
 
 export interface IBookmarkManager {
     saveBookmark(bookmark: Bookmark): void
@@ -12,7 +13,7 @@ export interface IBookmarkManager {
 @injectable()
 export class BookmarkManager implements IBookmarkManager {
     constructor(
-        @inject(TYPES.IBookmarkRepository) private _bookmarkRepository: IBookmarkRepository) {
+        @inject(daTypes.IBookmarkRepository) private _bookmarkRepository: IBookmarkRepository) {
     }
 
     saveBookmark(bookmark: Bookmark): void {
