@@ -1,6 +1,6 @@
 {
     "name": "bb.dataaccess",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "",
     "main": "dist/bb.dataaccess.js",
     "types": "dist/bb.dataaccess.d.ts",
@@ -10,7 +10,7 @@
     "author": "Brad Linard",
     "license": "ISC",
     "dependencies": {
-        "bb.models": "file:../bb.models/packages/bb.models-1.0.18.tgz",
+        "bb.models": "file:../bb.models/packages/bb.models-1.0.21.tgz",
         "inversify": "^4.3.0",
         "reflect-metadata": "^0.1.10"
     },

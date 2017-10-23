@@ -3,16 +3,10 @@ import "reflect-metadata";
 import { IBookmarkDataAccess } from "bb.dataaccess";
 import * as Rx from "rxjs/Rx";
 import { BookmarkMap, OmniboxInputChangedData, OmniboxObservables } from "bb.models";
-
-export interface IChromeFacade {
-    addOmniboxListeners(): OmniboxObservables
-    getCurrentTabUrl(): Promise<string>
-    navigateCurrentTab(url: string): void
-    postNotification(title: string, message: string, key?: string, iconUrl?: string): void
-}
+import { IBrowserFacade } from "bb.business";
 
 @injectable()
-export class ChromeFacade implements IChromeFacade, IBookmarkDataAccess {
+export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
     constructor() {
     }
 

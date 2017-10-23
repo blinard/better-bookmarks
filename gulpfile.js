@@ -51,12 +51,27 @@ createLocalPackageInstallTask(
     "bb.dataaccess"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:models:business",
+    projectBasePath + "bb.models/packages/",
+    "bb.business"
+);
+
 gulp.task('build:models', function(cb) {
-    runSequence('build:models:core', ['updatedependencies:models:chromeextension', 'updatedependencies:models:dataaccess'], cb)
+    runSequence('build:models:core', ['updatedependencies:models:chromeextension', 'updatedependencies:models:dataaccess', 'updatedependencies:models:business'], cb)
 });
 
-gulp.task('clean:models', function() {
-    return del(['bb.models/dist/**/*', 'bb.models/packages/**/*', 'bb.dataaccess/node_modules/bb.models', 'chrome-extension/node_modules/bb.models']);
+gulp.task('clean:models:files', function() {
+    return del(['bb.models/dist/**/*', 'bb.models/packages/**/*']);
+});
+
+createShellTask(
+    'clean:models:packages', 
+    'cd bb.dataaccess && npm uninstall bb.models && cd ../chrome-extension && npm uninstall bb.models && cd ../business && npm uninstall bb.models'
+);
+
+gulp.task('clean:models', function(cb) {
+    runSequence('clean:models:packages', 'clean:models:files', cb);
 });
 
 
@@ -72,12 +87,56 @@ createLocalPackageInstallTask(
     "chrome-extension"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:dataaccess:business",
+    projectBasePath + "bb.dataaccess/packages/",
+    "bb.business"
+);
+
 gulp.task('build:dataaccess', function(cb) {
-    runSequence('build:dataaccess:core', ['updatedependencies:dataaccess:chromeextension'], cb)
+    runSequence('build:dataaccess:core', ['updatedependencies:dataaccess:chromeextension', 'updatedependencies:dataaccess:business'], cb)
 });
 
-gulp.task('clean:dataaccess', function() {
-    return del(['bb.dataaccess/dist/**/*', 'bb.dataaccess/packages/**/*', 'chrome-extension/node_modules/bb.dataaccess']);
+gulp.task('clean:dataaccess:files', function() {
+    return del(['bb.dataaccess/dist/**/*', 'bb.dataaccess/packages/**/*']);
+});
+
+createShellTask(
+    'clean:dataaccess:packages', 
+    'cd bb.business && npm uninstall bb.dataaccess && cd ../chrome-extension && npm uninstall bb.dataaccess'
+);
+
+gulp.task('clean:dataaccess', function(cb) {
+    runSequence('clean:dataaccess:packages', 'clean:dataaccess:files', cb);
+});
+
+//Business
+createShellTask(
+    'build:business:core', 
+    'gulp build --gulpfile bb.business/gulpfile.js && gulp pack --gulpfile bb.business/gulpfile.js'
+);
+
+createLocalPackageInstallTask(
+    "updatedependencies:business:chromeextension",
+    projectBasePath + "bb.business/packages/",
+    "chrome-extension"
+);
+
+gulp.task('build:business', function(cb) {
+    runSequence('build:business:core', ['updatedependencies:business:chromeextension'], cb)
+});
+
+gulp.task('clean:business:files', function() {
+    return del(['bb.business/dist/**/*', 'bb.business/packages/**/*']);
+});
+
+createShellTask(
+    'clean:business:packages', 
+    'cd chrome-extension && npm uninstall bb.business'
+);
+
+gulp.task('clean:business', function(cb) {
+    runSequence('clean:business:packages', 'clean:business:files', cb);
 });
 
 //Chrome Extension
@@ -87,7 +146,7 @@ createShellTask(
 );
 
 gulp.task('build:chromeextension', function(cb) {
-    runSequence('build:models', 'build:dataaccess', 'build:chromeextension:core', cb)
+    runSequence('build:models', 'build:dataaccess', 'build:business', 'build:chromeextension:core', cb)
 });
 
 gulp.task('clean:chromeextension', function() {
@@ -99,6 +158,6 @@ gulp.task('build', function(cb) {
 });
 
 gulp.task('clean', function(cb) {
-    runSequence(['clean:models', 'clean:dataaccess', 'clean:chromeextension'], cb)
+    runSequence(['clean:models', 'clean:dataaccess', 'clean:business', 'clean:chromeextension'], cb)
 });
 

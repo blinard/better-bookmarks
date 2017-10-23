@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
-import TYPES from "../types";
+import { Types } from "./types";
 import { IBookmarkRepository } from "bb.dataaccess";
 import { Types as daTypes } from "bb.dataaccess";
 import { Bookmark } from "bb.models";
