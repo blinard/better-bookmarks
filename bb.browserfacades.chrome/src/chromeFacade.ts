@@ -1,20 +1,12 @@
-import { injectable } from "../../node_modules/inversify/dts/inversify";
+import { injectable } from "inversify";
 import "reflect-metadata";
-import { BookmarkMap } from "../models/bookmarkMap";
-import { IBookmarkDataAccess } from "../dataAccess/IBookmarkDataAccess";
-import * as Rx from "../../node_modules/rxjs/Rx";
-import { OmniboxObservables } from "../models/omniboxObservables";
-import { OmniboxInputChangedData } from "../models/omniboxInputChangedData";
-
-export interface IChromeFacade {
-    addOmniboxListeners(): OmniboxObservables
-    getCurrentTabUrl(): Promise<string>
-    navigateCurrentTab(url: string): void
-    postNotification(title: string, message: string, key?: string, iconUrl?: string): void
-}
+import { IBookmarkDataAccess } from "bb.dataaccess";
+import * as Rx from "rxjs/Rx";
+import { BookmarkMap, OmniboxInputChangedData, OmniboxObservables } from "bb.models";
+import { IBrowserFacade } from "bb.business";
 
 @injectable()
-export class ChromeFacade implements IChromeFacade, IBookmarkDataAccess {
+export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
     constructor() {
     }
 

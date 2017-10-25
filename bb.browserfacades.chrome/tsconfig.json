@@ -8,7 +8,7 @@
         "outDir": "./dist",
         "declaration": true,
         "lib": ["es6", "dom"],
-        "types": ["reflect-metadata", "chrome", "bb.models"],
+        // "types": [],
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true
     },

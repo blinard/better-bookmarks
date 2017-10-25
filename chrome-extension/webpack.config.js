@@ -6,7 +6,14 @@ module.exports = {
     rules: [
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
+        use: [
+            {
+                loader: 'ts-loader',
+                options: {
+                    logLevel: 'info'
+                }
+            }
+        ],
         exclude: /node_modules/
       }
     ]
@@ -15,8 +22,6 @@ module.exports = {
     modules: ["node_modules", path.resolve(__dirname, "src")],
     extensions: [".ts", ".js"],
     alias: {
-        "../node_modules/inversify/dts/inversify": "../node_modules/inversify/lib/inversify",
-        "../../node_modules/inversify/dts/inversify": "../../node_modules/inversify/lib/inversify"
     }
   },
   output: {
