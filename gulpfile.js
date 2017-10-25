@@ -207,11 +207,10 @@ gulp.task('clean:chromeextension', function() {
     return del(['chrome-extension/dist/**/*']);
 });
 
-gulp.task('build', function(cb) {
-    runSequence('build:chromeextension', cb)
-});
-
 gulp.task('clean', function(cb) {
     runSequence(['clean:models', 'clean:dataaccess', 'clean:business', 'clean:bfchrome', 'clean:chromeextension'], cb)
 });
 
+gulp.task('build', function(cb) {
+    runSequence('build:chromeextension', cb)
+});
