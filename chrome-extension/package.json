@@ -21,10 +21,10 @@
     "webpack-dev-server": "^2.9.1"
   },
   "dependencies": {
-    "bb.browserfacades.chrome": "file:../bb.browserfacades.chrome/packages/bb.browserfacades.chrome-1.0.3.tgz",
-    "bb.business": "file:../bb.business/packages/bb.business-1.0.5.tgz",
-    "bb.dataaccess": "file:../bb.dataaccess/packages/bb.dataaccess-1.0.11.tgz",
-    "bb.models": "file:../bb.models/packages/bb.models-1.0.29.tgz",
+    "bb.browserfacades.chrome": "file:../bb.browserfacades.chrome/packages/bb.browserfacades.chrome-1.0.5.tgz",
+    "bb.business": "file:../bb.business/packages/bb.business-1.0.7.tgz",
+    "bb.dataaccess": "file:../bb.dataaccess/packages/bb.dataaccess-1.0.13.tgz",
+    "bb.models": "file:../bb.models/packages/bb.models-1.0.32.tgz",
     "inversify": "^4.3.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.3"
