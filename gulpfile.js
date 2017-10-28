@@ -63,9 +63,15 @@ createLocalPackageInstallTask(
     "bb.browserfacades.chrome"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:models:uioptions",
+    projectBasePath + "bb.models/packages/",
+    "bb.ui.options"
+);
+
 
 gulp.task('build:models', function(cb) {
-    runSequence('build:models:core', ['updatedependencies:models:chromeextension', 'updatedependencies:models:dataaccess', 'updatedependencies:models:business', 'updatedependencies:models:bfchrome'], cb)
+    runSequence('build:models:core', ['updatedependencies:models:chromeextension', 'updatedependencies:models:dataaccess', 'updatedependencies:models:business', 'updatedependencies:models:bfchrome', "updatedependencies:models:uioptions"], cb)
 });
 
 gulp.task('clean:models:files', function() {
@@ -74,7 +80,7 @@ gulp.task('clean:models:files', function() {
 
 createShellTask(
     'clean:models:packages', 
-    'cd bb.dataaccess && npm uninstall bb.models && cd ../chrome-extension && npm uninstall bb.models && cd ../bb.business && npm uninstall bb.models && cd ../bb.browserfacades.chrome && npm uninstall bb.models'
+    'cd bb.dataaccess && npm uninstall bb.models && cd ../chrome-extension && npm uninstall bb.models && cd ../bb.business && npm uninstall bb.models && cd ../bb.browserfacades.chrome && npm uninstall bb.models && cd ../bb.ui.options && npm uninstall bb.models'
 );
 
 gulp.task('clean:models', function(cb) {
@@ -106,8 +112,14 @@ createLocalPackageInstallTask(
     "bb.browserfacades.chrome"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:dataaccess:uioptions",
+    projectBasePath + "bb.dataaccess/packages/",
+    "bb.ui.options"
+);
+
 gulp.task('build:dataaccess', function(cb) {
-    runSequence('build:dataaccess:core', ['updatedependencies:dataaccess:chromeextension', 'updatedependencies:dataaccess:business', 'updatedependencies:dataaccess:bfchrome'], cb)
+    runSequence('build:dataaccess:core', ['updatedependencies:dataaccess:chromeextension', 'updatedependencies:dataaccess:business', 'updatedependencies:dataaccess:bfchrome', "updatedependencies:dataaccess:uioptions"], cb)
 });
 
 gulp.task('clean:dataaccess:files', function() {
@@ -116,7 +128,7 @@ gulp.task('clean:dataaccess:files', function() {
 
 createShellTask(
     'clean:dataaccess:packages', 
-    'cd bb.business && npm uninstall bb.dataaccess && cd ../chrome-extension && npm uninstall bb.dataaccess && cd ../bb.browserfacades.chrome && npm uninstall bb.dataaccess'
+    'cd bb.business && npm uninstall bb.dataaccess && cd ../chrome-extension && npm uninstall bb.dataaccess && cd ../bb.browserfacades.chrome && npm uninstall bb.dataaccess && cd ../bb.ui.options && npm uninstall bb.dataaccess'
 );
 
 gulp.task('clean:dataaccess', function(cb) {
@@ -141,8 +153,14 @@ createLocalPackageInstallTask(
     "bb.browserfacades.chrome"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:business:uioptions",
+    projectBasePath + "bb.business/packages/",
+    "bb.ui.options"
+);
+
 gulp.task('build:business', function(cb) {
-    runSequence('build:business:core', ['updatedependencies:business:chromeextension', 'updatedependencies:business:bfchrome'], cb)
+    runSequence('build:business:core', ['updatedependencies:business:chromeextension', 'updatedependencies:business:bfchrome', "updatedependencies:business:uioptions"], cb)
 });
 
 gulp.task('clean:business:files', function() {
@@ -151,7 +169,7 @@ gulp.task('clean:business:files', function() {
 
 createShellTask(
     'clean:business:packages', 
-    'cd chrome-extension && npm uninstall bb.business && cd ../bb.browserfacades.chrome && npm uninstall bb.business'
+    'cd chrome-extension && npm uninstall bb.business && cd ../bb.browserfacades.chrome && npm uninstall bb.business && cd ../bb.ui.options && npm uninstall bb.business'
 );
 
 gulp.task('clean:business', function(cb) {
@@ -170,8 +188,14 @@ createLocalPackageInstallTask(
     "chrome-extension"
 );
 
+createLocalPackageInstallTask(
+    "updatedependencies:bfchrome:uioptions",
+    projectBasePath + "bb.browserfacades.chrome/packages/",
+    "bb.ui.options"
+);
+
 gulp.task('build:bfchrome', function(cb) {
-    runSequence('build:bfchrome:core', ['updatedependencies:bfchrome:chromeextension'], cb)
+    runSequence('build:bfchrome:core', ['updatedependencies:bfchrome:chromeextension', "updatedependencies:bfchrome:uioptions"], cb)
 });
 
 gulp.task('clean:bfchrome:files', function() {
@@ -180,11 +204,29 @@ gulp.task('clean:bfchrome:files', function() {
 
 createShellTask(
     'clean:bfchrome:packages', 
-    'cd chrome-extension && npm uninstall bb.browserfacades.chrome'
+    'cd chrome-extension && npm uninstall bb.browserfacades.chrome && cd ../bb.ui.options && npm uninstall bb.browserfacades.chrome'
 );
 
 gulp.task('clean:bfchrome', function(cb) {
     runSequence('clean:bfchrome:packages', 'clean:bfchrome:files', cb);
+});
+
+//Ui.Options
+createShellTask(
+    'build:uioptions:core', 
+    'cd bb.ui.options && ng build'
+);
+
+gulp.task('build:uioptions', function(cb) {
+    runSequence('build:uioptions:core', cb)
+});
+
+gulp.task('clean:uioptions:files', function() {
+    return del(['bb.ui.options/dist/**/*']);
+});
+
+gulp.task('clean:uioptions', function(cb) {
+    runSequence('clean:uioptions:files', cb);
 });
 
 //Chrome Extension
@@ -199,7 +241,8 @@ gulp.task('build:chromeextension', function(cb) {
         'build:dataaccess', 
         'build:business', 
         'build:bfchrome', 
-        'build:chromeextension:core', 
+        'build:uioptions',
+        'build:chromeextension:core',
         cb)
 });
 
@@ -208,7 +251,7 @@ gulp.task('clean:chromeextension', function() {
 });
 
 gulp.task('clean', function(cb) {
-    runSequence(['clean:models', 'clean:dataaccess', 'clean:business', 'clean:bfchrome', 'clean:chromeextension'], cb)
+    runSequence(['clean:models', 'clean:dataaccess', 'clean:business', 'clean:bfchrome', 'clean:uioptions', 'clean:chromeextension'], cb)
 });
 
 gulp.task('build', function(cb) {
