@@ -8,6 +8,7 @@ import { Bookmark } from "bb.models";
 export interface IBookmarkManager {
     saveBookmark(bookmark: Bookmark): void
     getBookmark(key: string): Promise<Bookmark>
+    getBookmarks(): Promise<Bookmark[]>
 }
 
 @injectable()
@@ -22,5 +23,9 @@ export class BookmarkManager implements IBookmarkManager {
 
     getBookmark(key: string): Promise<Bookmark> {
         return this._bookmarkRepository.getByKey(key);
+    }
+
+    getBookmarks(): Promise<Bookmark[]> {
+        return this._bookmarkRepository.getAll();
     }
 }

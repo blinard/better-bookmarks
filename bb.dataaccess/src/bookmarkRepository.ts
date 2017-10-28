@@ -6,6 +6,7 @@ import { IBookmarkDataAccess } from "./IBookmarkDataAccess";
 
 export interface IBookmarkRepository {
     getByKey(key: string): Promise<Bookmark>
+    getAll(): Promise<Bookmark[]>
     create(bookmark: Bookmark): void
     update(bookmark: Bookmark): void
     delete(bookmark: Bookmark): void
@@ -30,6 +31,26 @@ export class BookmarkRepository implements IBookmarkRepository {
                     return null;
                     
                 return Bookmark.hydrateNewBookmark(bookmarkMap[key]);
+            });
+    }
+
+    getAll(): Promise<Bookmark[]> {
+        if (!this._bookmarkMap) {
+            this._bookmarkMap = this._dataAccess.getData();
+        }
+
+        return this._bookmarkMap
+            .then((bookmarkMap: BookmarkMap) => {
+                let bookmarks = new Array<Bookmark>();
+                for (var key in bookmarkMap) {
+                    if (!bookmarkMap.hasOwnProperty(key)) {
+                        continue;
+                    }
+
+                    bookmarks.push(Bookmark.hydrateNewBookmark(bookmarkMap[key]));
+                }
+
+                return bookmarks;
             });
     }
 
