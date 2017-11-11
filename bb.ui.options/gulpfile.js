@@ -1,20 +1,29 @@
 var gulp = require('gulp');
 var { spawn } = require('child_process');
 var exec = require('child_process').exec;
+var { spawn } = require('child_process');
 var { join } = require('path');
 var path = require('path');
 var fs = require('fs');
 var runSequence = require('run-sequence');
 
 //require('../gulp.tasks/buildDependencies')(gulp);
+require('../gulp.tasks/importDependency')(gulp);
 
+gulp.task('import:dependencies', ['import:models', 'import:dataaccess', 'import:business', 'import:bfchrome'], function(cb) {
+    cb();
+});
 
-gulp.task('ngbuild', function(cb) {
-    exec("ng build", function(err, stdout, stderr) {
-        console.log(stdout);
-        console.log(stderr);
-        cb(err);
-    });
+gulp.task('ngbuild', ['import:dependencies'], function(cb) {
+    var child = spawn('ng', ['build'], { stdio: 'inherit' });
+    child.on('exit', function(code) {
+        if (code !== 0) {
+            cb('an error occurred');
+            return;
+        }
+
+        cb();
+    })
 });
 
 gulp.task('copy:manifest', function() {
@@ -52,7 +61,3 @@ gulp.task('webpack', function (cb) {
 //gulp.task('build:dependencies', ['build:bfchrome', 'build:models', 'build:dataaccess', 'build:business']);
 
 gulp.task('build', ['clean:dist', 'webpack', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup']);
-
-gulp.task('rebuild', function(cb) {
-    runSequence('build:dependencies', 'build', cb);
-});
