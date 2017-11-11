@@ -6,7 +6,13 @@ var exec = require('child_process').exec;
 var runSequence = require('run-sequence');
 var tsProject = ts.createProject('tsconfig.json');
 
-gulp.task('build:typescript', function() {
+require('../gulp.tasks/importDependency')(gulp);
+
+gulp.task('import:dependencies', ['import:models', 'import:dataaccess', 'import:business'], function(cb) {
+    cb();
+});
+
+gulp.task('build:typescript', ['import:dependencies'], function() {
     var tsResult = tsProject.src()
         .pipe(tsProject());
  

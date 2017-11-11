@@ -5,7 +5,13 @@ var del = require('del');
 var exec = require('child_process').exec;
 var tsProject = ts.createProject('tsconfig.json');
 
-gulp.task('build:typescript', function() {
+require('../gulp.tasks/importDependency')(gulp);
+
+gulp.task('import:dependencies', ['import:models', 'import:dataaccess', 'import:business', 'import:bfchrome'], function(cb) {
+    cb();
+});
+
+gulp.task('build:typescript', ['import:dependencies'], function() {
     var tsResult = tsProject.src()
         .pipe(tsProject());
  
@@ -39,7 +45,7 @@ gulp.task('clean:dist', function() {
     return del(['dist/**/*']);
 });
 
-gulp.task('webpack', function (cb) {
+gulp.task('webpack', ['import:dependencies', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup'], function (cb) {
     exec('./node_modules/.bin/webpack', function (err, stdout, stderr) {
         console.log(stdout);
         console.log(stderr);
@@ -47,4 +53,4 @@ gulp.task('webpack', function (cb) {
     });
 })
 
-gulp.task('build', ['clean:dist', 'webpack', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup']);
+gulp.task('build', ['clean:dist', 'webpack']);
