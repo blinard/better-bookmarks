@@ -1,0 +1,58 @@
+var gulp = require('gulp');
+var { spawn } = require('child_process');
+var exec = require('child_process').exec;
+var { join } = require('path');
+var path = require('path');
+var fs = require('fs');
+var runSequence = require('run-sequence');
+
+//require('../gulp.tasks/buildDependencies')(gulp);
+
+
+gulp.task('ngbuild', function(cb) {
+    exec("ng build", function(err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+});
+
+gulp.task('copy:manifest', function() {
+    return gulp.src('src/manifest.json')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('copy:images', function() {
+    return gulp.src('images/bb-icon.png')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('copy:options', function() {
+    return gulp.src('src/options/options.html')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('copy:popup', function() {
+    return gulp.src('src/popup/popup.html')
+        .pipe(gulp.dest('dist'));
+});
+
+gulp.task('clean:dist', function() {
+    return del(['dist/**/*']);
+});
+
+gulp.task('webpack', function (cb) {
+    exec('./node_modules/.bin/webpack', function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+})
+
+//gulp.task('build:dependencies', ['build:bfchrome', 'build:models', 'build:dataaccess', 'build:business']);
+
+gulp.task('build', ['clean:dist', 'webpack', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup']);
+
+gulp.task('rebuild', function(cb) {
+    runSequence('build:dependencies', 'build', cb);
+});

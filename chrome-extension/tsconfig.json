@@ -8,9 +8,10 @@
         "outDir": "./dist",
         "declaration": true,
         "lib": ["es6", "dom"],
-        "types": ["reflect-metadata", "chrome", "bb.models"],
+        "types": ["reflect-metadata", "chrome"],
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true
     },
     "include": [
         "src/**/*"

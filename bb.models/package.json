@@ -1,6 +1,6 @@
 {
   "name": "bb.models",
-  "version": "1.0.32",
+  "version": "1.0.83",
   "description": "",
   "main": "dist/bb.models.js",
   "types": "dist/bb.models.d.ts",
@@ -12,6 +12,7 @@
   "devDependencies": {
     "del": "^3.0.0",
     "gulp": "^3.9.1",
+    "gulp-json-editor": "^2.2.1",
     "gulp-typescript": "^3.2.2",
     "merge2": "^1.2.0",
     "run-sequence": "^2.2.0",
