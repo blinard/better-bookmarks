@@ -1,4 +1,5 @@
 const path = require('path');
+const { CheckerPlugin } = require('awesome-typescript-loader');
 
 module.exports = {
   entry: './src/background.ts',
@@ -8,6 +9,7 @@ module.exports = {
         test: /\.tsx?$/,
         use: [
             {
+                //loader: 'awesome-typescript-loader',
                 loader: 'ts-loader',
                 options: {
                     logLevel: 'info'
@@ -27,5 +29,8 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist')
-  }
+  } //,
+//   plugins: [
+//       new CheckerPlugin()
+//   ]
 };

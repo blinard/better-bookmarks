@@ -1,6 +1,6 @@
 {
   "name": "bb.browserfacades.chrome",
-  "version": "1.0.5",
+  "version": "1.0.11",
   "description": "",
   "main": "dist/bb.browserfacades.chrome.js",
   "types": "dist/bb.browserfacades.chrome.d.ts",
@@ -20,9 +20,6 @@
     "typescript": "^2.5.3"
   },
   "dependencies": {
-    "bb.business": "file:../bb.business/packages/bb.business-1.0.7.tgz",
-    "bb.dataaccess": "file:../bb.dataaccess/packages/bb.dataaccess-1.0.13.tgz",
-    "bb.models": "file:../bb.models/packages/bb.models-1.0.32.tgz",
     "inversify": "^4.3.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.3"

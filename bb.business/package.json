@@ -1,6 +1,6 @@
 {
   "name": "bb.business",
-  "version": "1.0.7",
+  "version": "1.0.12",
   "description": "",
   "main": "dist/bb.business.js",
   "types": "dist/bb.business.d.ts",
@@ -19,8 +19,6 @@
     "typescript": "^2.5.3"
   },
   "dependencies": {
-    "bb.dataaccess": "file:../bb.dataaccess/packages/bb.dataaccess-1.0.13.tgz",
-    "bb.models": "file:../bb.models/packages/bb.models-1.0.32.tgz",
     "inversify": "^4.3.0",
     "reflect-metadata": "^0.1.10"
   }

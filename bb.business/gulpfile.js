@@ -6,6 +6,8 @@ var exec = require('child_process').exec;
 var runSequence = require('run-sequence');
 var tsProject = ts.createProject('tsconfig.json');
 
+// require('../gulp.tasks/buildDependencies')(gulp);
+
 gulp.task('build:typescript', function() {
     var tsResult = tsProject.src()
         .pipe(tsProject());

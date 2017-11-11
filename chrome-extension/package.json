@@ -10,21 +10,18 @@
   "license": "ISC",
   "devDependencies": {
     "@types/chrome": "0.0.49",
+    "awesome-typescript-loader": "^3.3.0",
     "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-typescript": "^3.2.2",
     "merge2": "^1.2.0",
-    "ts-loader": "^2.3.7",
+    "ts-loader": "^3.1.1",
     "tslint": "^5.7.0",
     "typescript": "^2.5.3",
-    "webpack": "^3.7.1",
-    "webpack-dev-server": "^2.9.1"
+    "webpack": "^3.8.1",
+    "webpack-dev-server": "^2.9.4"
   },
   "dependencies": {
-    "bb.browserfacades.chrome": "file:../bb.browserfacades.chrome/packages/bb.browserfacades.chrome-1.0.5.tgz",
-    "bb.business": "file:../bb.business/packages/bb.business-1.0.7.tgz",
-    "bb.dataaccess": "file:../bb.dataaccess/packages/bb.dataaccess-1.0.13.tgz",
-    "bb.models": "file:../bb.models/packages/bb.models-1.0.32.tgz",
     "inversify": "^4.3.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.3"
