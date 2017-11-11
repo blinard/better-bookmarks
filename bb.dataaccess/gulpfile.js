@@ -8,8 +8,13 @@ var tsProject = ts.createProject('tsconfig.json');
 var { spawn } = require('child_process');
 
 //require('../gulp.tasks/buildDependencies')(gulp);
+require('../gulp.tasks/importDependency')(gulp);
 
-gulp.task('build:typescript', function() {
+gulp.task('import:dependencies', ['import:models'], function(cb) {
+    cb();
+});
+
+gulp.task('build:typescript', ['import:dependencies'], function() {
     var tsResult = tsProject.src()
         .pipe(tsProject());
  

@@ -1,6 +1,6 @@
 {
   "name": "bb.business",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "",
   "main": "dist/bb.business.js",
   "types": "dist/bb.business.d.ts",
@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "inversify": "^4.3.0",
-    "reflect-metadata": "^0.1.10"
+    "reflect-metadata": "^0.1.10",
+    "rxjs": "5.4.3"
   }
 }
