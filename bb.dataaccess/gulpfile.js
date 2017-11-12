@@ -7,7 +7,6 @@ var runSequence = require('run-sequence');
 var tsProject = ts.createProject('tsconfig.json');
 var { spawn } = require('child_process');
 
-//require('../gulp.tasks/buildDependencies')(gulp);
 require('../gulp.tasks/importDependency')(gulp);
 
 gulp.task('import:dependencies', ['import:models'], function(cb) {

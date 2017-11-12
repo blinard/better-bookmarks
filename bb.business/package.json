@@ -1,6 +1,6 @@
 {
   "name": "bb.business",
-  "version": "1.0.19",
+  "version": "1.0.21",
   "description": "",
   "main": "dist/bb.business.js",
   "types": "dist/bb.business.d.ts",

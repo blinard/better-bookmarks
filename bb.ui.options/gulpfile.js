@@ -1,4 +1,5 @@
 var gulp = require('gulp');
+var del = require('del');
 var { spawn } = require('child_process');
 var exec = require('child_process').exec;
 var { spawn } = require('child_process');
