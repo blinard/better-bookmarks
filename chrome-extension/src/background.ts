@@ -3,7 +3,7 @@ import {BookmarkRepository} from "bb.dataaccess";
 import {IBookmarkManager} from "bb.business";
 import container from "./inversify.config";
 import "reflect-metadata";
-import { Bookmark } from "bb.models"
+import { Bookmark, ISuggestResult } from "bb.models"
 import { Types as busTypes, IBrowserFacade } from "bb.business";
 
 namespace Background {
@@ -40,11 +40,23 @@ namespace Background {
             });
     });
 
-    // omniboxObservables.inputChanged.subscribe(icData => {
-    //     console.log("inputChanged: " + icData.text);
-    //     icData.suggestFunc([
-    //         {content: " one", description: "the first one"},
-    //         {content: " number two", description: "the second entry"}
-    //     ]);
-    // });
+    omniboxObservables.inputChanged.subscribe(icData => {
+        bookmarkManager.getBookmarks()
+            .then((bookmarks) => {
+                if (!icData.text.startsWith("go ") || icData.text.length < 4) {
+                    return;
+                }
+
+                let inputText = icData.text.replace("go ", "");
+
+                let suggestResults = bookmarks
+                    .filter((bkmark) => {
+                        return bkmark.key.includes(inputText) || bkmark.url.includes(inputText);
+                    })
+                    .map((bkmark) => {
+                        return <ISuggestResult>{ content: 'go ' + bkmark.key, description: bkmark.key + ' - ' + bkmark.url }
+                    });
+                icData.suggestFunc(suggestResults);
+            });
+    });
 }
