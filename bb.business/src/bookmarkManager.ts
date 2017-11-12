@@ -9,6 +9,7 @@ export interface IBookmarkManager {
     saveBookmark(bookmark: Bookmark): void
     getBookmark(key: string): Promise<Bookmark>
     getBookmarks(): Promise<Bookmark[]>
+    deleteBookmark(bkmark: Bookmark): Promise<boolean>
 }
 
 @injectable()
@@ -27,5 +28,9 @@ export class BookmarkManager implements IBookmarkManager {
 
     getBookmarks(): Promise<Bookmark[]> {
         return this._bookmarkRepository.getAll();
+    }
+
+    deleteBookmark(bkmark: Bookmark): Promise<boolean> {
+        return this._bookmarkRepository.delete(bkmark);
     }
 }

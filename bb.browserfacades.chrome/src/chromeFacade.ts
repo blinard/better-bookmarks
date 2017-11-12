@@ -78,8 +78,10 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
 
     setData(bookmarkMap: BookmarkMap): Promise<boolean> {
         let deferred = new Promise<boolean>((resolve, reject) => {
-            chrome.storage.local.set(bookmarkMap, () => {
-                resolve(true);
+            chrome.storage.local.clear(() => {
+                chrome.storage.local.set(bookmarkMap, () => {
+                    resolve(true);
+                });
             });
         });
         return deferred;
