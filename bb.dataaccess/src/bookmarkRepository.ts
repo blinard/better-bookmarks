@@ -9,7 +9,7 @@ export interface IBookmarkRepository {
     getAll(): Promise<Bookmark[]>
     create(bookmark: Bookmark): void
     update(bookmark: Bookmark): void
-    delete(bookmark: Bookmark): void
+    delete(bookmark: Bookmark): Promise<boolean>
 }
 
 @injectable()
@@ -70,7 +70,24 @@ export class BookmarkRepository implements IBookmarkRepository {
     update(bookmark: Bookmark): void {
         throw new Error("Method not implemented.");
     }
-    delete(bookmark: Bookmark): void {
-        throw new Error("Method not implemented.");
+    delete(bookmark: Bookmark): Promise<boolean> {
+        this._bookmarkMap = this._dataAccess.getData();
+        return this._bookmarkMap
+            .then((bookmarkMap: BookmarkMap) => {
+                if (!bookmarkMap)
+                    bookmarkMap = new BookmarkMap();
+
+                let newBookmarkMap = new BookmarkMap();
+                for (var key in bookmarkMap) {
+                    if (!bookmarkMap.hasOwnProperty(key) || key === bookmark.key) {
+                        continue;
+                    }
+
+                    newBookmarkMap[key] = bookmarkMap[key];
+                }
+                
+                this._bookmarkMap = null;
+                return this._dataAccess.setData(newBookmarkMap);
+            });
     }
 }

@@ -12,7 +12,7 @@
     <tr *ngFor="let b of bookmarks">
         <td>{{b.key}}</td>
         <td>{{b.url}}</td>
-        <td>Delete link or button</td>
+        <td><button (click)="deleteBookmark(b)">Delete</button></td>
     </tr>
 </table>
 

@@ -7,7 +7,6 @@ var path = require('path');
 var fs = require('fs');
 var runSequence = require('run-sequence');
 
-//require('../gulp.tasks/buildDependencies')(gulp);
 require('../gulp.tasks/importDependency')(gulp);
 
 gulp.task('import:dependencies', ['import:models', 'import:dataaccess', 'import:business', 'import:bfchrome'], function(cb) {
@@ -23,7 +22,7 @@ gulp.task('ngbuild', ['import:dependencies'], function(cb) {
         }
 
         cb();
-    })
+    });
 });
 
 gulp.task('copy:manifest', function() {
@@ -57,7 +56,5 @@ gulp.task('webpack', function (cb) {
         cb(err);
     });
 })
-
-//gulp.task('build:dependencies', ['build:bfchrome', 'build:models', 'build:dataaccess', 'build:business']);
 
 gulp.task('build', ['clean:dist', 'webpack', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup']);
