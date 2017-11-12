@@ -141,3 +141,79 @@ gulp.task('clean:chromeextension', [], function(cb) {
 
 gulp.task('clean', ['clean:chromeextension', 'clean:uioptions', 'clean:bfchrome', 'clean:business', 'clean:dataaccess', 'clean:models']);
 //end cleans
+
+//npm installs
+gulp.task('install:models', function(cb) {
+    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.models' });
+    child.on('exit', function(code) {
+        if (code !== 0) {
+            cb('an error occurred');
+            return;
+        }
+
+        cb();
+    });    
+});
+
+gulp.task('install:dataaccess', [], function(cb) {
+    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.dataaccess' });
+    child.on('exit', function(code) {
+        if (code !== 0) {
+            cb('an error occurred');
+            return;
+        }
+
+        cb();
+    });    
+});
+
+gulp.task('install:business', [], function(cb) {
+    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.business' });
+    child.on('exit', function(code) {
+        if (code !== 0) {
+            cb('an error occurred');
+            return;
+        }
+
+        cb();
+    });    
+});
+
+gulp.task('install:bfchrome', [], function(cb) {
+    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.browserfacades.chrome' });
+    child.on('exit', function(code) {
+        if (code !== 0) {
+            cb('an error occurred');
+            return;
+        }
+
+        cb();
+    });    
+});
+
+gulp.task('install:uioptions', [], function(cb) {
+    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.ui.options' });
+    child.on('exit', function(code) {
+        if (code !== 0) {
+            cb('an error occurred');
+            return;
+        }
+
+        cb();
+    });    
+});
+
+gulp.task('install:chromeextension', [], function(cb) {
+    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './chrome-extension' });
+    child.on('exit', function(code) {
+        if (code !== 0) {
+            cb('an error occurred');
+            return;
+        }
+
+        cb();
+    });    
+});
+
+gulp.task('install', ['install:chromeextension', 'install:uioptions', 'install:bfchrome', 'install:business', 'install:dataaccess', 'install:models']);
+//end npm installs
