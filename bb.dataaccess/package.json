@@ -1,6 +1,6 @@
 {
     "name": "bb.dataaccess",
-    "version": "1.0.35",
+    "version": "1.0.36",
     "description": "",
     "main": "dist/bb.dataaccess.js",
     "types": "dist/bb.dataaccess.d.ts",

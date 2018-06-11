@@ -253,3 +253,6 @@ paket-files/
 *.sln.iml
 
 *.tgz
+
+*.crx
+*.pem
