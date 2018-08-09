@@ -107,5 +107,22 @@
         "trackDir": "bb.business",
         "origin": "AUTHORED"
     },
+    "bb/browserfacades-chrome": {
+        "files": [
+            {
+                "relativePath": "bb.browserfacades.chrome/chromeFacade.ts",
+                "test": false,
+                "name": "chromeFacade.ts"
+            },
+            {
+                "relativePath": "bb.browserfacades.chrome/index.ts",
+                "test": false,
+                "name": "index.ts"
+            }
+        ],
+        "mainFile": "bb.browserfacades.chrome/index.ts",
+        "trackDir": "bb.browserfacades.chrome",
+        "origin": "AUTHORED"
+    },
     "version": "13.0.4"
 }
