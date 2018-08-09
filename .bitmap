@@ -80,5 +80,32 @@
         "trackDir": "bb.dataaccess",
         "origin": "AUTHORED"
     },
+    "bb/business": {
+        "files": [
+            {
+                "relativePath": "bb.business/IBrowserFacade.ts",
+                "test": false,
+                "name": "IBrowserFacade.ts"
+            },
+            {
+                "relativePath": "bb.business/bookmarkManager.ts",
+                "test": false,
+                "name": "bookmarkManager.ts"
+            },
+            {
+                "relativePath": "bb.business/index.ts",
+                "test": false,
+                "name": "index.ts"
+            },
+            {
+                "relativePath": "bb.business/types.ts",
+                "test": false,
+                "name": "types.ts"
+            }
+        ],
+        "mainFile": "bb.business/index.ts",
+        "trackDir": "bb.business",
+        "origin": "AUTHORED"
+    },
     "version": "13.0.4"
 }
