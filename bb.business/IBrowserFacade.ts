@@ -1,4 +1,4 @@
-import { OmniboxObservables } from "bb.models";
+import { OmniboxObservables } from "../bb.models";
 
 export interface IBrowserFacade {
     addOmniboxListeners(): OmniboxObservables
