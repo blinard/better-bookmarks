@@ -1,6 +1,6 @@
 {
   "name": "bb.models",
-  "version": "1.0.87",
+  "version": "1.0.91",
   "description": "",
   "main": "dist/bb.models.js",
   "types": "dist/bb.models.d.ts",

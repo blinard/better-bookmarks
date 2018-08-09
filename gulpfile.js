@@ -115,17 +115,17 @@ gulp.task('clean:bfchrome', [], function(cb) {
     });    
 });
 
-gulp.task('clean:uioptions', [], function(cb) {
-    var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './bb.ui.options' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
+// gulp.task('clean:uioptions', [], function(cb) {
+//     var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './bb.ui.options' });
+//     child.on('exit', function(code) {
+//         if (code !== 0) {
+//             cb('an error occurred');
+//             return;
+//         }
 
-        cb();
-    });    
-});
+//         cb();
+//     });    
+// });
 
 gulp.task('clean:chromeextension', [], function(cb) {
     var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './chrome-extension' });
@@ -139,7 +139,8 @@ gulp.task('clean:chromeextension', [], function(cb) {
     });    
 });
 
-gulp.task('clean', ['clean:chromeextension', 'clean:uioptions', 'clean:bfchrome', 'clean:business', 'clean:dataaccess', 'clean:models']);
+// gulp.task('clean', ['clean:chromeextension', 'clean:uioptions', 'clean:bfchrome', 'clean:business', 'clean:dataaccess', 'clean:models']);
+gulp.task('clean', ['clean:chromeextension', 'clean:bfchrome', 'clean:business', 'clean:dataaccess', 'clean:models']);
 //end cleans
 
 //npm installs
@@ -191,17 +192,17 @@ gulp.task('install:bfchrome', [], function(cb) {
     });    
 });
 
-gulp.task('install:uioptions', [], function(cb) {
-    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.ui.options' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
+// gulp.task('install:uioptions', [], function(cb) {
+//     var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.ui.options' });
+//     child.on('exit', function(code) {
+//         if (code !== 0) {
+//             cb('an error occurred');
+//             return;
+//         }
 
-        cb();
-    });    
-});
+//         cb();
+//     });    
+// });
 
 gulp.task('install:chromeextension', [], function(cb) {
     var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './chrome-extension' });
@@ -215,5 +216,6 @@ gulp.task('install:chromeextension', [], function(cb) {
     });    
 });
 
-gulp.task('install', ['install:chromeextension', 'install:uioptions', 'install:bfchrome', 'install:business', 'install:dataaccess', 'install:models']);
+//gulp.task('install', ['install:chromeextension', 'install:uioptions', 'install:bfchrome', 'install:business', 'install:dataaccess', 'install:models']);
+gulp.task('install', ['install:chromeextension', 'install:bfchrome', 'install:business', 'install:dataaccess', 'install:models']);
 //end npm installs

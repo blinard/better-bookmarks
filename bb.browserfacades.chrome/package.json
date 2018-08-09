@@ -1,6 +1,6 @@
 {
   "name": "bb.browserfacades.chrome",
-  "version": "1.0.18",
+  "version": "1.0.22",
   "description": "",
   "main": "dist/bb.browserfacades.chrome.js",
   "types": "dist/bb.browserfacades.chrome.d.ts",

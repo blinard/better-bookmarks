@@ -32,33 +32,34 @@ gulp.task('copy:images', function() {
         .pipe(gulp.dest('dist'));
 });
 
-gulp.task('build:options', function(cb) {
-    var child = spawn('gulp', ['ngbuild'], { stdio: 'inherit', cwd: '../bb.ui.options/' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
+// gulp.task('build:options', function(cb) {
+//     var child = spawn('gulp', ['ngbuild'], { stdio: 'inherit', cwd: '../bb.ui.options/' });
+//     child.on('exit', function(code) {
+//         if (code !== 0) {
+//             cb('an error occurred');
+//             return;
+//         }
 
-        cb();
-    });
-});
+//         cb();
+//     });
+// });
 
-gulp.task('copy:options', ['build:options'], function() {
-    return gulp.src('../bb.ui.options/dist/**/*')
-        .pipe(gulp.dest('dist'));
-});
+// gulp.task('copy:options', ['build:options'], function() {
+//     return gulp.src('../bb.ui.options/dist/**/*')
+//         .pipe(gulp.dest('dist'));
+// });
 
-gulp.task('copy:popup', function() {
-    return gulp.src('src/popup/popup.html')
-        .pipe(gulp.dest('dist'));
-});
+// gulp.task('copy:popup', function() {
+//     return gulp.src('src/popup/popup.html')
+//         .pipe(gulp.dest('dist'));
+// });
 
 gulp.task('clean:dist', function() {
     return del(['dist/**/*']);
 });
 
-gulp.task('webpack', ['import:dependencies', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup'], function (cb) {
+// gulp.task('webpack', ['import:dependencies', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup'], function (cb) {
+gulp.task('webpack', ['import:dependencies', 'copy:manifest', 'copy:images'], function (cb) {
     var child = spawn('./node_modules/.bin/webpack', { stdio: 'inherit' });
     child.on('exit', function(code) {
         if (code !== 0) {
