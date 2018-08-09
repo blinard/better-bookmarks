@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
 import { Types } from "./types"
-import { Bookmark, BookmarkMap, Dictionary } from "bb.models";
+import { Bookmark, BookmarkMap, Dictionary } from "../bb.models";
 import { IBookmarkDataAccess } from "./IBookmarkDataAccess";
 
 export interface IBookmarkRepository {
