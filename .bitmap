@@ -48,5 +48,37 @@
         "trackDir": "bb.models",
         "origin": "AUTHORED"
     },
+    "bb/dataaccess": {
+        "files": [
+            {
+                "relativePath": "bb.dataaccess/IBookmarkDataAccess.js",
+                "test": false,
+                "name": "IBookmarkDataAccess.js"
+            },
+            {
+                "relativePath": "bb.dataaccess/IBookmarkDataAccess.ts",
+                "test": false,
+                "name": "IBookmarkDataAccess.ts"
+            },
+            {
+                "relativePath": "bb.dataaccess/bookmarkRepository.ts",
+                "test": false,
+                "name": "bookmarkRepository.ts"
+            },
+            {
+                "relativePath": "bb.dataaccess/index.ts",
+                "test": false,
+                "name": "index.ts"
+            },
+            {
+                "relativePath": "bb.dataaccess/types.ts",
+                "test": false,
+                "name": "types.ts"
+            }
+        ],
+        "mainFile": "bb.dataaccess/index.ts",
+        "trackDir": "bb.dataaccess",
+        "origin": "AUTHORED"
+    },
     "version": "13.0.4"
 }
