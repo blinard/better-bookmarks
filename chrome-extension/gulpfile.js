@@ -2,6 +2,13 @@ var gulp = require('gulp');
 var ts = require('gulp-typescript');
 var merge = require('merge2');
 var del = require('del');
+var browserify = require('browserify');
+var tsify = require('tsify');
+var source = require('vinyl-source-stream');
+var sourcemaps = require('gulp-sourcemaps');
+var buffer = require('vinyl-buffer');
+var babelify = require('babelify');
+
 var exec = require('child_process').exec;
 var { spawn } = require('child_process');
 var tsProject = ts.createProject('tsconfig.json');
@@ -12,19 +19,44 @@ gulp.task('build:typescript', function() {
         .pipe(tsProject());
  
     return merge([
-        tsResult.dts.pipe(gulp.dest('dist')),
-        tsResult.js.pipe(gulp.dest('dist'))
+        tsResult.dts.pipe(gulp.dest('_buildtemp')),
+        tsResult.js.pipe(gulp.dest('_buildtemp'))
     ]);
 });
 
 gulp.task('copy:manifest', function() {
     return gulp.src('src/manifest.json')
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('_dist'));
 });
 
 gulp.task('copy:images', function() {
     return gulp.src('images/bb-icon.png')
-        .pipe(gulp.dest('dist'));
+        .pipe(gulp.dest('_dist'));
+});
+
+gulp.task('copy:html', function() {
+    return gulp.src('src/popup/popup.html')
+        .pipe(gulp.dest('_dist'));
+});
+
+gulp.task('bundle:scripts', function() {
+    return browserify({
+        basedir: '.',
+        debug: true,
+        cache: {},
+        packageCache: {}
+    })
+    .add('src/background.ts')
+    .plugin(tsify, { tsProject: 'tsconfig.json' })
+    .transform(babelify.configure({
+        presets: ['es2015'],
+        extensions: ['.ts']
+    }))
+    .bundle()
+    .on('error', function (error) { console.error(error.toString()); })
+    .pipe(process.stdout);    
+//    .pipe(source('bundle.js'))
+//    .pipe(gulp.dest('_dist'));
 });
 
 // gulp.task('build:options', function(cb) {
@@ -49,21 +81,25 @@ gulp.task('copy:images', function() {
 //         .pipe(gulp.dest('dist'));
 // });
 
+gulp.task('clean:buildtemp', function() {
+    return del(['_buildtemp/**/*']);
+});
+
 gulp.task('clean:dist', function() {
-    return del(['dist/**/*']);
+    return del(['_dist/**/*']);
 });
 
 // gulp.task('webpack', ['copy:manifest', 'copy:images', 'copy:options', 'copy:popup'], function (cb) {
-gulp.task('webpack', ['copy:manifest', 'copy:images'], function (cb) {
-    var child = spawn('./node_modules/.bin/webpack', { stdio: 'inherit' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
+// gulp.task('webpack', ['copy:manifest', 'copy:images'], function (cb) {
+//     var child = spawn('./node_modules/.bin/webpack', { stdio: 'inherit' });
+//     child.on('exit', function(code) {
+//         if (code !== 0) {
+//             cb('an error occurred');
+//             return;
+//         }
 
-        cb();
-    });
-});
+//         cb();
+//     });
+// });
 
-gulp.task('build', ['clean:dist', 'webpack']);
+// gulp.task('build', ['clean:dist', 'webpack']);

@@ -1,12 +1,12 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "module": "es2015",
+//        "module": "es2015",
         "moduleResolution": "node",
         "noImplicitAny": true,
-        "target": "es2015",
-//        "target": "es5",
-        "outDir": "./dist",
+//        "target": "es2015",
+        "target": "es5",
+        "outDir": "./_dist",
         "declaration": true,
         "lib": ["es6", "dom"],
         "types": ["reflect-metadata", "chrome"],

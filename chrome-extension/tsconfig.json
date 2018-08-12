@@ -5,7 +5,8 @@
         "moduleResolution": "node",
         "noImplicitAny": true,
         "target": "es2015",
-        "outDir": "./dist",
+//        "target": "es5",
+        "outDir": "./_buildtemp",
         "declaration": true,
         "lib": ["es6", "dom"],
         "types": ["reflect-metadata", "chrome"],
@@ -17,6 +18,8 @@
         "src/**/*"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "_buildtemp",
+        "_dist"
     ]
 }

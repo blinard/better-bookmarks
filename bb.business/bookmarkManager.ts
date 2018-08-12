@@ -3,7 +3,7 @@ import "reflect-metadata";
 import { BusinessTypes } from "./businessTypes";
 import { IBookmarkRepository } from "../bb.dataaccess";
 import { DataAccessTypes } from "../bb.dataaccess";
- import { IBookmark } from "../bb.models";
+import { IBookmark } from "../bb.models";
 
 export interface IBookmarkManager {
     saveBookmark(bookmark: IBookmark): void

@@ -42,6 +42,11 @@
                 "relativePath": "bb.models/omniboxObservables.ts",
                 "test": false,
                 "name": "omniboxObservables.ts"
+            },
+            {
+                "relativePath": "bb.models/tsconfig.json",
+                "test": false,
+                "name": "tsconfig.json"
             }
         ],
         "mainFile": "bb.models/index.ts",
@@ -74,6 +79,11 @@
                 "relativePath": "bb.dataaccess/index.ts",
                 "test": false,
                 "name": "index.ts"
+            },
+            {
+                "relativePath": "bb.dataaccess/tsconfig.json",
+                "test": false,
+                "name": "tsconfig.json"
             }
         ],
         "mainFile": "bb.dataaccess/index.ts",
@@ -101,6 +111,11 @@
                 "relativePath": "bb.business/index.ts",
                 "test": false,
                 "name": "index.ts"
+            },
+            {
+                "relativePath": "bb.business/tsconfig.json",
+                "test": false,
+                "name": "tsconfig.json"
             }
         ],
         "mainFile": "bb.business/index.ts",
@@ -118,6 +133,11 @@
                 "relativePath": "bb.browserfacades.chrome/index.ts",
                 "test": false,
                 "name": "index.ts"
+            },
+            {
+                "relativePath": "bb.browserfacades.chrome/tsconfig.json",
+                "test": false,
+                "name": "tsconfig.json"
             }
         ],
         "mainFile": "bb.browserfacades.chrome/index.ts",

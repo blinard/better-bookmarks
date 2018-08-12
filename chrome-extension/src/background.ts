@@ -4,7 +4,6 @@ import {IBookmarkManager} from "@bit/blinard.better-bookmarks.bb.business";
 import container from "./inversify.config";
 import "reflect-metadata";
 import { Bookmark, ISuggestResult } from "@bit/blinard.better-bookmarks.bb.models";
-// import { Bookmark, ISuggestResult } from "../../bb.models";
 import { BusinessTypes, IBrowserFacade } from "@bit/blinard.better-bookmarks.bb.business";
 
 namespace Background {
