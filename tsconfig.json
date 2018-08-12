@@ -10,12 +10,16 @@
         "lib": ["es6", "dom"],
         "types": ["reflect-metadata", "chrome"],
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true
     },
     "include": [
         "**/*"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "chrome-extension",
+        "bb.ui.options",
+        "dist"
     ]
 }

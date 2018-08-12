@@ -1,6 +1,6 @@
-import { Bookmark } from "./bookmark";
+import { IBookmark } from "./bookmark";
 import { Dictionary } from "./dictionary";
 
-export class BookmarkMap implements Dictionary<Bookmark> {
-    [k: string]: Bookmark;
+export class BookmarkMap implements Dictionary<IBookmark> {
+    [k: string]: IBookmark;
 }

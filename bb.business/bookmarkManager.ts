@@ -1,36 +1,36 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
-import { Types } from "./types";
+import { BusinessTypes } from "./businessTypes";
 import { IBookmarkRepository } from "../bb.dataaccess";
-import { Types as daTypes } from "../bb.dataaccess";
-import { Bookmark } from "../bb.models";
+import { DataAccessTypes } from "../bb.dataaccess";
+ import { IBookmark } from "../bb.models";
 
 export interface IBookmarkManager {
-    saveBookmark(bookmark: Bookmark): void
-    getBookmark(key: string): Promise<Bookmark>
-    getBookmarks(): Promise<Bookmark[]>
-    deleteBookmark(bkmark: Bookmark): Promise<boolean>
+    saveBookmark(bookmark: IBookmark): void
+    getBookmark(key: string): Promise<IBookmark>
+    getBookmarks(): Promise<IBookmark[]>
+    deleteBookmark(bkmark: IBookmark): Promise<boolean>
 }
 
 @injectable()
 export class BookmarkManager implements IBookmarkManager {
     constructor(
-        @inject(daTypes.IBookmarkRepository) private _bookmarkRepository: IBookmarkRepository) {
+        @inject(DataAccessTypes.IBookmarkRepository) private _bookmarkRepository: IBookmarkRepository) {
     }
 
-    saveBookmark(bookmark: Bookmark): void {
+    saveBookmark(bookmark: IBookmark): void {
         this._bookmarkRepository.create(bookmark);        
     }
 
-    getBookmark(key: string): Promise<Bookmark> {
+    getBookmark(key: string): Promise<IBookmark> {
         return this._bookmarkRepository.getByKey(key);
     }
 
-    getBookmarks(): Promise<Bookmark[]> {
+    getBookmarks(): Promise<IBookmark[]> {
         return this._bookmarkRepository.getAll();
     }
 
-    deleteBookmark(bkmark: Bookmark): Promise<boolean> {
+    deleteBookmark(bkmark: IBookmark): Promise<boolean> {
         return this._bookmarkRepository.delete(bkmark);
     }
 }

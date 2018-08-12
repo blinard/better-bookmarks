@@ -6,13 +6,8 @@ var exec = require('child_process').exec;
 var { spawn } = require('child_process');
 var tsProject = ts.createProject('tsconfig.json');
 
-require('../gulp.tasks/importDependency')(gulp);
 
-gulp.task('import:dependencies', ['import:models', 'import:dataaccess', 'import:business', 'import:bfchrome'], function(cb) {
-    cb();
-});
-
-gulp.task('build:typescript', ['import:dependencies'], function() {
+gulp.task('build:typescript', function() {
     var tsResult = tsProject.src()
         .pipe(tsProject());
  
@@ -58,8 +53,8 @@ gulp.task('clean:dist', function() {
     return del(['dist/**/*']);
 });
 
-// gulp.task('webpack', ['import:dependencies', 'copy:manifest', 'copy:images', 'copy:options', 'copy:popup'], function (cb) {
-gulp.task('webpack', ['import:dependencies', 'copy:manifest', 'copy:images'], function (cb) {
+// gulp.task('webpack', ['copy:manifest', 'copy:images', 'copy:options', 'copy:popup'], function (cb) {
+gulp.task('webpack', ['copy:manifest', 'copy:images'], function (cb) {
     var child = spawn('./node_modules/.bin/webpack', { stdio: 'inherit' });
     child.on('exit', function(code) {
         if (code !== 0) {

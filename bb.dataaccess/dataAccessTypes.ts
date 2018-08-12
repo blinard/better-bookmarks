@@ -1,4 +1,4 @@
-export let Types = {
+export let DataAccessTypes = {
     IBookmarkDataAccess: Symbol("IBookmarkDataAccess"),
     IBookmarkRepository: Symbol("IBookmarkRepository")
 };

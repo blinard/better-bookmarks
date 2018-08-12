@@ -1,4 +1,4 @@
-export {Bookmark} from "./bookmark";
+export {IBookmark, Bookmark} from "./bookmark";
 export {Dictionary} from "./dictionary";
 export {BookmarkMap} from "./bookmarkMap";
 export {ISuggestResult} from "./ISuggestResult";

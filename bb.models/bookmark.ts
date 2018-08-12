@@ -1,6 +1,12 @@
-export class Bookmark {
-    static hydrateNewBookmark(existingBookmark: Bookmark): Bookmark {
-        return new Bookmark(existingBookmark._key, existingBookmark._url, existingBookmark._tags);
+export interface IBookmark {
+    key: string;
+    url: string;
+    tags: string;
+}
+
+export class Bookmark implements IBookmark {
+    static hydrateNewBookmark(existingBookmark: IBookmark): IBookmark {
+        return new Bookmark(existingBookmark.key, existingBookmark.url, existingBookmark.tags);
     }
     
     constructor(private _key: string, private _url: string, private _tags?: string) {
