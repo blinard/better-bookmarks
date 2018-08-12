@@ -48,13 +48,8 @@
         "trackDir": "bb.models",
         "origin": "AUTHORED"
     },
-    "blinard.better-bookmarks/bb/dataaccess@1.0.4": {
+    "blinard.better-bookmarks/bb/dataaccess@1.0.5": {
         "files": [
-            {
-                "relativePath": "bb.dataaccess/IBookmarkDataAccess.js",
-                "test": false,
-                "name": "IBookmarkDataAccess.js"
-            },
             {
                 "relativePath": "bb.dataaccess/IBookmarkDataAccess.ts",
                 "test": false,
@@ -80,7 +75,7 @@
         "trackDir": "bb.dataaccess",
         "origin": "AUTHORED"
     },
-    "blinard.better-bookmarks/bb/business@1.0.5": {
+    "blinard.better-bookmarks/bb/business@1.0.6": {
         "files": [
             {
                 "relativePath": "bb.business/IBrowserFacade.ts",
@@ -107,7 +102,7 @@
         "trackDir": "bb.business",
         "origin": "AUTHORED"
     },
-    "blinard.better-bookmarks/bb/browserfacades-chrome@1.0.5": {
+    "blinard.better-bookmarks/bb/browserfacades-chrome@1.0.7": {
         "files": [
             {
                 "relativePath": "bb.browserfacades.chrome/chromeFacade.ts",
