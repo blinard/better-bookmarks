@@ -1,11 +1,12 @@
 {
     "compileOnSave": false,
     "compilerOptions": {
-        "module": "es2015",
+//        "module": "es2015",
+        "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": true,
-        "target": "es2015",
-//        "target": "es5",
+//        "target": "es2015",
+        "target": "es5",
         "outDir": "./_buildtemp",
         "declaration": true,
         "lib": ["es6", "dom"],

@@ -5,9 +5,6 @@ var del = require('del');
 var browserify = require('browserify');
 var tsify = require('tsify');
 var source = require('vinyl-source-stream');
-var sourcemaps = require('gulp-sourcemaps');
-var buffer = require('vinyl-buffer');
-var babelify = require('babelify');
 
 var exec = require('child_process').exec;
 var { spawn } = require('child_process');
@@ -48,15 +45,9 @@ gulp.task('bundle:scripts', function() {
     })
     .add('src/background.ts')
     .plugin(tsify, { tsProject: 'tsconfig.json' })
-    .transform(babelify.configure({
-        presets: ['es2015'],
-        extensions: ['.ts']
-    }))
     .bundle()
-    .on('error', function (error) { console.error(error.toString()); })
-    .pipe(process.stdout);    
-//    .pipe(source('bundle.js'))
-//    .pipe(gulp.dest('_dist'));
+   .pipe(source('bundle.js'))
+   .pipe(gulp.dest('_dist'));
 });
 
 // gulp.task('build:options', function(cb) {
