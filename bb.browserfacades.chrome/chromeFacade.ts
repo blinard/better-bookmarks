@@ -1,9 +1,9 @@
 import { injectable } from "inversify";
 import "reflect-metadata";
-import { IBookmarkDataAccess } from "bb.dataaccess";
+import { IBookmarkDataAccess } from "../bb.dataaccess";
 import * as Rx from "rxjs/Rx";
-import { BookmarkMap, OmniboxInputChangedData, OmniboxObservables } from "bb.models";
-import { IBrowserFacade } from "bb.business";
+import { BookmarkMap, OmniboxInputChangedData, OmniboxObservables } from "../bb.models";
+import { IBrowserFacade } from "../bb.business";
 
 @injectable()
 export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {

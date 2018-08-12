@@ -5,17 +5,22 @@
         "moduleResolution": "node",
         "noImplicitAny": true,
         "target": "es2015",
+//        "target": "es5",
         "outDir": "./dist",
         "declaration": true,
         "lib": ["es6", "dom"],
-        // "types": [],
+        "types": ["reflect-metadata", "chrome"],
         "experimentalDecorators": true,
-        "emitDecoratorMetadata": true
+        "emitDecoratorMetadata": true,
+        "skipLibCheck": true
     },
     "include": [
-        "src/**/*"
+        "**/*"
     ],
     "exclude": [
-        "node_modules"
+        "node_modules",
+        "chrome-extension",
+        "bb.ui.options",
+        "dist"
     ]
 }

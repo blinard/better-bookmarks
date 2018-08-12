@@ -256,3 +256,6 @@ paket-files/
 
 *.crx
 *.pem
+
+_dist
+_buildtemp
