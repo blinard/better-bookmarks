@@ -1,5 +1,7 @@
 {
-    "env": {},
+    "env": {
+        "compiler": "bit.envs/compilers/typescript@0.0.5"
+    },
     "dependencies": {},
     "componentsDefaultDirectory": "components/{namespace}/{name}",
     "packageManager": "npm"

@@ -1,6 +1,0 @@
-{
-  "main": "_dist/index.js",
-  "typings": "_dist/index",
-  "author": "Brad Linard",
-  "license": "ISC"
-}

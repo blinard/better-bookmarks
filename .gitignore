@@ -258,3 +258,4 @@ paket-files/
 *.pem
 
 _dist
+_buildtemp
