@@ -1,7 +1,7 @@
 export interface IBookmark {
     key: string;
     url: string;
-    tags: string;
+    tags: string | undefined;
 }
 
 export class Bookmark implements IBookmark {
@@ -20,7 +20,7 @@ export class Bookmark implements IBookmark {
         return this._url;
     }
 
-    get tags(): string {
+    get tags(): string | undefined {
         return this._tags
     }
 }

@@ -1,11 +1,11 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
 import { DataAccessTypes } from "./dataAccessTypes"
-import { IBookmark, Bookmark, BookmarkMap, Dictionary } from "../bb.models";
+import { IBookmark, Bookmark, BookmarkMap } from "../bb.models";
 import { IBookmarkDataAccess } from "./IBookmarkDataAccess";
 
 export interface IBookmarkRepository {
-    getByKey(key: string): Promise<IBookmark>
+    getByKey(key: string): Promise<IBookmark | null>
     getAll(): Promise<IBookmark[]>
     create(bookmark: IBookmark): void
     update(bookmark: IBookmark): void
@@ -14,13 +14,13 @@ export interface IBookmarkRepository {
 
 @injectable()
 export class BookmarkRepository implements IBookmarkRepository {
-    private _bookmarkMap: Promise<BookmarkMap>;
+    private _bookmarkMap: Promise<BookmarkMap> | null;
     
     constructor(
         @inject(DataAccessTypes.IBookmarkDataAccess) private _dataAccess: IBookmarkDataAccess) {
     }
 
-    getByKey(key: string): Promise<IBookmark> {
+    getByKey(key: string): Promise<IBookmark | null> {
         if (!this._bookmarkMap) {
             this._bookmarkMap = this._dataAccess.getData();
         }

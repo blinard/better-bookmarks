@@ -40,7 +40,7 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
             message: message,
             iconUrl: iconUrl || "bb-icon.png"
         };
-        chrome.notifications.create(key, opts);
+        chrome.notifications.create(key || "", opts);
     }
 
     getCurrentTabUrl(): Promise<string> {
@@ -62,7 +62,7 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
                 console.log("Current tab not found");
                 return;
             }
-            chrome.tabs.update(tabs[0].id, { url: url });
+            chrome.tabs.update(<number>tabs[0].id, { url: url });
         });
     }
 

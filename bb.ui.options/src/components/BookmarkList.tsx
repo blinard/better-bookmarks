@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Bookmark from './Bookmark';
-import { BookmarkMap } from 'bb.models';
+import { BookmarkMap } from '@bit/blinard.better-bookmarks.bb.models';
 
 export interface IBookmarkListProps {
     bookmarks: BookmarkMap

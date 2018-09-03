@@ -1,13 +1,12 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
-import { BusinessTypes } from "./businessTypes";
 import { IBookmarkRepository } from "../bb.dataaccess";
 import { DataAccessTypes } from "../bb.dataaccess";
 import { IBookmark } from "../bb.models";
 
 export interface IBookmarkManager {
     saveBookmark(bookmark: IBookmark): void
-    getBookmark(key: string): Promise<IBookmark>
+    getBookmark(key: string): Promise<IBookmark | null>
     getBookmarks(): Promise<IBookmark[]>
     deleteBookmark(bkmark: IBookmark): Promise<boolean>
 }
@@ -22,7 +21,7 @@ export class BookmarkManager implements IBookmarkManager {
         this._bookmarkRepository.create(bookmark);        
     }
 
-    getBookmark(key: string): Promise<IBookmark> {
+    getBookmark(key: string): Promise<IBookmark | null> {
         return this._bookmarkRepository.getByKey(key);
     }
 
