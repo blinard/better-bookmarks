@@ -20,7 +20,6 @@
     "exclude": [
         "node_modules",
         "chrome-extension",
-        "bb.ui.options",
         "dist"
     ]
 }

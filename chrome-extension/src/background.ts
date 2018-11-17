@@ -7,9 +7,8 @@ import { Bookmark, ISuggestResult } from "@bit/blinard.better-bookmarks.bb.model
 import { BusinessTypes, IBrowserFacade } from "@bit/blinard.better-bookmarks.bb.business";
 
 namespace Background {
-    //let chromeFacade = container.resolve(ChromeFacade);
     let chromeFacade = container.get<IBrowserFacade>(BusinessTypes.IBrowserFacade);
-    let bookmarkManager = container.get<IBookmarkManager>(BusinessTypes.IBookmarkManager); //new BookmarkManager(bookmarkRepository);
+    let bookmarkManager = container.get<IBookmarkManager>(BusinessTypes.IBookmarkManager);
 
     let omniboxObservables = chromeFacade.addOmniboxListeners();
     
