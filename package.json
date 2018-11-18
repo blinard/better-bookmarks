@@ -4,9 +4,7 @@
   "description": "Webservice",
   "main": "gulpfile.js",
   "dependencies": {
-    "auth0-chrome": "^0.1.2",
     "inversify": "^4.3.0",
-    "jwt-decode": "^2.2.0",
     "reflect-metadata": "^0.1.10",
     "rxjs": "5.4.3"
   },

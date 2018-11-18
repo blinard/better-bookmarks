@@ -30,8 +30,11 @@
     "@bit/blinard.better-bookmarks.bb.business": "^1.0.6",
     "@bit/blinard.better-bookmarks.bb.dataaccess": "^1.0.5",
     "@bit/blinard.better-bookmarks.bb.models": "^1.0.3",
+    "auth0-chrome": "^0.1.2",
     "inversify": "^4.3.0",
+    "jwt-decode": "^2.2.0",
     "reflect-metadata": "^0.1.10",
-    "rxjs": "5.4.3"
+    "rxjs": "5.4.3",
+    "string.prototype.includes": "^1.0.0"
   }
 }

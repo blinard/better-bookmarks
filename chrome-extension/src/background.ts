@@ -5,6 +5,7 @@ import container from "./inversify.config";
 import "reflect-metadata";
 import { Bookmark, ISuggestResult } from "@bit/blinard.better-bookmarks.bb.models";
 import { BusinessTypes, IBrowserFacade } from "@bit/blinard.better-bookmarks.bb.business";
+import "string.prototype.includes";
 
 namespace Background {
     let chromeFacade = container.get<IBrowserFacade>(BusinessTypes.IBrowserFacade);
