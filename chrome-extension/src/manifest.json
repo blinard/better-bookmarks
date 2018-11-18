@@ -3,18 +3,20 @@
   "description" : "Type 'bb' plus a bookmark key into the Omnibox.",
   "version": "1.0",
   "background": {
-    "scripts": ["bundle.js"]
+    "scripts": ["bundle.js", "./env.js", "node_modules/auth0-chrome/dist/auth0chrome.min.js", "./auth.listener.js"]
   },
   "omnibox": { "keyword" : "bb" },
   "browser_action": {
     "default_icon": "bb-icon.png",
-    "default_popup": "popup.html"
+    "default_popup": "browser.action.html"
   },
-  "options_page": "index.html",
+//   "options_page": "index.html",
   "permissions": [
     "activeTab",
     "storage",
-    "notifications"
+    "identity",
+    "notifications",
+    "https://*.auth0.com/*"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "manifest_version": 2
