@@ -46,6 +46,11 @@ gulp.task('copy:jwtdecode', function() {
         .pipe(gulp.dest('dist'));
 });
 
+gulp.task('copy:options', function() {
+    return gulp.src('src/options/**/*')
+        .pipe(gulp.dest('dist'));
+});
+
 gulp.task('bundle:scripts', function() {
     return browserify({
         basedir: '.',
@@ -65,7 +70,7 @@ gulp.task('clean:dist', function() {
 });
 
 gulp.task('clean', ['clean:dist']);
-gulp.task('copy:all', ['copy:html', 'copy:images', 'copy:manifest', 'copy:authlistener', 'copy:env', 'copy:browseraction', 'copy:auth0', 'copy:jwtdecode']);
+gulp.task('copy:all', ['copy:html', 'copy:images', 'copy:manifest', 'copy:authlistener', 'copy:env', 'copy:browseraction', 'copy:auth0', 'copy:jwtdecode', 'copy:options']);
 gulp.task('build', ['copy:all', 'bundle:scripts']);
 
 /* Tasks for testing/troubleshooting only */

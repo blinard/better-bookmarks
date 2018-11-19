@@ -10,6 +10,7 @@
     "default_icon": "bb-icon.png",
     "default_popup": "browser.action.html"
   },
+  "options_page": "options.html",
   "permissions": [
     "tabs",
     "activeTab",
