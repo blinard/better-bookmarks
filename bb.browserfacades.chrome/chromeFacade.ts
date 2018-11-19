@@ -11,8 +11,8 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
     }
 
     addOmniboxListeners(): OmniboxObservables {
-        let inputChangedObservable = Rx.Observable.create((observer: Rx.Observer<OmniboxInputChangedData>) => {
-            let inputChangedCallback = (text: string, suggest: (suggestions: chrome.omnibox.SuggestResult[]) => void) => {
+        var inputChangedObservable = Rx.Observable.create((observer: Rx.Observer<OmniboxInputChangedData>) => {
+            var inputChangedCallback = (text: string, suggest: (suggestions: chrome.omnibox.SuggestResult[]) => void) => {
                 observer.next(new OmniboxInputChangedData(text, suggest));
             };
 
@@ -21,8 +21,8 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
             chrome.omnibox.onInputChanged.addListener(inputChangedCallback);
         });
 
-        let inputEnteredObservable = Rx.Observable.create((observer: Rx.Observer<string>) => {
-            let inputEnteredCallback = (text: string) => {
+        var inputEnteredObservable = Rx.Observable.create((observer: Rx.Observer<string>) => {
+            var inputEnteredCallback = (text: string) => {
                 observer.next(text);
             };
 
@@ -34,7 +34,7 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
     }
 
     postNotification(title: string, message: string, key?: string, iconUrl?: string): void {
-        let opts: chrome.notifications.NotificationOptions = {
+        var opts: chrome.notifications.NotificationOptions = {
             type: "basic",
             title: title,
             message: message,
@@ -62,12 +62,12 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
                 console.log("Current tab not found");
                 return;
             }
-            chrome.tabs.update(<number>tabs[0].id, { url: url });
+            chrome.tabs.update(tabs[0].id as number, { url: url });
         });
     }
 
     getData(): Promise<BookmarkMap> {
-        let deferred = new Promise<BookmarkMap>((resolve, reject) => {
+        var deferred = new Promise<BookmarkMap>((resolve, reject) => {
             chrome.storage.local.get((bookmarkMap: BookmarkMap) => {
                 resolve(bookmarkMap);
                 //reject(chrome.runtime.lastError);
@@ -77,7 +77,7 @@ export class ChromeFacade implements IBrowserFacade, IBookmarkDataAccess {
     }
 
     setData(bookmarkMap: BookmarkMap): Promise<boolean> {
-        let deferred = new Promise<boolean>((resolve, reject) => {
+        var deferred = new Promise<boolean>((resolve, reject) => {
             chrome.storage.local.clear(() => {
                 chrome.storage.local.set(bookmarkMap, () => {
                     resolve(true);

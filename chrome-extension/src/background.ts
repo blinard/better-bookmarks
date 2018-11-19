@@ -36,7 +36,7 @@ namespace Background {
         chromeFacade.getCurrentTabUrl()
             .then((url) => {
                 bookmarkManager.saveBookmark(new Bookmark(entry, url));
-                chromeFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${entry}`, "bb-icon.png");
+                chromeFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${entry}`, entry, "bb-icon.png");
             });
     });
 

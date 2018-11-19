@@ -26,10 +26,10 @@
     "vinyl-source-stream": "^2.0.0"
   },
   "dependencies": {
-    "@bit/blinard.better-bookmarks.bb.browserfacades-chrome": "^1.0.7",
-    "@bit/blinard.better-bookmarks.bb.business": "^1.0.6",
-    "@bit/blinard.better-bookmarks.bb.dataaccess": "^1.0.5",
-    "@bit/blinard.better-bookmarks.bb.models": "^1.0.3",
+    "@bit/blinard.better-bookmarks.bb.browserfacades-chrome": "^1.0.12",
+    "@bit/blinard.better-bookmarks.bb.business": "^1.0.9",
+    "@bit/blinard.better-bookmarks.bb.dataaccess": "^1.0.8",
+    "@bit/blinard.better-bookmarks.bb.models": "^1.0.5",
     "auth0-chrome": "^0.1.2",
     "inversify": "^4.3.0",
     "jwt-decode": "^2.2.0",
