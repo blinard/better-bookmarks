@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener(function (event) {
         localStorage.authResult = JSON.stringify(authResult);
         chrome.notifications.create({
           type: 'basic',
-          iconUrl: 'icons/icon128.png',
+          iconUrl: 'bb-icon.png',
           title: 'Login Successful',
           message: 'You can use the app now'
         });
@@ -27,7 +27,7 @@ chrome.runtime.onMessage.addListener(function (event) {
           type: 'basic',
           title: 'Login Failed',
           message: err.message,
-          iconUrl: 'icons/icon128.png'
+          iconUrl: 'bb-icon.png'
         });
       });
   }
