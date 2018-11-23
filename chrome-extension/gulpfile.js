@@ -65,13 +65,27 @@ gulp.task('bundle:scripts', function() {
    .pipe(gulp.dest('dist'));
 });
 
+gulp.task('bundle:options', function() {
+    return browserify({
+        basedir: '.',
+        debug: true,
+        cache: {},
+        packageCache: {}
+    })
+    .add('src/options/options.ts')
+    .plugin(tsify, { tsProject: 'tsconfig.json' })
+    .bundle()
+   .pipe(source('options.bundle.js'))
+   .pipe(gulp.dest('dist'));
+});
+
 gulp.task('clean:dist', function() {
     return del(['dist/**/*']);
 });
 
 gulp.task('clean', ['clean:dist']);
 gulp.task('copy:all', ['copy:html', 'copy:images', 'copy:manifest', 'copy:authlistener', 'copy:env', 'copy:browseraction', 'copy:auth0', 'copy:jwtdecode', 'copy:options']);
-gulp.task('build', ['copy:all', 'bundle:scripts']);
+gulp.task('build', ['copy:all', 'bundle:scripts', 'bundle:options']);
 
 /* Tasks for testing/troubleshooting only */
 var tsProject = ts.createProject('tsconfig.json')
