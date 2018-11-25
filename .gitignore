@@ -259,3 +259,9 @@ paket-files/
 
 _dist
 _buildtemp
+
+obj
+old
+dist
+node_modules
+.cache
