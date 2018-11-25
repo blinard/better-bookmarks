@@ -3,7 +3,7 @@
   "description" : "Type 'bb' plus a bookmark key into the Omnibox.",
   "version": "1.0",
   "background": {
-    "scripts": ["omniboxListeners-bundle.js", "authEnv.js", "auth0chrome.min.js", "authListener-bundle.js"]
+    "scripts": ["authEnv.js", "backgroundServices.js", "auth0chrome.min.js"]
   },
   "omnibox": { "keyword" : "bb" },
   "browser_action": {

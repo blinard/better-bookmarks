@@ -23,7 +23,6 @@
     "@babel/preset-env": "^7.1.6",
     "gulp": "^3.9.1",
     "gulp-babel": "^8.0.0",
-    "gulp-concat": "^2.6.1",
     "gulp-sourcemaps": "^2.6.4",
     "parcel-bundler": "^1.10.3"
   },
