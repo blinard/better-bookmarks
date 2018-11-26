@@ -41,6 +41,7 @@ gulp.task("copy:authenv", function() {
 gulp.task("copy:jwtdecode", function() {
     return gulp.src("node_modules/jwt-decode/build/jwt-decode*.js")
         .pipe(gulp.dest("dist/browserAction"))
+        .pipe(gulp.dest("dist"))
 });
 
 gulp.task("copy:auth0chrome", function() {

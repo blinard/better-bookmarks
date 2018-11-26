@@ -48,8 +48,11 @@ function inputEnteredHandler(txt, inputEnteredDisposition) {
     
     browserFacade.getCurrentTabUrl()
         .then((url) => {
-            bookmarkManager.saveBookmark(new Bookmark(entry, url));
-            browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${entry}`);
+            bookmarkManager.saveBookmark(new Bookmark(entry, url))
+                .then(() => {
+                    browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${entry}`);
+                    chrome.runtime.sendMessage({ type: "bb-syncbookmarks" });
+                });
         });
 }
 

@@ -24,14 +24,21 @@ export class BookmarkManager {
     }
 
     saveBookmark(bookmark) {
-        this.getBookmarks()
+        return this.getBookmarks()
             .then((bookmarksArray) => {
                 var existingBookmark = BookmarkManager.getBookmarkFromList(bookmark.key, bookmarksArray);
-                if (!existingBookmark) {
-                    bookmark.key = bookmark.key.toLowerCase().trim();
-                    bookmarksArray.push(bookmark);
+                if (existingBookmark) {
+                    existingBookmark.url = bookmark.url;
+                    existingBookmark.tags = bookmark.tags;
+                    existingBookmark.lastModified = (new Date()).toJSON();
                     this.browserFacade.setLocalStorageData(bookmarksArray);
+                    return;
                 }
+
+                bookmark.key = bookmark.key.toLowerCase().trim();
+                bookmark.lastModified = (new Date()).toJSON();
+                bookmarksArray.push(bookmark);
+                this.browserFacade.setLocalStorageData(bookmarksArray);
             });
     }
 }
