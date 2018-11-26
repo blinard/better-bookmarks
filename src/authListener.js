@@ -6,9 +6,11 @@ export function addAuthListeners() {
 }
 
 function onMessageHandler(event) {
-    if (!event || !event.type || evnet.type !== 'authenticate') {
+    if (!event || !event.type || event.type !== 'authenticate') {
         return;
     }
+
+    var browserFacade = new BrowserFacade();
 
     // scope
     //  - openid if you want an id_token returned

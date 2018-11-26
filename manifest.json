@@ -7,10 +7,10 @@
   },
   "omnibox": { "keyword" : "bb" },
   "browser_action": {
-    "default_icon": "bb-icon.png",
-    "default_popup": "browserAction.html"
+    "default_icon": "images/bb-icon.png",
+    "default_popup": "browserAction/browserAction.html"
   },
-  "options_page": "options.html",
+  "options_page": "options/options.html",
   "permissions": [
     "tabs",
     "activeTab",

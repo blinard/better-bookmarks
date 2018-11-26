@@ -18,12 +18,8 @@
   },
   "homepage": "https://github.com/blinard/better-bookmarks#readme",
   "devDependencies": {
-    "@babel/cli": "^7.1.5",
     "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
     "gulp": "^3.9.1",
-    "gulp-babel": "^8.0.0",
-    "gulp-sourcemaps": "^2.6.4",
     "parcel-bundler": "^1.10.3"
   },
   "dependencies": {

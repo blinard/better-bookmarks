@@ -23,7 +23,7 @@ export class BrowserFacade {
             type: "basic",
             title: title,
             message: message,
-            iconUrl: iconUrl || "bb-icon.png"
+            iconUrl: iconUrl || "images/bb-icon.png"
         };
         chrome.notifications.create(key || "", opts);
     }
@@ -59,21 +59,14 @@ export class BrowserFacade {
 
     getLocalStorageData() {
         var deferred = new Promise((resolve, reject) => {
-            chrome.storage.local.get(CHROME_BOOKMARKS_KEY, (bookmarksArray) => {
-                resolve(bookmarksArray);
+            chrome.storage.local.get(CHROME_BOOKMARKS_KEY, (bookmarksObj) => {
+                resolve((bookmarksObj && bookmarksObj[CHROME_BOOKMARKS_KEY]) || []);
             });
         });
         return deferred;
     }
 
     setLocalStorageData(bookmarksArray) {
-        // var deferred = new Promise((resolve, reject) => {
-        //     chrome.storage.local.clear(() => {
-        //         chrome.storage.local.set(bookmarkMap, () => {
-        //             resolve(true);
-        //         });
-        //     });
-        // });
         var deferred = new Promise((resolve, reject) => {
             var storageShim = {};
             storageShim[CHROME_BOOKMARKS_KEY] = bookmarksArray;
