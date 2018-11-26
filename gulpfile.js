@@ -1,221 +1,55 @@
-var gulp = require('gulp');
-var del = require('del');
+var gulp = require("gulp");
 var exec = require('child_process').exec;
-var { spawn } = require('child_process');
-var runSequence = require('run-sequence');
 
-gulp.task('build:models', function(cb) {
-    var child = spawn('gulp', ['build'], { stdio: 'inherit', cwd: './bb.models' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
+function cmd(cmdString, cb) {
+    exec(cmdString, function (err, stdout, stderr) {
+        console.log(stdout);
+        console.log(stderr);
+        cb(err);
+    });
+}
 
-        cb();
-    });    
+gulp.task("build:bgservices", function (cb) {
+    cmd("node_modules/.bin/parcel build src/backgroundServices.js --out-dir dist", cb)
 });
 
-gulp.task('build:dataaccess', ['build:models'], function(cb) {
-    var child = spawn('gulp', ['build'], { stdio: 'inherit', cwd: './bb.dataaccess' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
+gulp.task("copy:browseraction", function() {
+    return gulp.src("src/browserAction/*")
+        .pipe(gulp.dest("dist/browserAction"));
 });
 
-gulp.task('build:business', ['build:models', 'build:dataaccess'], function(cb) {
-    var child = spawn('gulp', ['build'], { stdio: 'inherit', cwd: './bb.business' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
+gulp.task("copy:options", function() {
+    return gulp.src("src/options/*")
+        .pipe(gulp.dest("dist/options"));
 });
 
-gulp.task('build:bfchrome', ['build:models', 'build:dataaccess', 'build:business'], function(cb) {
-    var child = spawn('gulp', ['build'], { stdio: 'inherit', cwd: './bb.browserfacades.chrome' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
+gulp.task("copy:images", function() {
+    return gulp.src("images/*.png")
+        .pipe(gulp.dest("dist/images"))
 });
 
-gulp.task('build:chromeextension', ['build:models', 'build:dataaccess', 'build:business', 'build:bfchrome'], function(cb) {
-    var child = spawn('gulp', ['build'], { stdio: 'inherit', cwd: './chrome-extension' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
+gulp.task("copy:manifest", function() {
+    return gulp.src("manifest.json")
+        .pipe(gulp.dest("dist"))
 });
 
-gulp.task('build', ['build:chromeextension']);
-
-// Cleans
-gulp.task('clean:models', function(cb) {
-    var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './bb.models' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
+gulp.task("copy:authenv", function() {
+    return gulp.src("src/authEnv.js")
+        .pipe(gulp.dest("dist"))
 });
 
-gulp.task('clean:dataaccess', [], function(cb) {
-    var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './bb.dataaccess' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
+gulp.task("copy:jwtdecode", function() {
+    return gulp.src("node_modules/jwt-decode/build/jwt-decode*.js")
+        .pipe(gulp.dest("dist/browserAction"))
 });
 
-gulp.task('clean:business', [], function(cb) {
-    var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './bb.business' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
+gulp.task("copy:auth0chrome", function() {
+    return gulp.src("node_modules/auth0-chrome/dist/auth0chrome*.js")
+        .pipe(gulp.dest("dist"))
 });
 
-gulp.task('clean:bfchrome', [], function(cb) {
-    var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './bb.browserfacades.chrome' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
+gulp.task("build", ["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authenv"]);
 
-        cb();
-    });    
+gulp.task("clean", function(cb) {
+    cmd('rm -rf dist', cb);
 });
-
-// gulp.task('clean:uioptions', [], function(cb) {
-//     var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './bb.ui.options' });
-//     child.on('exit', function(code) {
-//         if (code !== 0) {
-//             cb('an error occurred');
-//             return;
-//         }
-
-//         cb();
-//     });    
-// });
-
-gulp.task('clean:chromeextension', [], function(cb) {
-    var child = spawn('gulp', ['clean:dist'], { stdio: 'inherit', cwd: './chrome-extension' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
-});
-
-// gulp.task('clean', ['clean:chromeextension', 'clean:uioptions', 'clean:bfchrome', 'clean:business', 'clean:dataaccess', 'clean:models']);
-gulp.task('clean', ['clean:chromeextension', 'clean:bfchrome', 'clean:business', 'clean:dataaccess', 'clean:models']);
-//end cleans
-
-//npm installs
-gulp.task('install:models', function(cb) {
-    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.models' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
-});
-
-gulp.task('install:dataaccess', [], function(cb) {
-    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.dataaccess' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
-});
-
-gulp.task('install:business', [], function(cb) {
-    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.business' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
-});
-
-gulp.task('install:bfchrome', [], function(cb) {
-    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.browserfacades.chrome' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
-});
-
-// gulp.task('install:uioptions', [], function(cb) {
-//     var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './bb.ui.options' });
-//     child.on('exit', function(code) {
-//         if (code !== 0) {
-//             cb('an error occurred');
-//             return;
-//         }
-
-//         cb();
-//     });    
-// });
-
-gulp.task('install:chromeextension', [], function(cb) {
-    var child = spawn('npm', ['install'], { stdio: 'inherit', cwd: './chrome-extension' });
-    child.on('exit', function(code) {
-        if (code !== 0) {
-            cb('an error occurred');
-            return;
-        }
-
-        cb();
-    });    
-});
-
-//gulp.task('install', ['install:chromeextension', 'install:uioptions', 'install:bfchrome', 'install:business', 'install:dataaccess', 'install:models']);
-gulp.task('install', ['install:chromeextension', 'install:bfchrome', 'install:business', 'install:dataaccess', 'install:models']);
-//end npm installs
