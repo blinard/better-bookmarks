@@ -11,6 +11,7 @@ namespace BetterBookmarks.Service.Models
 
         public string Key { get; set; }
         public string Url { get; set; }
+        public bool IsDeleted { get; set; }
         public List<string> Tags { get; set; }
         public string LastModified { get; set; }
     }

@@ -28,18 +28,20 @@ namespace BetterBookmarks.Service
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            var configAdapter = new ConfigurationAdapter(Configuration);
+            services.AddSingleton<IConfigurationAdapter>((sp) => configAdapter);
+
             services.AddAuthentication(opts => 
             {
                 opts.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(opts => 
             {
-                // TODO: Pull these in via config.
-                opts.Authority = "https://betterbookmarks.auth0.com/";
-                opts.Audience = "https://betterbookmarks.com/api";
+                opts.Authority = configAdapter.AuthConfig.Authority;
+                opts.Audience = configAdapter.AuthConfig.ValidAudience;
             });
 
-            services.AddSingleton<IConfigurationAdapter, ConfigurationAdapter>();
             services.AddSingleton<IUserRepository, UserRepository>();
         }
 
@@ -56,7 +58,8 @@ namespace BetterBookmarks.Service
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            // TODO: Add https back in
+            // app.UseHttpsRedirection();
             app.UseCors(builder => builder
                 .AllowAnyMethod()
                 .WithHeaders("authorization", "content-type", "origin", "accept")

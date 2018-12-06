@@ -5,7 +5,25 @@
    "version": "0.2.0",
    "configurations": [
         {
-            "name": ".NET Core Launch (web)",
+            "name": "Attach to BetterBookmarks.Service (Docker)",
+            "type": "coreclr",
+            "request": "attach",
+            "sourceFileMap": {
+                "/src": "${workspaceFolder}"
+            },
+            "processId" : "${command:pickRemoteProcess}",
+            "pipeTransport": {
+                "debuggerPath": "/vsdbg/vsdbg",
+                "pipeProgram": "docker",
+                "pipeCwd": "${workspaceFolder}",
+                "quoteArgs": false,
+                "pipeArgs": [
+                    "exec -i betterbookmarks-service"
+                ]
+            }
+        },
+        {
+            "name": "Launch BetterBookmarks.Service (Locally)",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",

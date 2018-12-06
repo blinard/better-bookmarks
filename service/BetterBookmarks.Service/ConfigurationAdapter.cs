@@ -5,21 +5,18 @@ namespace BetterBookmarks.Service
 {
     public class ConfigurationAdapter : IConfigurationAdapter
     {
-        private readonly IConfiguration _config;
-        
         public ConfigurationAdapter(IConfiguration config)
         {
-            _config = config;
-
-            DatabaseConfig = HydrateConfigModel<DatabaseConfig>("DatabaseConfig");
+            DatabaseConfig = HydrateConfigModel<DatabaseConfig>("DatabaseConfig", config);
+            AuthConfig = HydrateConfigModel<AuthConfig>("AuthConfig", config);
         }
 
         public DatabaseConfig DatabaseConfig { get; private set; }
+        public AuthConfig AuthConfig { get; private set; }
 
-        private T HydrateConfigModel<T>(string sectionName) where T : new()
+        private T HydrateConfigModel<T>(string sectionName, IConfiguration config) where T : new()
         {
             var configModel = new T();
-            _config.GetSection(sectionName).Bind(configModel);
             return configModel;
         }
     }

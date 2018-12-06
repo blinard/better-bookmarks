@@ -1,7 +1,10 @@
 using System;
+using System.Net;
 using System.Threading.Tasks;
 using BetterBookmarks.Service.Models;
+using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using User = BetterBookmarks.Service.Models.User;
 
 namespace BetterBookmarks.Service.Repositories
 {
@@ -28,14 +31,26 @@ namespace BetterBookmarks.Service.Repositories
             }
         }
 
-        public Task<User> GetUserAsync(string userId)
+        public async Task<User> GetUserAsync(string userId)
         {
-            throw new System.NotImplementedException();
+            var userUri = UriFactory.CreateDocumentUri(_config.DatabaseConfig.DatabaseName, _config.DatabaseConfig.CollectionName, userId);
+            try
+            {
+                return await Client.ReadDocumentAsync<User>(userUri);
+            }
+            catch(DocumentClientException dce)
+            {
+                if (dce.StatusCode == HttpStatusCode.NotFound)
+                    return null;
+
+                throw;                
+            }
         }
 
-        public Task SaveUserAsync(User user)
+        public async Task SaveUserAsync(User user)
         {
-            throw new System.NotImplementedException();
+            var userUri = UriFactory.CreateDocumentUri(_config.DatabaseConfig.DatabaseName, _config.DatabaseConfig.CollectionName, user.Id);
+            await Client.ReplaceDocumentAsync(userUri, user);
         }
     }
 }

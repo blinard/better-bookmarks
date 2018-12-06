@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
 
 namespace BetterBookmarks.Service.Models 
@@ -13,5 +14,10 @@ namespace BetterBookmarks.Service.Models
         }
 
         public List<Bookmark> Bookmarks { get; set; }
+
+        public List<Bookmark> GetNonDeletedBookmarks()
+        {
+            return Bookmarks.Where(b => !b.IsDeleted).ToList();
+        }
     }
 }
