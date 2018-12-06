@@ -20,7 +20,8 @@ function onMessageHandler(event) {
     //  - required if requesting the offline_access scope.
     let options = {
         scope: 'openid profile offline_access',
-        device: 'chrome-extension'
+        device: 'chrome-extension',
+        audience: 'https://betterbookmarks.com/api'
     };
 
     new Auth0Chrome(authEnv.AUTH0_DOMAIN, authEnv.AUTH0_CLIENT_ID)

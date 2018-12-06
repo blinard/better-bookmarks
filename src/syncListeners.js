@@ -59,6 +59,7 @@ function getCachedAccessToken() {
     const authResult = JSON.parse(localStorage.authResult || '{}');
     const token = authResult.id_token;
     // TODO: Add refresh token logic
+    // Use this as guide: https://auth0.com/docs/api-auth/tutorials/silent-authentication
     if (token && isLoggedIn(token)) {
         renderProfileView(authResult);
         return authResult.access_token;
