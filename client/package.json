@@ -4,7 +4,7 @@
   "description": "Webservice",
   "main": "index.js",
   "scripts": {
-    "build": "./node_modules/.bin/babel src -d obj",
+    "build": "gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +18,6 @@
   },
   "homepage": "https://github.com/blinard/better-bookmarks#readme",
   "devDependencies": {
-    "@babel/core": "^7.1.6",
     "gulp": "^3.9.1",
     "parcel-bundler": "^1.10.3"
   },
