@@ -2,15 +2,8 @@
 
 Webservice
 
-    Auth token exchange
     Create user
-    add bookmark
-    remove bookmark
-    edit bookmark
-    get bookmarks
     v2 - get bookmarks modified since date
-    Aspnet Core - Web API
-    Azure DocumentDB data store
 
 Website
 
@@ -18,7 +11,6 @@ Website
     Add bookmark
     Easily open bookmark in new browser window
     list, edit and delete bookmarks
-    Angular 4, Typescript, etc.
 
 Chrome Extension Ideas:
 
