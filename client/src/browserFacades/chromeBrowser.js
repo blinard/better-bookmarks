@@ -1,4 +1,5 @@
 const CHROME_BOOKMARKS_KEY = "bb-bookmarks";
+const CHROME_REFRESHTOKEN_KEY = "bb-refreshtoken";
 
 export class BrowserFacade {
 
@@ -57,7 +58,7 @@ export class BrowserFacade {
         );
     }
 
-    getLocalStorageData() {
+    getLocalBookmarksData() {
         var deferred = new Promise((resolve, reject) => {
             chrome.storage.local.get(CHROME_BOOKMARKS_KEY, (bookmarksObj) => {
                 resolve((bookmarksObj && bookmarksObj[CHROME_BOOKMARKS_KEY]) || []);
@@ -66,10 +67,34 @@ export class BrowserFacade {
         return deferred;
     }
 
-    setLocalStorageData(bookmarksArray) {
+    setLocalBookmarksData(bookmarksArray) {
         var deferred = new Promise((resolve, reject) => {
             var storageShim = {};
             storageShim[CHROME_BOOKMARKS_KEY] = bookmarksArray;
+            chrome.storage.local.set(storageShim, () => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                    return;
+                }
+
+                resolve(true);
+            });
+        });
+        return deferred;
+    }
+
+    getRefreshToken() {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get(CHROME_REFRESHTOKEN_KEY, (refreshTokenObj) => {
+                resolve((refreshTokenObj && refreshTokenObj[CHROME_REFRESHTOKEN_KEY]));
+            });
+        });
+    }
+
+    setRefreshToken(refreshToken) {
+        var deferred = new Promise((resolve, reject) => {
+            var storageShim = {};
+            storageShim[CHROME_REFRESHTOKEN_KEY] = refreshToken;
             chrome.storage.local.set(storageShim, () => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError);

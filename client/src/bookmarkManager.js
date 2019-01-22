@@ -7,7 +7,7 @@ export class BookmarkManager {
 
     //returns promise of bookmarksArray
     getBookmarks() {
-        return this.browserFacade.getLocalStorageData();
+        return this.browserFacade.getLocalBookmarksData();
     }
 
     //return promise of bookmark with key === bookmarkKey
@@ -31,14 +31,14 @@ export class BookmarkManager {
                     existingBookmark.url = bookmark.url;
                     existingBookmark.tags = bookmark.tags;
                     existingBookmark.lastModified = (new Date()).toJSON();
-                    this.browserFacade.setLocalStorageData(bookmarksArray);
+                    this.browserFacade.setLocalBookmarksData(bookmarksArray);
                     return;
                 }
 
                 bookmark.key = bookmark.key.toLowerCase().trim();
                 bookmark.lastModified = (new Date()).toJSON();
                 bookmarksArray.push(bookmark);
-                this.browserFacade.setLocalStorageData(bookmarksArray);
+                this.browserFacade.setLocalBookmarksData(bookmarksArray);
             });
     }
 }

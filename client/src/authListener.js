@@ -27,7 +27,9 @@ function onMessageHandler(event) {
     new Auth0Chrome(authEnv.AUTH0_DOMAIN, authEnv.AUTH0_CLIENT_ID)
         .authenticate(options)
         .then(function (authResult) {
+            // TODO: Store in chrome.storage rather than localStorage.
             localStorage.authResult = JSON.stringify(authResult);
+            browserFacade.setRefreshToken(authResult.refresh_token);
             browserFacade.postNotification('Login Successful', 'Nice, you\'ve logged in!');
         })
         .catch(function (err) {
