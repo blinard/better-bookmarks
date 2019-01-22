@@ -36,7 +36,7 @@ namespace BetterBookmarks.Service.Repositories
             var userUri = UriFactory.CreateDocumentUri(_config.DatabaseConfig.DatabaseName, _config.DatabaseConfig.CollectionName, userId);
             try
             {
-                return await Client.ReadDocumentAsync<User>(userUri);
+                return await Client.ReadDocumentAsync<User>(userUri, new RequestOptions() { PartitionKey = new PartitionKey(userId) });
             }
             catch(DocumentClientException dce)
             {
@@ -49,8 +49,8 @@ namespace BetterBookmarks.Service.Repositories
 
         public async Task SaveUserAsync(User user)
         {
-            var userUri = UriFactory.CreateDocumentUri(_config.DatabaseConfig.DatabaseName, _config.DatabaseConfig.CollectionName, user.Id);
-            await Client.ReplaceDocumentAsync(userUri, user);
+            var docCollectionUri = UriFactory.CreateDocumentCollectionUri(_config.DatabaseConfig.DatabaseName, _config.DatabaseConfig.CollectionName);
+            await Client.UpsertDocumentAsync(docCollectionUri, user);
         }
     }
 }

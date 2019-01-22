@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/BetterBookmarks.Service/BetterBookmarks.Service.csproj"
+                "${workspaceFolder}/BetterBookmarks.Service.sln"
             ],
             "problemMatcher": "$msCompile"
         }

@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using BetterBookmarks.Service.Models;
 using BetterBookmarks.Service.Repositories;
+using BetterBookmarks.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,10 +17,24 @@ namespace BetterBookmarks.Service.Controllers
     public class BookmarksController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
+        private readonly ISyncService _syncService;
 
-        public BookmarksController(IUserRepository userRepository) 
+        public BookmarksController(IUserRepository userRepository, ISyncService syncService) 
         {
             _userRepository = userRepository;
+            _syncService = syncService;
+        }
+
+        [HttpPost]
+        public async Task<List<Bookmark>> Sync([FromBody] List<Bookmark> bookmarks)
+        {
+            // TODO: Need to handle scenario where multiple clients sync under the same account?
+            var user = await GetUserFromRequestAsync();
+
+            user.Bookmarks = _syncService.SyncBookmarks(user.Bookmarks, bookmarks, null).ToList();
+
+            await _userRepository.SaveUserAsync(user);
+            return user.GetNonDeletedBookmarks();
         }
 
         [HttpPost]
@@ -77,7 +92,17 @@ namespace BetterBookmarks.Service.Controllers
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
 
             // Get Bookmarks for User from Cosmos DB
-            return await _userRepository.GetUserAsync(userIdClaim.Value);
+            var user = await _userRepository.GetUserAsync(userIdClaim.Value);
+            if (user == null) 
+            {
+                user = new User()
+                {
+                    Id = userIdClaim.Value,
+                    UserId = userIdClaim.Value    
+                };
+            }
+
+            return user;
         }
     }
 }
