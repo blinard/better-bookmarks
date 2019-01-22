@@ -1,6 +1,7 @@
 import {BrowserFacade} from './browserFacades/chromeBrowser';
 import {BookmarkManager} from './bookmarkManager';
 import {Bookmark} from './models/bookmark';
+import {SyncService} from './syncService';
 
 export function addOmniboxListeners() {
     var browser = new BrowserFacade();
@@ -12,6 +13,7 @@ function inputChangedHandler(txt, provideSuggestionsCallback) {
     var browserFacade = new BrowserFacade();
     var bookmarkManager = new BookmarkManager();
 
+    // TODO: Add caching for this getBookmarks call.
     bookmarkManager.getBookmarks()
     .then((bookmarks) => {
         if (!txt.startsWith("go ") || txt.length < 4) {
@@ -51,7 +53,11 @@ function inputEnteredHandler(txt, inputEnteredDisposition) {
             bookmarkManager.saveBookmark(new Bookmark(entry, url))
                 .then(() => {
                     browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${entry}`);
-                    chrome.runtime.sendMessage({ type: "bb-syncbookmarks" });
+                    bookmarkManager.getBookmarks()
+                        .then((allBookmarks) => {
+                            var syncService = new SyncService();
+                            syncService.synchronizeWithService(allBookmarks);
+                        });
                 });
         });
 }

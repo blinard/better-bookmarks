@@ -6,6 +6,7 @@ namespace BetterBookmarks.Service.Models
 {
     public class User
     {
+        [JsonProperty("id")]
         public string Id { get; set; }
         public string UserId { get; set; }
         public User() 

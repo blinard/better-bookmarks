@@ -1,6 +1,7 @@
 import {BrowserFacade} from './browserFacades/chromeBrowser';
 import {BookmarkManager} from './bookmarkManager';
 import {Bookmark} from './models/bookmark';
+import {SyncService} from './syncService';
 
 export function addSyncListeners() {
     var browserFacade = new BrowserFacade();
@@ -16,54 +17,9 @@ function onMessageHandler(event) {
     var bookmarkManager = new BookmarkManager();
     bookmarkManager.getBookmarks()
         .then((bookmarksArray) => {
-            sendSyncRequest(bookmarksArray);
+            var syncService = new SyncService();
+            syncService.synchronizeWithService(bookmarksArray);
         });
     
     return true;
-}
-
-function sendSyncRequest(bookmarksArray) {
-    const accessToken = getCachedAccessToken();
-    if (!accessToken) {
-        return;
-    }
-
-    // TODO: Swap in Url from Config.
-    var req = new Request(
-        "https://blah.blah.com/api/bookmarks/sync",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                'Authorization': `Bearer ${accessToken}`
-            },
-            body: JSON.stringify(bookmarksArray),
-            mode: "cors",
-            cache: "no-store"
-        }
-    );
-
-    fetch(req)
-        .then(resp => {
-            // TODO: Check response, pop message?
-            //resp.json()?
-        });
-}
-
-function isLoggedIn(token) {
-    // The user is logged in if their token isn't expired
-    return jwt_decode(token).exp > Date.now() / 1000;
-}
-  
-function getCachedAccessToken() {
-    const authResult = JSON.parse(localStorage.authResult || '{}');
-    const token = authResult.id_token;
-    // TODO: Add refresh token logic
-    // Use this as guide: https://auth0.com/docs/api-auth/tutorials/silent-authentication
-    if (token && isLoggedIn(token)) {
-        renderProfileView(authResult);
-        return authResult.access_token;
-    }
-
-    return undefined;
 }

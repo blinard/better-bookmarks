@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using BetterBookmarks.Service.Repositories;
+using BetterBookmarks.Service.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Protocols;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BetterBookmarks.Service
 {
@@ -31,6 +37,13 @@ namespace BetterBookmarks.Service
 
             var configAdapter = new ConfigurationAdapter(Configuration);
             services.AddSingleton<IConfigurationAdapter>((sp) => configAdapter);
+            services.AddSingleton<ISyncService, SyncService>();
+
+            Console.WriteLine($"configAdapter.AuthConfig.OpenIdConnectEndpoint: {configAdapter.AuthConfig.OpenIdConnectEndpoint}");
+            var openIdConfigMgr = new ConfigurationManager<OpenIdConnectConfiguration>(configAdapter.AuthConfig.OpenIdConnectEndpoint, new OpenIdConnectConfigurationRetriever());
+            // Warning: Making this async call synchronous b/c we need the JsonWebKeySet keys before being able to
+            //   configure the TokenValidationParams.
+            var openIdConfig = openIdConfigMgr.GetConfigurationAsync(CancellationToken.None).GetAwaiter().GetResult();
 
             services.AddAuthentication(opts => 
             {
@@ -38,8 +51,16 @@ namespace BetterBookmarks.Service
                 opts.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(opts => 
             {
-                opts.Authority = configAdapter.AuthConfig.Authority;
-                opts.Audience = configAdapter.AuthConfig.ValidAudience;
+                opts.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = configAdapter.AuthConfig.Authority,
+                    ValidAudience = configAdapter.AuthConfig.ValidAudience,
+                    IssuerSigningKeys = openIdConfig.JsonWebKeySet.GetSigningKeys()
+                };
             });
 
             services.AddSingleton<IUserRepository, UserRepository>();
@@ -63,7 +84,7 @@ namespace BetterBookmarks.Service
             app.UseCors(builder => builder
                 .AllowAnyMethod()
                 .WithHeaders("authorization", "content-type", "origin", "accept")
-                .WithOrigins("chrome-extension://dngcliokcmmkbjipofmblfebphgdlnan")
+                .WithOrigins("chrome-extension://gealdblfjnmkojlnoddecpmbaoghjlag")
             );
             app.UseAuthentication();
             app.UseMvc();
