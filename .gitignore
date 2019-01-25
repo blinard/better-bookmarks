@@ -265,3 +265,5 @@ old
 dist
 node_modules
 .cache
+client/**/*.js
+client/**/*.js.map
