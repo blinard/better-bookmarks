@@ -1,9 +1,13 @@
-import {BrowserFacade} from './browserFacades/chromeBrowser';
+import { ChromeBrowser } from './browserFacades/chromeBrowser';
+import { Bookmark } from './models/bookmark';
+import * as jwtDecode from 'jwt-decode';
+import { DecodedToken } from './types/decodedToken';
+import { authEnv } from './authEnv';
 
 // Note: This class can only function within the extension's backgroundPage (where it can access stored auth token)
 export class SyncService {
 
-    synchronizeWithService(bookmarksArray) {
+    synchronizeWithService(bookmarksArray: Array<Bookmark>) {
         this._getCachedAccessToken()
             .then((accessToken) => {
                 if (!accessToken) {
@@ -50,17 +54,17 @@ export class SyncService {
     }
 
     _getAccessTokenUsingRefreshToken() {
-        var browserFacade = new BrowserFacade();
+        var browserFacade = new ChromeBrowser();
         return browserFacade.getRefreshToken()
             .then(refreshToken => {
-                if (!refresh_token) {
+                if (!refreshToken) {
                     return Promise.resolve(undefined);
                 }
         
                 var tokReqBody = {
                     "grant_type": "refresh_token",
                     "client_id": authEnv.AUTH0_CLIENT_ID,
-                    "refresh_token": refresh_token
+                    "refresh_token": refreshToken
                 };
         
                 var req = new Request(
@@ -97,8 +101,8 @@ export class SyncService {
             });
     }
 
-    _isTokenActive(token) {
+    _isTokenActive(token: string) {
         // The user is logged in if their token isn't expired
-        return jwt_decode(token).exp > Date.now() / 1000;
+        return jwtDecode<DecodedToken>(token).exp > Date.now() / 1000;
     }
 }

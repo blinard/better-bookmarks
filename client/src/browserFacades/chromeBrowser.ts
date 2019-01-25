@@ -1,25 +1,29 @@
+import {BrowserFacade, OmniboxInputChangedCallback, OnMessageCallback, OmniboxInputEnteredCallback} from "./browserFacade";
+import { Bookmark } from "../models/bookmark";
+import { Dictionary } from "../types/dictionary";
+
 const CHROME_BOOKMARKS_KEY = "bb-bookmarks";
 const CHROME_REFRESHTOKEN_KEY = "bb-refreshtoken";
 
-export class BrowserFacade {
+export class ChromeBrowser implements BrowserFacade {
 
     // This event is fired each time the user updates the text in the omnibox,
     // as long as the extension's keyword mode is still active.
-    addOmniboxInputChangedListener(inputChangedCallback) {
+    addOmniboxInputChangedListener(inputChangedCallback: OmniboxInputChangedCallback): void {
         chrome.omnibox.onInputChanged.addListener(inputChangedCallback);
     }
 
     // This event is fired with the user accepts the input in the omnibox.
-    addOmniboxInputEnteredListener(inputEnteredCallback) {
+    addOmniboxInputEnteredListener(inputEnteredCallback: OmniboxInputEnteredCallback): void {
         chrome.omnibox.onInputEntered.addListener(inputEnteredCallback);
     }
 
-    addOnMessageListener(onMessageCallback) {
+    addOnMessageListener(onMessageCallback: OnMessageCallback): void {
         chrome.runtime.onMessage.addListener(onMessageCallback);
     }
 
     //Pushes a chrome notification
-    postNotification(title, message, key, iconUrl) {
+    postNotification(title: string, message: string, key?: string, iconUrl?: string): void {
         var opts = {
             type: "basic",
             title: title,
@@ -29,7 +33,7 @@ export class BrowserFacade {
         chrome.notifications.create(key || "", opts);
     }
 
-    getCurrentTabUrl() {
+    getCurrentTabUrl(): Promise<string | undefined> {
         return new Promise((resolve, reject) => {
             chrome.tabs.query(
                 {active: true, currentWindow: true}, 
@@ -45,21 +49,21 @@ export class BrowserFacade {
         });
     }
 
-    navigateCurrentTab(url) {
+    navigateCurrentTab(url: string): void {
         chrome.tabs.query(
             {active: true, currentWindow: true}, 
             (tabs) => {
-                if (!tabs || tabs.length === 0) {
+                if (!tabs || tabs.length === 0 || tabs[0].id === undefined) {
                     console.log("Current tab not found");
                     return;
                 }
-                chrome.tabs.update(tabs[0].id, { url: url });
+                chrome.tabs.update(<number>tabs[0].id, { url: url });
             }
         );
     }
 
-    getLocalBookmarksData() {
-        var deferred = new Promise((resolve, reject) => {
+    getLocalBookmarksData(): Promise<Array<Bookmark>> {
+        var deferred = new Promise<Array<Bookmark>>((resolve, reject) => {
             chrome.storage.local.get(CHROME_BOOKMARKS_KEY, (bookmarksObj) => {
                 resolve((bookmarksObj && bookmarksObj[CHROME_BOOKMARKS_KEY]) || []);
             });
@@ -67,10 +71,10 @@ export class BrowserFacade {
         return deferred;
     }
 
-    setLocalBookmarksData(bookmarksArray) {
-        var deferred = new Promise((resolve, reject) => {
-            var storageShim = {};
-            storageShim[CHROME_BOOKMARKS_KEY] = bookmarksArray;
+    setLocalBookmarksData(bookmarksArray: Array<Bookmark>): Promise<boolean | chrome.runtime.LastError> {
+        var deferred = new Promise<boolean | chrome.runtime.LastError>((resolve, reject) => {
+            let storageShim: Dictionary<Array<Bookmark>> = {};
+            storageShim[CHROME_BOOKMARKS_KEY] = (<any>bookmarksArray);
             chrome.storage.local.set(storageShim, () => {
                 if (chrome.runtime.lastError) {
                     reject(chrome.runtime.lastError);
@@ -83,7 +87,7 @@ export class BrowserFacade {
         return deferred;
     }
 
-    getRefreshToken() {
+    getRefreshToken(): Promise<string | undefined> {
         return new Promise((resolve, reject) => {
             chrome.storage.local.get(CHROME_REFRESHTOKEN_KEY, (refreshTokenObj) => {
                 resolve((refreshTokenObj && refreshTokenObj[CHROME_REFRESHTOKEN_KEY]));
@@ -91,9 +95,9 @@ export class BrowserFacade {
         });
     }
 
-    setRefreshToken(refreshToken) {
-        var deferred = new Promise((resolve, reject) => {
-            var storageShim = {};
+    setRefreshToken(refreshToken: string): Promise<boolean | chrome.runtime.LastError> {
+        var deferred = new Promise<boolean | chrome.runtime.LastError>((resolve, reject) => {
+            let storageShim: Dictionary<string> = {};
             storageShim[CHROME_REFRESHTOKEN_KEY] = refreshToken;
             chrome.storage.local.set(storageShim, () => {
                 if (chrome.runtime.lastError) {

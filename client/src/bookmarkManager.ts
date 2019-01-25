@@ -1,29 +1,31 @@
-import {BrowserFacade} from './browserFacades/chromeBrowser';
+import { BrowserFacade } from './browserFacades/browserFacade';
+import { ChromeBrowser } from './browserFacades/chromeBrowser';
+import { Bookmark } from './models/bookmark';
 
 export class BookmarkManager {
+    browserFacade: BrowserFacade;
     constructor() {
-        this.browserFacade = new BrowserFacade();
+        // TODO: Inject as BrowserFacade - define ChromeBrowser in Ioc container?
+        this.browserFacade = new ChromeBrowser();
     }
 
-    //returns promise of bookmarksArray
     getBookmarks() {
         return this.browserFacade.getLocalBookmarksData();
     }
 
-    //return promise of bookmark with key === bookmarkKey
-    getBookmark(bookmarkKey) {
+    getBookmark(bookmarkKey: string) {
         return this.getBookmarks()
             .then((bookmarksArray) => {
                 return BookmarkManager.getBookmarkFromList(bookmarkKey, bookmarksArray);
             });
     }
 
-    static getBookmarkFromList(bookmarkKey, bookmarksArray) {
+    static getBookmarkFromList(bookmarkKey: string, bookmarksArray: Array<Bookmark>) {
         var normalizedKey = bookmarkKey.toLowerCase().trim();
         return bookmarksArray.find((bkmk) => bkmk.key.toLowerCase().trim() === normalizedKey);
     }
 
-    saveBookmark(bookmark) {
+    saveBookmark(bookmark: Bookmark) {
         return this.getBookmarks()
             .then((bookmarksArray) => {
                 var existingBookmark = BookmarkManager.getBookmarkFromList(bookmark.key, bookmarksArray);

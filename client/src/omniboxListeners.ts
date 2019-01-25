@@ -1,26 +1,27 @@
-import {BrowserFacade} from './browserFacades/chromeBrowser';
-import {BookmarkManager} from './bookmarkManager';
-import {Bookmark} from './models/bookmark';
-import {SyncService} from './syncService';
+import { ChromeBrowser } from './browserFacades/chromeBrowser';
+import { BookmarkManager } from './bookmarkManager';
+import { Bookmark } from './models/bookmark';
+import { SyncService } from './syncService';
+import { OmniboxProvideSuggestionsCallback, BrowserFacade } from './browserFacades/browserFacade';
 
 export function addOmniboxListeners() {
-    var browser = new BrowserFacade();
+    var browser = new ChromeBrowser();
     browser.addOmniboxInputChangedListener(inputChangedHandler);
     browser.addOmniboxInputEnteredListener(inputEnteredHandler);
 }
 
-function inputChangedHandler(txt, provideSuggestionsCallback) {
-    var browserFacade = new BrowserFacade();
+function inputChangedHandler(text: string, provideSuggestionsCallback: OmniboxProvideSuggestionsCallback): void {
+    var browserFacade = new ChromeBrowser();
     var bookmarkManager = new BookmarkManager();
 
     // TODO: Add caching for this getBookmarks call.
     bookmarkManager.getBookmarks()
     .then((bookmarks) => {
-        if (!txt.startsWith("go ") || txt.length < 4) {
+        if (!text.startsWith("go ") || text.length < 4) {
             return;
         }
 
-        var inputText = txt.replace("go ", "");
+        var inputText = text.replace("go ", "");
 
         // TODO: Tweak order of suggestions based on closest match
         // simple 2-pass algorithm for now (first check for startsWith, second for includes and not already in the list).
@@ -36,13 +37,13 @@ function inputChangedHandler(txt, provideSuggestionsCallback) {
     });
 }
 
-function inputEnteredHandler(txt, inputEnteredDisposition) {
-    var browserFacade = new BrowserFacade();
+function inputEnteredHandler(text: string, disposition: chrome.omnibox.OnInputEnteredDisposition): void {
+    var browserFacade = new ChromeBrowser();
     var bookmarkManager = new BookmarkManager();
 
     // inputEnteredDisposition could be used to control url navigation tab behavior (currentTab, newForegroundTab, etc)
     // See: https://developer.chrome.com/extensions/omnibox#type-OnInputEnteredDisposition
-    var entry = txt.toLowerCase().trim();
+    var entry = text.toLowerCase().trim();
     if (entry.startsWith("go ")) {
         performGoNavigation(entry, browserFacade, bookmarkManager);
         return;
@@ -50,6 +51,11 @@ function inputEnteredHandler(txt, inputEnteredDisposition) {
     
     browserFacade.getCurrentTabUrl()
         .then((url) => {
+            // TODO: Display error?
+            if (!url) {
+                return;
+            }
+
             bookmarkManager.saveBookmark(new Bookmark(entry, url))
                 .then(() => {
                     browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${entry}`);
@@ -62,7 +68,7 @@ function inputEnteredHandler(txt, inputEnteredDisposition) {
         });
 }
 
-function performGoNavigation(entry, browserFacade, bookmarkManager) {
+function performGoNavigation(entry: string, browserFacade: BrowserFacade, bookmarkManager: BookmarkManager) {
     var key = entry.replace("go ", "");
     bookmarkManager.getBookmark(key)
         .then((bookmark) => {

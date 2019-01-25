@@ -1,16 +1,18 @@
-import {BrowserFacade} from './browserFacades/chromeBrowser';
+import { ChromeBrowser } from './browserFacades/chromeBrowser';
+import { authEnv } from './authEnv';
+import { Auth0Chrome } from './typings/auth0-chrome';
 
 export function addAuthListeners() {
-    var browserFacade = new BrowserFacade();
+    var browserFacade = new ChromeBrowser();
     browserFacade.addOnMessageListener(onMessageHandler);
 }
 
-function onMessageHandler(event) {
+function onMessageHandler(event: any) {
     if (!event || !event.type || event.type !== 'authenticate') {
         return;
     }
 
-    var browserFacade = new BrowserFacade();
+    var browserFacade = new ChromeBrowser();
 
     // scope
     //  - openid if you want an id_token returned
@@ -29,7 +31,7 @@ function onMessageHandler(event) {
         .then(function (authResult) {
             // TODO: Store in chrome.storage rather than localStorage.
             localStorage.authResult = JSON.stringify(authResult);
-            browserFacade.setRefreshToken(authResult.refresh_token);
+            browserFacade.setRefreshToken(<string>authResult.refresh_token);
             browserFacade.postNotification('Login Successful', 'Nice, you\'ve logged in!');
         })
         .catch(function (err) {

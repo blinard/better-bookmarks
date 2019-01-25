@@ -18,11 +18,14 @@
   },
   "homepage": "https://github.com/blinard/better-bookmarks#readme",
   "devDependencies": {
+    "@types/chrome": "0.0.77",
+    "@types/jwt-decode": "^2.2.1",
     "gulp": "^3.9.1",
     "parcel-bundler": "^1.10.3"
   },
   "dependencies": {
     "auth0-chrome": "^0.1.2",
-    "jwt-decode": "^2.2.0"
+    "jwt-decode": "^2.2.0",
+    "typescript": "^3.2.4"
   }
 }
