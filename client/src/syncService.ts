@@ -1,8 +1,11 @@
+/// <reference types="jwt-decode" />
+
 import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { Bookmark } from './models/bookmark';
-import * as jwtDecode from 'jwt-decode';
 import { DecodedToken } from './types/decodedToken';
 import { authEnv } from './authEnv';
+// Note: Have trouble with jwt_decode if I import it here and rely on the Parcel bundling.
+// Falling back to loading it directly through the manifest for now.
 
 // Note: This class can only function within the extension's backgroundPage (where it can access stored auth token)
 export class SyncService {
@@ -16,7 +19,7 @@ export class SyncService {
             
                 // TODO: Swap in Url from Config.
                 var req = new Request(
-                    "https://e0a13859.ngrok.io/api/bookmarks/sync",
+                    "https://53d990b8.ngrok.io/api/bookmarks/sync",
                     {
                         method: "POST",
                         headers: {
@@ -103,6 +106,7 @@ export class SyncService {
 
     _isTokenActive(token: string) {
         // The user is logged in if their token isn't expired
-        return jwtDecode<DecodedToken>(token).exp > Date.now() / 1000;
+        let decodedToken = <DecodedToken> jwt_decode(token);
+        return decodedToken.exp > Date.now() / 1000;
     }
 }

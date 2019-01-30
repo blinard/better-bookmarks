@@ -10,7 +10,7 @@ function cmd(cmdString, cb) {
 }
 
 gulp.task("build:bgservices", function (cb) {
-    cmd("node_modules/.bin/parcel build src/backgroundServices.js --out-dir dist", cb)
+    cmd("node_modules/.bin/parcel build src/backgroundServices.ts --out-dir dist", cb)
 });
 
 gulp.task("copy:browseraction", function() {
@@ -35,7 +35,7 @@ gulp.task("copy:manifest", function() {
 
 gulp.task("copy:authenv", function() {
     return gulp.src("src/authEnv.js")
-        .pipe(gulp.dest("dist"))
+        .pipe(gulp.dest("dist/browserAction"))
 });
 
 gulp.task("copy:jwtdecode", function() {
