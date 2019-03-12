@@ -6,11 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using BetterBookmarks.Service.Repositories;
 using BetterBookmarks.Service.Services;
+using BetterBookmarks.Service.Adapters;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Documents;
+using Microsoft.Azure.Documents.Client;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,6 +32,7 @@ namespace BetterBookmarks.Service
         }
 
         public IConfiguration Configuration { get; }
+        public ConfigurationAdapter ConfigAdapter { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,8 +40,15 @@ namespace BetterBookmarks.Service
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             var configAdapter = new ConfigurationAdapter(Configuration);
-            services.AddSingleton<IConfigurationAdapter>((sp) => configAdapter);
+            ConfigAdapter = configAdapter;
+            services.AddSingleton<IConfigurationAdapter>(sp => configAdapter);
             services.AddSingleton<ISyncService, SyncService>();
+            services.AddSingleton<Lazy<IDocumentClient>>(sp => 
+                new Lazy<IDocumentClient>(() => {
+                    return new DocumentClient(new Uri(configAdapter.DatabaseConfig.Endpoint), configAdapter.DatabaseConfig.AuthKey);
+                    // TODO: Create DB and Collection if not exists?
+                })
+            );
 
             Console.WriteLine($"configAdapter.AuthConfig.OpenIdConnectEndpoint: {configAdapter.AuthConfig.OpenIdConnectEndpoint}");
             var openIdConfigMgr = new ConfigurationManager<OpenIdConnectConfiguration>(configAdapter.AuthConfig.OpenIdConnectEndpoint, new OpenIdConnectConfigurationRetriever());
@@ -84,7 +95,7 @@ namespace BetterBookmarks.Service
             app.UseCors(builder => builder
                 .AllowAnyMethod()
                 .WithHeaders("authorization", "content-type", "origin", "accept")
-                .WithOrigins("chrome-extension://gealdblfjnmkojlnoddecpmbaoghjlag")
+                .WithOrigins(ConfigAdapter.AuthConfig.AllowedOrigins.Split(','))
             );
             app.UseAuthentication();
             app.UseMvc();

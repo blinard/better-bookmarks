@@ -267,3 +267,12 @@ node_modules
 .cache
 client/**/*.js
 client/**/*.js.map
+
+**/terraform.tfvars
+**/.terraform
+**/.terraform.tfstate*
+**/terraform.tfstate
+**/private_ssh_key
+**/secrets
+**/aks-cluster-creation
+

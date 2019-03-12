@@ -37,6 +37,7 @@ namespace BetterBookmarks.Service.Controllers
             return user.GetNonDeletedBookmarks();
         }
 
+/* - Regular CRUD operations not in use yet.
         [HttpPost]
         public async Task<List<Bookmark>> Create([FromBody] Bookmark bookmark)
         {
@@ -86,6 +87,7 @@ namespace BetterBookmarks.Service.Controllers
             await _userRepository.SaveUserAsync(user);
             return user.GetNonDeletedBookmarks();
         }
+*/
 
         private async Task<User> GetUserFromRequestAsync()
         {

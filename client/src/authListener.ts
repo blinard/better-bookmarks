@@ -25,7 +25,7 @@ function onMessageHandler(event: any) {
     let options = {
         scope: 'openid profile offline_access',
         device: 'chrome-extension',
-        audience: 'https://betterbookmarks.com/api'
+        audience: authEnv.AUDIENCE
     };
 
     new Auth0Chrome(authEnv.AUTH0_DOMAIN, authEnv.AUTH0_CLIENT_ID)

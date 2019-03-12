@@ -19,7 +19,7 @@ export class SyncService {
             
                 // TODO: Swap in Url from Config.
                 var req = new Request(
-                    "https://53d990b8.ngrok.io/api/bookmarks/sync",
+                    authEnv.SYNC_ENDPOINT,
                     {
                         method: "POST",
                         headers: {

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using BetterBookmarks.Service.Models;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using BetterBookmarks.Service.Adapters;
 using User = BetterBookmarks.Service.Models.User;
 
 namespace BetterBookmarks.Service.Repositories
@@ -11,19 +12,15 @@ namespace BetterBookmarks.Service.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly IConfigurationAdapter _config;
-        private Lazy<DocumentClient> _client;
+        private readonly Lazy<IDocumentClient> _client;
 
-        public UserRepository(IConfigurationAdapter config)
+        public UserRepository(IConfigurationAdapter config, Lazy<IDocumentClient> client)
         {
             _config = config;
-
-            _client = new Lazy<DocumentClient>(() => {
-                return new DocumentClient(new Uri(_config.DatabaseConfig.Endpoint), _config.DatabaseConfig.AuthKey);
-                // TODO: Create DB and Collection if not exists?
-            });
+            _client = client;
         }
 
-        private DocumentClient Client
+        private IDocumentClient Client
         {
             get
             {

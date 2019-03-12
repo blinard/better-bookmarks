@@ -42,10 +42,10 @@ namespace BetterBookmarks.Service.Services
                     continue;
                 }
 
-                // providedBookmark can only be an update (or delete) if it's lastModifiedDate is > existingBookmark's lastModifiedDate
+                // Edge case - existingBookmarks should never have a null LastModifiedDate.
+                // If they do...assume the incoming changes are most recent
                 if (existingBookmark.LastModifiedDate == null)
                 {
-                    // Edge case - existingBookmarks should never have a null LastModifiedDate.
                     existingBookmark.CopyValuesFrom(providedBookmark);
                     continue;
                 }
@@ -54,6 +54,7 @@ namespace BetterBookmarks.Service.Services
                 if (providedBookmark.LastModifiedDate == null)
                     continue;
 
+                // providedBookmark can only be an update (or delete) if its lastModifiedDate is > existingBookmark's lastModifiedDate
                 if (providedBookmark.LastModifiedDate > existingBookmark.LastModifiedDate)
                 {
                     existingBookmark.CopyValuesFrom(providedBookmark);

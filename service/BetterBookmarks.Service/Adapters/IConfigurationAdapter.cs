@@ -1,6 +1,6 @@
 using BetterBookmarks.Service.Models.Configs;
 
-namespace BetterBookmarks.Service
+namespace BetterBookmarks.Service.Adapters
 {
     public interface IConfigurationAdapter
     {

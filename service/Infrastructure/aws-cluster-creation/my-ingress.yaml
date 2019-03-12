@@ -1,0 +1,22 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+   name: spike-webapp-ingress
+   annotations:
+      kubernetes.io/ingress.class: nginx
+      certmanager.k8s.io/cluster-issuer: letsencrypt-production
+      kubernetes.io/tls-acme: "true"
+spec:
+   rules:
+   -  host: api.better-bookmarks.com
+      http:
+         paths:
+         -  path: /
+            backend:
+               serviceName: spike-webapp-service
+               servicePort: 8080
+   tls:
+   -  secretName: tls-production-cert
+      hosts:
+      -  api.better-bookmarks.com
+

@@ -5,5 +5,6 @@ namespace BetterBookmarks.Service.Models.Configs
         public string Authority { get; set; }
         public string ValidAudience { get; set; }
         public string OpenIdConnectEndpoint { get; set; }
+        public string AllowedOrigins {get; set; }
     }
 }

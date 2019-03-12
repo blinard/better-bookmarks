@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterBookmarks.Service", "BetterBookmarks.Service\BetterBookmarks.Service.csproj", "{79D922E5-5FBF-4987-A40B-BBB682EC317B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BetterBookmarks.Service.UnitTests", "BetterBookmarks.Service.UnitTests\BetterBookmarks.Service.UnitTests.csproj", "{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,17 @@ Global
 		{79D922E5-5FBF-4987-A40B-BBB682EC317B}.Release|x64.Build.0 = Release|Any CPU
 		{79D922E5-5FBF-4987-A40B-BBB682EC317B}.Release|x86.ActiveCfg = Release|Any CPU
 		{79D922E5-5FBF-4987-A40B-BBB682EC317B}.Release|x86.Build.0 = Release|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Debug|x64.Build.0 = Debug|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Debug|x86.Build.0 = Debug|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Release|x64.ActiveCfg = Release|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Release|x64.Build.0 = Release|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Release|x86.ActiveCfg = Release|Any CPU
+		{1CA8FB30-F4D8-4A7E-A737-0FBB6A1BE456}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,7 @@
 using BetterBookmarks.Service.Models.Configs;
 using Microsoft.Extensions.Configuration;
 
-namespace BetterBookmarks.Service
+namespace BetterBookmarks.Service.Adapters
 {
     public class ConfigurationAdapter : IConfigurationAdapter
     {

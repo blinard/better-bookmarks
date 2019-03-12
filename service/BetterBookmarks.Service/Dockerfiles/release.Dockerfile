@@ -1,11 +1,6 @@
 FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends unzip procps \
-    && rm -rf /var/lib/apt/lists/* \
-    && curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l /vsdbg
 EXPOSE 80
-EXPOSE 443
 
 FROM microsoft/dotnet:2.2-sdk AS build
 WORKDIR /src

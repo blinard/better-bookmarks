@@ -19,6 +19,11 @@ namespace BetterBookmarks.Service.Models
 
         public void CopyValuesFrom(Bookmark incomingBookmark)
         {
+            if (incomingBookmark == null)
+            {
+                throw new ArgumentNullException(nameof(incomingBookmark));
+            }
+            
             Key = incomingBookmark.Key.Trim();
             Url = incomingBookmark.Url;
             IsDeleted = incomingBookmark.IsDeleted;

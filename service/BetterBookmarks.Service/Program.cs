@@ -19,6 +19,14 @@ namespace BetterBookmarks.Service
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+                .ConfigureAppConfiguration((ctx, configBuilder) => {
+                    configBuilder
+                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile("appsettings.secrets.json", optional: true, reloadOnChange: true)
+                        .AddCommandLine(args)
+                        .AddEnvironmentVariables(prefix: "BETTERBOOKMARKS_");
+                })
                 .UseStartup<Startup>();
     }
 }
