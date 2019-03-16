@@ -1,7 +1,7 @@
 apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-   name: spike-webapp-ingress
+   name: bb-ingress
    annotations:
       kubernetes.io/ingress.class: nginx
       certmanager.k8s.io/cluster-issuer: letsencrypt-production
@@ -11,9 +11,9 @@ spec:
    -  host: api.better-bookmarks.com
       http:
          paths:
-         -  path: /
+         -  path: /bookmarks/
             backend:
-               serviceName: spike-webapp-service
+               serviceName: bb-service
                servicePort: 8080
    tls:
    -  secretName: tls-production-cert

@@ -21,6 +21,7 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using Microsoft.IdentityModel.Tokens;
+using BetterBookmarks.Service.Models.Configs;
 
 namespace BetterBookmarks.Service
 {
@@ -39,7 +40,9 @@ namespace BetterBookmarks.Service
         {
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            var configAdapter = new ConfigurationAdapter(Configuration);
+            var dbConfig = new DatabaseConfig(Configuration);
+            var authConfig = new AuthConfig(Configuration);
+            var configAdapter = new ConfigurationAdapter(dbConfig, authConfig);
             ConfigAdapter = configAdapter;
             services.AddSingleton<IConfigurationAdapter>(sp => configAdapter);
             services.AddSingleton<ISyncService, SyncService>();

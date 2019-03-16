@@ -1,10 +1,43 @@
+using Microsoft.Extensions.Configuration;
+
 namespace BetterBookmarks.Service.Models.Configs
 {
-    public class DatabaseConfig
+    public class DatabaseConfig : ConfigBase
     {
-        public string Endpoint { get; set; }
-        public string AuthKey { get; set; } // TODO: Move this into Local Dev Secret Storage
-        public string DatabaseName { get; set; }
-        public string CollectionName { get; set; }
+        public DatabaseConfig(IConfiguration config) : base(config)
+        {
+        }
+
+        public string Endpoint
+        { 
+            get 
+            {
+                return GetConfigValue(nameof(DatabaseConfig), nameof(Endpoint));
+            }
+        }
+
+        public string AuthKey
+        { 
+            get 
+            {
+                return GetConfigValue(nameof(DatabaseConfig), nameof(AuthKey));
+            }
+        }
+
+        public string DatabaseName
+        { 
+            get 
+            {
+                return GetConfigValue(nameof(DatabaseConfig), nameof(DatabaseName));
+            }
+        }
+        
+        public string CollectionName
+        { 
+            get 
+            {
+                return GetConfigValue(nameof(DatabaseConfig), nameof(CollectionName));
+            }
+        }
     }
 }

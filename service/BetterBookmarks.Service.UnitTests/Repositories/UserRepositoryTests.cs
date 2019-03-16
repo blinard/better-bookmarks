@@ -8,6 +8,7 @@ using BetterBookmarks.Service.Repositories;
 using BetterBookmarks.Service.UnitTests.Factories;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 using User = BetterBookmarks.Service.Models.User;
@@ -20,14 +21,29 @@ namespace BetterBookmarks.Service.UnitTests.Repositories
         private readonly Mock<IDocumentClient> _mockDocumentClient;
         private readonly IUserRepository _userRepository;
         private readonly Service.Models.User _fakeUser;
+        private readonly Mock<IConfiguration> _mockConfiguration;
         
         public UserRepositoryTests()
         {
             _fakeUser = new Service.Models.User() {Id = "FakeId", UserId = "FakeUserId"};
             
+            _mockConfiguration = new Mock<IConfiguration>();
+            _mockConfiguration
+                .SetupGet(o => o[It.Is<string>(s => s == "DatabaseConfig:AuthKey")])
+                .Returns("FakeAuthKey");
+            _mockConfiguration
+                .SetupGet(o => o[It.Is<string>(s => s == "DatabaseConfig:CollectionName")])
+                .Returns("FakeCollectionName");
+            _mockConfiguration
+                .SetupGet(o => o[It.Is<string>(s => s == "DatabaseConfig:DatabaseName")])
+                .Returns("FakeDatabaseName");
+            _mockConfiguration
+                .SetupGet(o => o[It.Is<string>(s => s == "DatabaseConfig:Endpoint")])
+                .Returns("FakeEndpoint");
+
             _mockConfigurationAdapter = new Mock<IConfigurationAdapter>();
             _mockConfigurationAdapter.SetupGet(o => o.DatabaseConfig)
-                .Returns(new DatabaseConfig() { AuthKey = "FakeAuthKey", CollectionName = "FakeCollectionName", DatabaseName = "FakeDatabaseName", Endpoint = "FakeEndpoint" });
+                .Returns(new DatabaseConfig(_mockConfiguration.Object));
             
             _mockDocumentClient = new Mock<IDocumentClient>();
             _userRepository = new UserRepository(_mockConfigurationAdapter.Object, new Lazy<IDocumentClient>(() => _mockDocumentClient.Object));

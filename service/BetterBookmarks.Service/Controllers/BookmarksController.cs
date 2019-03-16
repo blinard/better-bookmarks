@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BetterBookmarks.Service.Controllers
 {
-    [Route("api/[controller]/[action]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class BookmarksController : ControllerBase

@@ -1,0 +1,48 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: bb-deployment
+  labels:
+    app: better-bookmarks
+    env: prod
+spec:
+  replicas: 2
+  template: 
+    metadata:
+      labels:
+        app: better-bookmarks
+        env: prod
+    spec:
+      containers:
+      - name: bb-container
+        image: blinard/better-bookmarks:1.4
+        ports:
+        - containerPort: 80
+        env:
+        - name: "ASPNETCORE_ENVIRONMENT"
+          value: "Production"
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+          initialDelaySeconds: 3
+          periodSeconds: 3          
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 80
+            httpHeaders:
+            - name: Custom-Header
+              value: Awesome
+          initialDelaySeconds: 3
+          periodSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+      volumes:
+      - name: secrets
+        secret:
+          secretName: secret-bb-appsettings

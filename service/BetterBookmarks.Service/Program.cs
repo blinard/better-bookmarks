@@ -23,7 +23,7 @@ namespace BetterBookmarks.Service
                     configBuilder
                         .SetBasePath(Directory.GetCurrentDirectory())
                         .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                        .AddJsonFile("appsettings.secrets.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile("secrets/appsettings.secrets.json", optional: true, reloadOnChange: true)
                         .AddCommandLine(args)
                         .AddEnvironmentVariables(prefix: "BETTERBOOKMARKS_");
                 })

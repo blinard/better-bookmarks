@@ -16,4 +16,4 @@ RUN dotnet publish "BetterBookmarks.Service.csproj" -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "BetterBookmarks.Service.dll"]
+ENTRYPOINT ["dotnet", "BetterBookmarks.Service.dll", "--urls=http://0.0.0.0:80"]
