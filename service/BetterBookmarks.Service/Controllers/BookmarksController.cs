@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BetterBookmarks.Service.Controllers
 {
-    [Route("[controller]/[action]")]
     [ApiController]
     [Authorize]
     public class BookmarksController : ControllerBase
@@ -25,7 +24,16 @@ namespace BetterBookmarks.Service.Controllers
             _syncService = syncService;
         }
 
+        [HttpGet] 
+        [Route("bookmarks")]
+        public async Task<List<Bookmark>> Read()
+        {
+            var user = await GetUserFromRequestAsync();
+            return user.GetNonDeletedBookmarks();
+        }
+
         [HttpPost]
+        [Route("bookmarks/sync")]
         public async Task<List<Bookmark>> Sync([FromBody] List<Bookmark> bookmarks)
         {
             // TODO: Need to handle scenario where multiple clients sync under the same account?
@@ -45,14 +53,6 @@ namespace BetterBookmarks.Service.Controllers
             user.Bookmarks.Add(bookmark);
 
             await _userRepository.SaveUserAsync(user);
-            return user.GetNonDeletedBookmarks();
-        }
-
-        [HttpGet] 
-        [Route("api/bookmarks")]
-        public async Task<List<Bookmark>> Read()
-        {
-            var user = await GetUserFromRequestAsync();
             return user.GetNonDeletedBookmarks();
         }
 
@@ -97,6 +97,7 @@ namespace BetterBookmarks.Service.Controllers
             var user = await _userRepository.GetUserAsync(userIdClaim.Value);
             if (user == null) 
             {
+                Console.WriteLine($"User ({userIdClaim.Value}) not found. Creating a new user.");
                 user = new User()
                 {
                     Id = userIdClaim.Value,

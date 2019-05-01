@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: bb-container
-        image: blinard/better-bookmarks:1.4
+        image: blinard/better-bookmarks:1.9
         ports:
         - containerPort: 80
         env:

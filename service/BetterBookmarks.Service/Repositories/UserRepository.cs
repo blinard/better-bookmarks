@@ -33,7 +33,7 @@ namespace BetterBookmarks.Service.Repositories
             var userUri = UriFactory.CreateDocumentUri(_config.DatabaseConfig.DatabaseName, _config.DatabaseConfig.CollectionName, userId);
             try
             {
-                return await Client.ReadDocumentAsync<User>(userUri, new RequestOptions() { PartitionKey = new PartitionKey(userId) });
+                return await Client.ReadDocumentAsync<User>(userUri, new RequestOptions() { PartitionKey = new PartitionKey("user") });
             }
             catch(DocumentClientException dce)
             {

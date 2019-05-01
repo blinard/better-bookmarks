@@ -1,9 +1,7 @@
-/// <reference path="./typings/auth0-chrome.d.ts" />
-
 import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { authEnv } from './authEnv';
-// Note: Having trouble with Parcel and the bundling of Auth0Chrome if I import it here.
-// So falling back to typing reference and manually loading the auth0chrome.js through the manifest.
+import Auth0Chrome from 'auth0-chrome';
+
 export function addAuthListeners() {
     var browserFacade = new ChromeBrowser();
     browserFacade.addOnMessageListener(onMessageHandler);

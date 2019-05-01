@@ -11,7 +11,7 @@ spec:
    -  host: api.better-bookmarks.com
       http:
          paths:
-         -  path: /bookmarks/
+         -  path: /bookmarks
             backend:
                serviceName: bb-service
                servicePort: 8080
