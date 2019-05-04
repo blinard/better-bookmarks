@@ -9,9 +9,11 @@ namespace BetterBookmarks.Service.Models
         [JsonProperty("id")]
         public string Id { get; set; }
         public string UserId { get; set; }
+        public string Type { get; set; }
         public User() 
         {
             Bookmarks = new List<Bookmark>();
+            Type = "user";
         }
 
         public List<Bookmark> Bookmarks { get; set; }

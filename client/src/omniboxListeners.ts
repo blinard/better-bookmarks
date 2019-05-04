@@ -10,7 +10,7 @@ export function addOmniboxListeners() {
     browser.addOmniboxInputEnteredListener(inputEnteredHandler);
 }
 
-function inputChangedHandler(text: string, provideSuggestionsCallback: OmniboxProvideSuggestionsCallback): void {
+export function inputChangedHandler(text: string, provideSuggestionsCallback: OmniboxProvideSuggestionsCallback): void {
     var browserFacade = new ChromeBrowser();
     var bookmarkManager = new BookmarkManager();
 
@@ -21,23 +21,36 @@ function inputChangedHandler(text: string, provideSuggestionsCallback: OmniboxPr
             return;
         }
 
-        var inputText = text.replace("go ", "");
+        var inputText = text.replace("go ", "").toLowerCase();
 
         // TODO: Tweak order of suggestions based on closest match
         // simple 2-pass algorithm for now (first check for startsWith, second for includes and not already in the list).
-        var suggestedBookmarks = bookmarks
-            .filter((bkmark) => {
+        var filteredBookmarks = 
+            bookmarks.filter(bkmark => bkmark.key.startsWith(inputText) || bkmark.url.startsWith(inputText));
+
+        filteredBookmarks.concat(
+            bookmarks.filter(bkmark => {
+                let bookmarkInList = filteredBookmarks.find(innerBkmark => innerBkmark.key === bkmark.key);
+                if (bookmarkInList) {
+                    return false;
+                }
+
                 return bkmark.key.includes(inputText) || bkmark.url.includes(inputText);
             })
-            .map((bkmark) => {
-                return { content: 'go ' + bkmark.key, description: bkmark.key + ' - ' + bkmark.url }
-            });
+        );
+
+        if (!filteredBookmarks || filteredBookmarks.length <= 0) {
+            return;
+        }
+
+        var suggestedBookmarks = 
+            filteredBookmarks.map(bkmark => ({ content: 'go ' + bkmark.key, description: bkmark.key + ' - ' + bkmark.url }));
 
         provideSuggestionsCallback(suggestedBookmarks);
     });
 }
 
-function inputEnteredHandler(text: string, disposition: chrome.omnibox.OnInputEnteredDisposition): void {
+export function inputEnteredHandler(text: string, disposition: chrome.omnibox.OnInputEnteredDisposition): void {
     var browserFacade = new ChromeBrowser();
     var bookmarkManager = new BookmarkManager();
 

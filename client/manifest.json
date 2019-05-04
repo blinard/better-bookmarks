@@ -1,9 +1,9 @@
 {
   "name": "Better Bookmarks",
   "description" : "Type 'bb' plus a bookmark key into the Omnibox.",
-  "version": "0.0.0.3",
+  "version": "0.0.1.0",
   "background": {
-    "scripts": [ "jwt-decode.js", "auth0chrome.js", "backgroundServices.js" ]
+    "scripts": [ "backgroundServices.js" ]
   },
   "omnibox": { "keyword" : "bb" },
   "browser_action": {
@@ -18,7 +18,8 @@
     "identity",
     "notifications",
     "https://*.auth0.com/*",
-    "http://localhost:5001/*",
+    "https://localhost:5001/*",
+    "http://localhost:5000/*",
     "https://*.better-bookmarks.com/*"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",

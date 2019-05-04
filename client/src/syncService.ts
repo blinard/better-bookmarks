@@ -1,11 +1,8 @@
-/// <reference types="jwt-decode" />
-
 import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { Bookmark } from './models/bookmark';
 import { DecodedToken } from './types/decodedToken';
 import { authEnv } from './authEnv';
-// Note: Have trouble with jwt_decode if I import it here and rely on the Parcel bundling.
-// Falling back to loading it directly through the manifest for now.
+import jwt_decode from 'jwt-decode';
 
 // Note: This class can only function within the extension's backgroundPage (where it can access stored auth token)
 export class SyncService {
@@ -17,7 +14,6 @@ export class SyncService {
                     return;
                 }
             
-                // TODO: Swap in Url from Config.
                 var req = new Request(
                     authEnv.SYNC_ENDPOINT,
                     {
@@ -43,7 +39,6 @@ export class SyncService {
     _getCachedAccessToken() {
         const authResult = JSON.parse(localStorage.authResult || '{}');
         const token = authResult.id_token;
-        // TODO: Add refresh token logic
         if (token) {
             if (this._isTokenActive(token))
                 return Promise.resolve(authResult.access_token);
