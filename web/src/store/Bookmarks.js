@@ -1,8 +1,9 @@
 const requestBookmarksType = 'REQUEST_BOOKMARKS';
 const receiveBookmarksType = 'RECEIVE_BOOKMARKS';
 const initialState = {
-    bookmarks: null,
-    isLoadingBookmarks: false
+    bookmarks: [],
+    isLoadingBookmarks: false,
+    hasLoadedBookmarks: false
 };
 
 export const actionCreators = {
@@ -47,7 +48,8 @@ export const reducer = (state, action) => {
     if (action.type === receiveBookmarksType) {
         return { 
             ...state, 
-            isLoadingBookmarks: false, 
+            isLoadingBookmarks: false,
+            hasLoadedBookmarks: true,
             bookmarks: action.bookmarks 
         };
     }

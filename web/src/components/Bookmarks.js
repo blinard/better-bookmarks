@@ -13,11 +13,17 @@ class Bookmarks extends Component {
     this.renderBookmarksTable = this.renderBookmarksTable.bind(this);
   }
 
+  componentDidMount() {
+    if (this.auth.isAuthenticated()) {
+      this.props.requestBookmarks();
+    }
+  }
+
   render() {
     if (!this.auth.isAuthenticated(this.props.user)) {
       return (<div></div>);
     }
-    if (!this.props.bookmarks.bookmarks) {
+    if (!this.props.bookmarks.hasLoadedBookmarks && !this.props.bookmarks.isLoadingBookmarks) {
       this.props.requestBookmarks();
       return (<div></div>);
     }
@@ -43,7 +49,7 @@ class Bookmarks extends Component {
           <tbody>
             {bookmarks.map(bookmark =>
               <tr key={bookmark.key}>
-                <td>{bookmark.key}</td>
+                <td><a href={bookmark.url} target="_blank" rel="noopener noreferrer">{bookmark.key}</a></td>
                 <td>{bookmark.url}</td>
                 <td>{bookmark.tags}</td>
                 <td>{bookmark.lastModified}</td>
