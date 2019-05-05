@@ -13,15 +13,13 @@ class Bookmarks extends Component {
     this.renderBookmarksTable = this.renderBookmarksTable.bind(this);
   }
 
-  componentDidMount() {
-      if (new Date().getTime() < this.props.user.expiresAt) {
-        this.props.requestBookmarks();
-      }
-  }
-
   render() {
-    if (new Date().getTime() >= this.props.user.expiresAt) {
-        return (<div></div>);
+    if (!this.auth.isAuthenticated(this.props.user)) {
+      return (<div></div>);
+    }
+    if (!this.props.bookmarks.bookmarks) {
+      this.props.requestBookmarks();
+      return (<div></div>);
     }
 
     return (

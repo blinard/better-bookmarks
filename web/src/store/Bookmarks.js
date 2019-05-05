@@ -1,7 +1,7 @@
 const requestBookmarksType = 'REQUEST_BOOKMARKS';
 const receiveBookmarksType = 'RECEIVE_BOOKMARKS';
 const initialState = {
-    bookmarks: [],
+    bookmarks: null,
     isLoadingBookmarks: false
 };
 
