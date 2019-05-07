@@ -32,6 +32,22 @@ namespace BetterBookmarks.Service.Controllers
             return user.GetNonDeletedBookmarks();
         }
 
+        [HttpDelete]
+        [Route("bookmarks")]
+        public async Task<IActionResult> Delete(string bookmarkKey) 
+        {
+            var user = await GetUserFromRequestAsync();
+            var bookmark = user.Bookmarks.FirstOrDefault(bk => string.Equals(bk.Key, bookmarkKey, StringComparison.OrdinalIgnoreCase));
+            if (bookmark == null) 
+            {
+                return NotFound();
+            }
+
+            bookmark.IsDeleted = true;
+            await _userRepository.SaveUserAsync(user);
+            return Ok();
+        }
+
         [HttpPost]
         [Route("bookmarks/sync")]
         public async Task<List<Bookmark>> Sync([FromBody] List<Bookmark> bookmarks)

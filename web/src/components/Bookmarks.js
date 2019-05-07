@@ -11,6 +11,7 @@ class Bookmarks extends Component {
     super(props);
 
     this.renderBookmarksTable = this.renderBookmarksTable.bind(this);
+    this.deleteBookmark = this.removeBookmark.bind(this);
   }
 
   componentDidMount() {
@@ -44,6 +45,7 @@ class Bookmarks extends Component {
               <th>Url</th>
               <th>Tags</th>
               <th>LastModified</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -53,11 +55,16 @@ class Bookmarks extends Component {
                 <td>{bookmark.url}</td>
                 <td>{bookmark.tags}</td>
                 <td>{bookmark.lastModified}</td>
+                <td><button className="btn" onClick={() => {this.removeBookmark(bookmark)}}>Delete</button></td>
               </tr>
             )}
           </tbody>
         </table>
     );
+  }
+
+  removeBookmark(bookmark) {
+    this.props.deleteBookmark(bookmark);
   }
 }
 
