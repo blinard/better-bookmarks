@@ -23,6 +23,7 @@ export default class Auth {
     this.handleAuthentication = this.handleAuthentication.bind(this);
     this.isAuthenticated = this.isAuthenticated.bind(this);
     this.renewSession = this.renewSession.bind(this);
+    this.loginInChromeExtension = this.loginInChromeExtension.bind(this);
   }
 
   handleAuthentication() {
@@ -37,18 +38,14 @@ export default class Auth {
     });
   }
 
-  isInChromeExtension() {
-    return window.location.protocol === "chrome-extension:";
-  }
-
   loginInChromeExtension() {
     window.chrome.runtime.sendMessage({ type: "bb-getauth" }, (authResult) => {
       authResult.accessToken = authResult.access_token;
       authResult.idToken = authResult.id_token;
       authResult.expiresAt = authResult.expires_in * 1000 + new Date().getTime();
       store.dispatch(actionCreators.updateUser(authResult.accessToken, authResult.idToken, authResult.expiresAt));
-  });
-}
+    });
+  }
 
   setSession(authResult) {
     // Set the time that the access token will expire at

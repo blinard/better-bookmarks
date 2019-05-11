@@ -3,6 +3,7 @@ import { BookmarkManager } from './bookmarkManager';
 import { Bookmark } from './models/bookmark';
 import { SyncService } from './syncService';
 import { OmniboxProvideSuggestionsCallback, BrowserFacade } from './browserFacades/browserFacade';
+import * as _ from 'lodash';
 
 export function addOmniboxListeners() {
     var browser = new ChromeBrowser();
@@ -28,7 +29,7 @@ export function inputChangedHandler(text: string, provideSuggestionsCallback: Om
         var filteredBookmarks = 
             bookmarks.filter(bkmark => bkmark.key.startsWith(inputText) || bkmark.url.startsWith(inputText));
 
-        filteredBookmarks.concat(
+        filteredBookmarks = filteredBookmarks.concat(
             bookmarks.filter(bkmark => {
                 let bookmarkInList = filteredBookmarks.find(innerBkmark => innerBkmark.key === bkmark.key);
                 if (bookmarkInList) {
@@ -44,7 +45,9 @@ export function inputChangedHandler(text: string, provideSuggestionsCallback: Om
         }
 
         var suggestedBookmarks = 
-            filteredBookmarks.map(bkmark => ({ content: 'go ' + bkmark.key, description: bkmark.key + ' - ' + bkmark.url }));
+            filteredBookmarks.map(bkmark => {
+                return { content: 'go ' + bkmark.key, description: _.escape(bkmark.key + ' - ') + '<url>' + _.escape(bkmark.url) + '</url>' };
+            });
 
         provideSuggestionsCallback(suggestedBookmarks);
     });

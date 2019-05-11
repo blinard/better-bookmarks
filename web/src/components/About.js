@@ -3,6 +3,10 @@ import { connect } from 'react-redux';
 
 class About extends Component {
 
+  constructor(props) {
+    super(props);
+  }
+  
   render() {
     return (
       <div>

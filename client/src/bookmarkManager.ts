@@ -26,12 +26,14 @@ export class BookmarkManager {
     }
 
     saveBookmark(bookmark: Bookmark) {
+        console.log(`saving bookmark - ${bookmark}`);
         return this.getBookmarks()
             .then((bookmarksArray) => {
                 var existingBookmark = BookmarkManager.getBookmarkFromList(bookmark.key, bookmarksArray);
                 if (existingBookmark) {
                     existingBookmark.url = bookmark.url;
                     existingBookmark.tags = bookmark.tags;
+                    existingBookmark.isDeleted = bookmark.isDeleted;
                     existingBookmark.lastModified = (new Date()).toJSON();
                     this.browserFacade.setLocalBookmarksData(bookmarksArray);
                     return;
@@ -42,5 +44,9 @@ export class BookmarkManager {
                 bookmarksArray.push(bookmark);
                 this.browserFacade.setLocalBookmarksData(bookmarksArray);
             });
+    }
+
+    saveBookmarks(bookmarksArray: Array<Bookmark>) {
+        this.browserFacade.setLocalBookmarksData(bookmarksArray);
     }
 }

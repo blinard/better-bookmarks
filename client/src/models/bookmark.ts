@@ -1,6 +1,7 @@
 export class Bookmark {
     key: string;
     url: string;
+    isDeleted: boolean;
     lastModified: string;
     tags: Array<string>;
 
@@ -9,5 +10,6 @@ export class Bookmark {
         this.url = url;
         this.lastModified = (new Date()).toJSON();
         this.tags = [];
+        this.isDeleted = false;
     }
 }

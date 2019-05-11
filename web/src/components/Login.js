@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Auth from '../services/Auth';
+import Utils from '../services/Utils';
 
 class Login extends Component {
   auth = new Auth();
@@ -12,7 +13,7 @@ class Login extends Component {
   }
 
   componentDidMount() {
-    if (this.auth.isInChromeExtension()) {
+    if (Utils.isInChromeExtension()) {
       this.auth.loginInChromeExtension();
     }
   }
@@ -33,7 +34,7 @@ class Login extends Component {
   }
 
   triggerAuth() {
-    if (this.auth.isInChromeExtension()) {
+    if (Utils.isInChromeExtension()) {
       this.auth.loginInChromeExtension();
       return;
     }

@@ -1,3 +1,7 @@
+import BookmarkService from '../strategies/BookmarksService';
+import BookmarkExtension from '../strategies/BookmarksExtension';
+import Utils from '../services/Utils';
+
 const requestBookmarksType = 'REQUEST_BOOKMARKS';
 const receiveBookmarksType = 'RECEIVE_BOOKMARKS';
 
@@ -17,26 +21,16 @@ export const actionCreators = {
 
     dispatch({ type: requestBookmarksType });
 
-    const req = new Request(
-      "https://api.better-bookmarks.com/bookmarks",
-      {
-        method: "GET",
-        headers: {
-          'Authorization': `Bearer ${getState().user.accessToken}`
-        },
-        mode: "cors",
-        cache: "no-store"
-      }
-    );
-
-    const resp = await fetch(req);
-    if (resp.status < 200 || resp.status >= 300) {
-      let messageString = `Error getting bookmarks. Status: ${resp.status}`;
-      throw new Error(messageString);
+    let bookmarks;
+    if (Utils.isInChromeExtension()) {
+      let bookmarksExtension = new BookmarkExtension();
+      bookmarks = await bookmarksExtension.getBookmarks();
+    } else {
+      let bookmarkService = new BookmarkService();
+      bookmarks = await bookmarkService.getBookmarks(getState().user.accessToken);
     }
 
-    const bookmarks = await resp.json();
-    dispatch({ type: receiveBookmarksType, bookmarks });
+    dispatch({ type: receiveBookmarksType, bookmarks: bookmarks });
   },
   deleteBookmark: (bookmark) => async (dispatch, getState) => {
     if (!getState().user.accessToken) {
@@ -44,25 +38,15 @@ export const actionCreators = {
       return;
     }
 
-    const req = new Request(
-      `https://api.better-bookmarks.com/bookmarks?bookmarkKey=${encodeURIComponent(bookmark.key)}`,
-      {
-        method: "DELETE",
-        headers: {
-          'Authorization': `Bearer ${getState().user.accessToken}`
-        },
-        mode: "cors",
-        cache: "no-store"
-      }
-    );
-
-    const resp = await fetch(req);
-    if (resp.status < 200 || resp.status >= 300) {
-      let messageString = `Error deleting bookmark. Status: ${resp.status}`;
-      throw new Error(messageString);
+    if (Utils.isInChromeExtension()) {
+      let bookmarksExtension = new BookmarkExtension();
+      await bookmarksExtension.deleteBookmark(bookmark);
+    } else {
+      let bookmarkService = new BookmarkService();
+      await bookmarkService.deleteBookmark(bookmark, getState().user.accessToken);
     }
 
-    dispatch({ type: deletedBookmarkType, bookmark });
+    dispatch({ type: deletedBookmarkType, bookmark: bookmark });
   }
 };
 

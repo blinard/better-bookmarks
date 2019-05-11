@@ -14,9 +14,11 @@ function onMessageHandler(event: any, sender: chrome.runtime.MessageSender, send
         return;
     }
 
+    console.log(`beginning bookmark sync`);
     var bookmarkManager = new BookmarkManager();
     bookmarkManager.getBookmarks()
         .then((bookmarksArray) => {
+            console.log(`initiating sync - ${bookmarksArray}`);
             var syncService = new SyncService();
             syncService.synchronizeWithService(bookmarksArray);
         });

@@ -1,6 +1,7 @@
 import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { Bookmark } from './models/bookmark';
 import { DecodedToken } from './types/decodedToken';
+import { BookmarkManager } from './bookmarkManager';
 import { authEnv } from './authEnv';
 import jwt_decode from 'jwt-decode';
 
@@ -8,12 +9,14 @@ import jwt_decode from 'jwt-decode';
 export class SyncService {
 
     synchronizeWithService(bookmarksArray: Array<Bookmark>) {
+        console.log(`fetching token for sync...`);
         this._getCachedAccessToken()
             .then((accessToken) => {
                 if (!accessToken) {
                     return;
                 }
             
+                console.log(`token received - constructing request`);
                 var req = new Request(
                     authEnv.SYNC_ENDPOINT,
                     {
@@ -29,9 +32,16 @@ export class SyncService {
                 );
             
                 // TODO: Implement success/error handling
+                console.log(`initiating fetch...`);
                 fetch(req)
                     .then(resp => {
-                        //resp.json()?
+                        console.log(`fetch response received - ${resp}`);
+                        resp.json()
+                            .then(bookmarks => {
+                                console.log(`received bookmarks - ${bookmarks}`);
+                                let mgr = new BookmarkManager();
+                                mgr.saveBookmarks(bookmarks);
+                            });
                     });
             });
     }

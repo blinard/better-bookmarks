@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/chai": "^4.1.7",
     "@types/chrome": "0.0.77",
+    "@types/lodash": "^4.14.126",
     "@types/mocha": "^5.2.6",
     "chai": "^4.2.0",
     "gulp": "^3.9.1",
@@ -30,6 +31,7 @@
   },
   "dependencies": {
     "auth0-chrome": "^0.1.2",
-    "jwt-decode": "^2.2.0"
+    "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.11"
   }
 }

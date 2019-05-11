@@ -6,14 +6,19 @@ import Bookmarks from './Bookmarks';
 import Login from './Login';
 
 class Home extends Component {
-    render() {
-        return (
-          <div>
-            <Login />
-            <Bookmarks />
-          </div>
-        );
-    }
+
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div>
+        <Login />
+        <Bookmarks />
+      </div>
+    );
+  }
 }
 
 export default connect(
