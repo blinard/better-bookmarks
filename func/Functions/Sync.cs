@@ -7,14 +7,22 @@ using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using BetterBookmarks.Repositories;
 
 namespace BetterBookmarks.Functions
 {
-    public static class Delete
+    public class BookmarkSyncer
     {
-        [FunctionName("Delete")]
-        public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "get", "post", Route = null)] HttpRequest req,
+        private readonly IApplicationSettingRepository _appSettings;
+
+        public BookmarkSyncer(IApplicationSettingRepository appSettings)
+        {
+            _appSettings = appSettings;
+        }
+
+        [FunctionName("Sync")]
+        public async Task<IActionResult> Run(
+            [HttpTrigger(AuthorizationLevel.Function, "post", Route = null)] HttpRequest req,
             ILogger log)
         {
             log.LogInformation("C# HTTP trigger function processed a request.");
