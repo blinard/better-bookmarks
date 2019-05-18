@@ -26,8 +26,7 @@ namespace BetterBookmarks.Services
         {
             try 
             {
-                var claimPrincipal = await _authService.ValidateTokenAsync(req.GetAuthToken());
-                var userIdClaim = claimPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+                var userIdClaim = await GetUserIdClaim(req);
                 if (userIdClaim == null)
                     return false;
                 
@@ -42,19 +41,18 @@ namespace BetterBookmarks.Services
 
         public async Task<User> GetOrCreateUserAsync(HttpRequest req, ILogger log)
         {
-            var claimPrincipal = await _authService.ValidateTokenAsync(req.GetAuthToken());
-            var userIdClaim = claimPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
+            var userIdClaim = await GetUserIdClaim(req);
             if (userIdClaim == null)
                 throw new ArgumentException("NameIdentifier claim not found.");
 
             var user = await _userRepository.GetUserAsync(userIdClaim.Value);
-            if (user == null) 
+            if (user == null)
             {
                 log.LogInformation($"User ({userIdClaim.Value}) not found. Creating a new user.");
                 user = new User()
                 {
                     Id = userIdClaim.Value,
-                    UserId = userIdClaim.Value    
+                    UserId = userIdClaim.Value
                 };
             }
 
@@ -64,6 +62,12 @@ namespace BetterBookmarks.Services
         public async Task SaveUserAsync(User user)
         {
             await _userRepository.SaveUserAsync(user);
+        }
+
+        private async Task<Claim> GetUserIdClaim(HttpRequest req)
+        {
+            var claimPrincipal = await _authService.ValidateTokenAsync(req.GetAuthToken());
+            return claimPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
         }
     }
 }

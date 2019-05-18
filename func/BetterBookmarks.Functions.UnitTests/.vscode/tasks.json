@@ -7,17 +7,17 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/BetterBookmarks.Functions.UnitTests/BetterBookmarks.Functions.UnitTests.csproj"
+                "${workspaceFolder}/BetterBookmarks.Functions.UnitTests.csproj"
             ],
             "problemMatcher": "$tsc"
         },
         {
-            "label": "publish",
+            "label": "test",
             "command": "dotnet",
             "type": "process",
             "args": [
-                "publish",
-                "${workspaceFolder}/BetterBookmarks.Functions.UnitTests/BetterBookmarks.Functions.UnitTests.csproj"
+                "test",
+                "${workspaceFolder}/BetterBookmarks.Functions.UnitTests.csproj"
             ],
             "problemMatcher": "$tsc"
         },
@@ -28,7 +28,7 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/BetterBookmarks.Functions.UnitTests/BetterBookmarks.Functions.UnitTests.csproj"
+                "${workspaceFolder}/BetterBookmarks.Functions.UnitTests.csproj"
             ],
             "problemMatcher": "$tsc"
         }

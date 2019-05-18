@@ -1,0 +1,3 @@
+# BetterBookmarks.Functions
+
+Placeholder.
