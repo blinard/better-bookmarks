@@ -272,6 +272,9 @@ client/**/*.js.map
 **/.terraform
 **/.terraform.tfstate*
 **/terraform.tfstate
+**/*.tfstate
+**/*.tfstate.backup
+**/.terraform.tfstate.lock.info
 **/private_ssh_key
 **/secrets
 **/aks-cluster-creation
