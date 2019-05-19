@@ -24,7 +24,7 @@ steps:
 # Publish Test Results to Azure Pipelines/TFS
 - task: PublishTestResults@2
   inputs:
-    testResultsFormat: 'xUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    testResultsFormat: 'VSTest' # Options: JUnit, NUnit, VSTest, xUnit, cTest
     testResultsFiles: 'func/BetterBookmarks.Functions.UnitTests/TestResults/TestResults.trx' 
     # searchFolder: 'func/test-results' # Optional
     #mergeTestResults: false # Optional
