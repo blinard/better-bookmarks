@@ -29,20 +29,22 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration) func/BetterBookmarks.Functions.sln
-  displayName: 'dotnet build $(buildConfiguration)'
-
-- script: dotnet test --configuration $(buildConfiguration) --logger "trx;LogFileName=TestResults.trx" func/BetterBookmarks.Functions.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit*]*%2c[Microsoft*]*%2c[Cosmos*]*"
-  displayName: 'dotnet test $(buildConfiguration)'
+- script: |
+    docker build -f func/Dockerfile.build --build-arg VERSION=$BUILD_BUILDID --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$BUILD_BUILDID .
+    docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$BUILD_BUILDID
+    docker cp dotnetcoreapp:app/BetterBookmarks.Functions.UnitTests/TestResults $(System.DefaultWorkingDirectory)/testresults
+    docker cp dotnetcoreapp:app/BetterBookmarks.Functions.UnitTests/coverage.cobertura.xml $(System.DefaultWorkingDirectory)
+    docker cp dotnetcoreapp:out $(System.DefaultWorkingDirectory)/app
+    docker stop dotnetcoreapp
 
 # Publish Test Results
 # Publish Test Results to Azure Pipelines/TFS
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testResultsFiles: 'func/BetterBookmarks.Functions.UnitTests/TestResults/TestResults.trx' 
+    testResultsFiles: 'testresults/*.trx' 
     # searchFolder: 'func/test-results' # Optional
-    #mergeTestResults: false # Optional
+    mergeTestResults: true # Optional
     failTaskOnFailedTests: true # Optional
     #testRunTitle: # Optional
     #buildPlatform: # Optional
@@ -53,4 +55,11 @@ steps:
   displayName: 'publish coverage results'
   inputs:
     codeCoverageTool: 'cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/func/BetterBookmarks.Functions.UnitTests/coverage.cobertura.xml'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.cobertura.xml'
+
+- script: |
+    docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$BUILD_BUILDID .
+    docker login -u $(dockerId) -p $pswd
+    docker push $(dockerId)/bb-func:$BUILD_BUILDID
+  env:
+    pswd: $(dockerPassword)
