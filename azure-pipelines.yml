@@ -19,3 +19,17 @@ steps:
 
 - script: dotnet test --configuration $(buildConfiguration) --results-directory func/test-results func/BetterBookmarks.Functions.sln
   displayName: 'dotnet test $(buildConfiguration)'
+
+# Publish Test Results
+# Publish Test Results to Azure Pipelines/TFS
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'xUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    #testResultsFiles: '**/TEST-*.xml' 
+    searchFolder: 'func/test-results' # Optional
+    #mergeTestResults: false # Optional
+    failTaskOnFailedTests: true # Optional
+    #testRunTitle: # Optional
+    #buildPlatform: # Optional
+    #buildConfiguration: # Optional
+    publishRunAttachments: true # Optional
