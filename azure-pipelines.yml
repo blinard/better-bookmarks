@@ -31,11 +31,19 @@ variables:
 steps:
 - script: |
     docker build -f func/Dockerfile.build --build-arg VERSION=$BUILD_BUILDID --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$BUILD_BUILDID .
+
+- script: |
+    echo "Starting container"
     docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$BUILD_BUILDID
+    echo "Copying test results, coverage results and bits"
     docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/TestResults $(System.DefaultWorkingDirectory)/testresults
+    echo "Test results copied"
     docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/coverage.cobertura.xml $(System.DefaultWorkingDirectory)
+    echo "Coverage results copied"
     docker cp dotnetcoreapp:/out $(System.DefaultWorkingDirectory)/app
+    echo "Bits copied, stopping container"
     docker stop dotnetcoreapp
+    echo "Container stopped"
 
 # Publish Test Results
 # Publish Test Results to Azure Pipelines/TFS
