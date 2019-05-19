@@ -14,8 +14,8 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build --configuration $(buildConfiguration) func/**/*.csproj
+- script: dotnet build --configuration $(buildConfiguration) func/BetterBookmarks.Functions.sln
   displayName: 'dotnet build $(buildConfiguration)'
 
-- script: dotnet test --configuration $(buildConfiguration) --results-directory func/test-results func/**/*.csproj
+- script: dotnet test --configuration $(buildConfiguration) --results-directory func/test-results func/BetterBookmarks.Functions.sln
   displayName: 'dotnet test $(buildConfiguration)'
