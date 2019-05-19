@@ -17,7 +17,7 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) func/BetterBookmarks.Functions.sln
   displayName: 'dotnet build $(buildConfiguration)'
 
-- script: dotnet test --configuration $(buildConfiguration) --results-directory func/test-results func/BetterBookmarks.Functions.sln
+- script: dotnet test --configuration $(buildConfiguration) --logger "trx;LogFileName=func/TestResults.trx" func/BetterBookmarks.Functions.sln
   displayName: 'dotnet test $(buildConfiguration)'
 
 # Publish Test Results
@@ -25,8 +25,8 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'xUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    #testResultsFiles: '**/TEST-*.xml' 
-    searchFolder: 'func/test-results' # Optional
+    testResultsFiles: 'func/TestResults.trx' 
+    # searchFolder: 'func/test-results' # Optional
     #mergeTestResults: false # Optional
     failTaskOnFailedTests: true # Optional
     #testRunTitle: # Optional
