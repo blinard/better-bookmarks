@@ -17,7 +17,7 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) func/BetterBookmarks.Functions.sln
   displayName: 'dotnet build $(buildConfiguration)'
 
-- script: dotnet test --configuration $(buildConfiguration) --logger "trx;LogFileName=TestResults.trx" func/BetterBookmarks.Functions.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit*]%2c[Microsoft*]%2c[Cosmos*]*"
+- script: dotnet test --configuration $(buildConfiguration) --logger "trx;LogFileName=TestResults.trx" func/BetterBookmarks.Functions.sln /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit*]*%2c[Microsoft*]*%2c[Cosmos*]*"
   displayName: 'dotnet test $(buildConfiguration)'
 
 # Publish Test Results
