@@ -5,7 +5,20 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+    branches:
+        include:
+        - master
+    paths:
+        include:
+        - func/*
+
+pr:
+    branches:
+        include:
+        - master
+    paths:
+        include:
+        - func/*
 
 pool:
   vmImage: 'ubuntu-16.04'
