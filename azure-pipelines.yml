@@ -17,5 +17,5 @@ steps:
 - script: dotnet build --configuration $(buildConfiguration) func/BetterBookmarks.Functions/*.csproj
   displayName: 'dotnet build $(buildConfiguration)'
 
-- script: dotnet test --configuration $(buildConfiguration) func/BetterBookmarks.Functions/*.csproj
+- script: dotnet test --configuration $(buildConfiguration) --results-directory func/BetterBookmarks.Functions/test-results func/BetterBookmarks.Functions/*.csproj
   displayName: 'dotnet test $(buildConfiguration)'
