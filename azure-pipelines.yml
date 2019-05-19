@@ -32,9 +32,9 @@ steps:
 - script: |
     docker build -f func/Dockerfile.build --build-arg VERSION=$BUILD_BUILDID --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$BUILD_BUILDID .
     docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$BUILD_BUILDID
-    docker cp dotnetcoreapp:app/BetterBookmarks.Functions.UnitTests/TestResults $(System.DefaultWorkingDirectory)/testresults
-    docker cp dotnetcoreapp:app/BetterBookmarks.Functions.UnitTests/coverage.cobertura.xml $(System.DefaultWorkingDirectory)
-    docker cp dotnetcoreapp:out $(System.DefaultWorkingDirectory)/app
+    docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/TestResults $(System.DefaultWorkingDirectory)/testresults
+    docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/coverage.cobertura.xml $(System.DefaultWorkingDirectory)
+    docker cp dotnetcoreapp:/out $(System.DefaultWorkingDirectory)/app
     docker stop dotnetcoreapp
 
 # Publish Test Results
