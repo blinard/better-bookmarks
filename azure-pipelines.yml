@@ -1,9 +1,6 @@
+# Setting the name effectively sets the Build.BuildNumber variable
+# Older doc on version number details: https://github.com/MicrosoftDocs/vsts-docs/blob/e5d4e6f62d381a0d78b2c3dba7ffeedcf25be73a/docs/pipelines/build/options.md
 name: 1.1.0$(Rev:.r)
-# ASP.NET Core
-
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
     branches:
@@ -31,23 +28,22 @@ variables:
 
 steps:
 
-- script: echo Build number is $(Build.BuildNumber) hope it works...
-  displayName: 'Displaying build number'
-
+# Be sure that you have the 'coverlet.msbuild' package added to your unit test project for code coverage to work
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
   displayName: 'Performing Docker build and test'
 
+# Extract test results and publish output from the build container
 - script: |
     docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$(Build.BuildNumber)
     docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/testresults $(System.DefaultWorkingDirectory)/testresults
     docker cp dotnetcoreapp:/out $(System.DefaultWorkingDirectory)/app
     docker stop dotnetcoreapp
+  displayName: 'Extract test results and publish bits from build container'
 
-# Publish Test Results
 # Publish Test Results to Azure Pipelines/TFS
 - task: PublishTestResults@2
   inputs:
-    testResultsFormat: 'VSTest' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    testResultsFormat: 'VSTest'
     testResultsFiles: 'testresults/*.trx' 
     # searchFolder: 'func/test-results' # Optional
     mergeTestResults: true # Optional
@@ -57,15 +53,18 @@ steps:
     #buildConfiguration: # Optional
     publishRunAttachments: true # Optional
 
+# Publish Code Coverage Results to Azure Pipelines/TFS
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish coverage results'
   inputs:
     codeCoverageTool: 'cobertura'
     summaryFileLocation: 'testresults/coverage/coverage.cobertura.xml'
 
+# Build and publish the release image
 - script: |
     docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$(Build.BuildNumber) .
     docker login -u $(dockerId) -p $pswd
     docker push $(dockerId)/bb-func:$(Build.BuildNumber)
+  displayName: 'Build and publish production image'
   env:
     pswd: $(dockerPassword)
