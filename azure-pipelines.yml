@@ -36,20 +36,21 @@ steps:
     echo "Starting container"
     docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$BUILD_BUILDID
     echo "Copying test results, coverage results and bits"
-    docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests $(System.DefaultWorkingDirectory)/unittests
+    docker cp dotnetcoreapp:/app $(System.DefaultWorkingDirectory)/buildcontainercontents
     echo "Test results copied"
     docker cp dotnetcoreapp:/out $(System.DefaultWorkingDirectory)/app
     echo "Bits copied, stopping container"
     docker stop dotnetcoreapp
     echo "Container stopped"
-    ls -R $(System.DefaultWorkingDirectory)
+    ls -R $(System.DefaultWorkingDirectory)/buildcontainercontents
+    displayName: 'Building and Testing Solution'
 
 # Publish Test Results
 # Publish Test Results to Azure Pipelines/TFS
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testResultsFiles: 'unittests/TestResults/*.trx' 
+    testResultsFiles: 'buildcontainercontents/BetterBookmarks.Functions.UnitTests/TestResults/*.trx' 
     # searchFolder: 'func/test-results' # Optional
     mergeTestResults: true # Optional
     failTaskOnFailedTests: true # Optional
@@ -62,11 +63,12 @@ steps:
   displayName: 'publish coverage results'
   inputs:
     codeCoverageTool: 'cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/unittests/coverage.cobertura.xml'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/buildcontainercontents/BetterBookmarks.Functions.UnitTests/coverage.cobertura.xml'
 
 - script: |
     docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$BUILD_BUILDID .
     docker login -u $(dockerId) -p $pswd
     docker push $(dockerId)/bb-func:$BUILD_BUILDID
+  displayName: 'Building and Publishing production image'
   env:
     pswd: $(dockerPassword)
