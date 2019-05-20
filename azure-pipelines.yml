@@ -63,8 +63,6 @@ steps:
 # Build and publish the release image
 - script: |
     docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$(Build.BuildNumber) .
-    docker login -u $(dockerId) -p $pswd
+    echo $(dockerPassword) | docker login -u $(dockerId) --password-stdin
     docker push $(dockerId)/bb-func:$(Build.BuildNumber)
   displayName: 'Build and publish production image'
-  env:
-    pswd: $(dockerPassword)
