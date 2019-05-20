@@ -3,7 +3,7 @@ variable "azure_subscription_id" {
 }
 
 variable "azure_region" {
-  default = "centralus"
+  default = "westus"
 }
 
 variable "azure_resource_group_name" {

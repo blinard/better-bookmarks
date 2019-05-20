@@ -18,7 +18,7 @@ resource "azurerm_storage_account" "storage" {
 
 resource "azurerm_application_insights" "appinsights" {
   name = "${var.azure_app_insights_name}"
-  location = "westus"
+  location = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   application_type = "Web"
 }

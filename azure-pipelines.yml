@@ -27,13 +27,14 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
+  buildVersion: $[format('1.0.{0}', $(Build.BuildNumber))]
 
 steps:
-- script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
+- script: docker build -f func/Dockerfile.build --build-arg VERSION=$(buildVersion) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(buildVersion) .
   displayName: 'Performing Docker build and test'
 
 - script: |
-    docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$(Build.BuildNumber)
+    docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$(buildVersion)
     docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/testresults $(System.DefaultWorkingDirectory)/testresults
     docker cp dotnetcoreapp:/out $(System.DefaultWorkingDirectory)/app
     docker stop dotnetcoreapp
@@ -59,8 +60,8 @@ steps:
     summaryFileLocation: 'testresults/coverage/coverage.cobertura.xml'
 
 - script: |
-    docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$(Build.BuildNumber) .
+    docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$(buildVersion) .
     docker login -u $(dockerId) -p $pswd
-    docker push $(dockerId)/bb-func:$(Build.BuildNumber)
+    docker push $(dockerId)/bb-func:$(buildVersion)
   env:
     pswd: $(dockerPassword)
