@@ -42,6 +42,7 @@ steps:
     echo "Bits copied, stopping container"
     docker stop dotnetcoreapp
     echo "Container stopped"
+    ls -R $(System.DefaultWorkingDirectory)
 
 # Publish Test Results
 # Publish Test Results to Azure Pipelines/TFS
