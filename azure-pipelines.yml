@@ -91,7 +91,4 @@ steps:
     azureSubscription: outlookAzureSubscriptionConnection
     appName: bbfunction
     imageName: registry.hub.docker.com/library/blinard/bb-func:$(Build.BuildNumber)
-    deployToSlotOrASE: true
-    resourceGroupName: bb-tf-rg
-    slotName: staging
     appSettings: -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api
