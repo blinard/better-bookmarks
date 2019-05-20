@@ -31,6 +31,9 @@ variables:
 
 steps:
 
+- script: echo Build number is $(Build.BuildNumber) hope it works...
+  displayName: 'Displaying build number'
+
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
   displayName: 'Performing Docker build and test'
 
@@ -55,7 +58,7 @@ steps:
     publishRunAttachments: true # Optional
 
 - task: PublishCodeCoverageResults@1
-  displayName: 'publish coverage results'
+  displayName: 'Publish coverage results'
   inputs:
     codeCoverageTool: 'cobertura'
     summaryFileLocation: 'testresults/coverage/coverage.cobertura.xml'
