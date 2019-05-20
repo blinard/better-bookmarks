@@ -50,7 +50,7 @@ steps:
 - task: PublishTestResults@2
   inputs:
     testResultsFormat: 'VSTest' # Options: JUnit, NUnit, VSTest, xUnit, cTest
-    testResultsFiles: 'buildcontainercontents/BetterBookmarks.Functions.UnitTests/TestResults/*.trx' 
+    testResultsFiles: 'buildcontainercontents/testresults/*.trx' 
     # searchFolder: 'func/test-results' # Optional
     mergeTestResults: true # Optional
     failTaskOnFailedTests: true # Optional
@@ -63,7 +63,7 @@ steps:
   displayName: 'publish coverage results'
   inputs:
     codeCoverageTool: 'cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/buildcontainercontents/BetterBookmarks.Functions.UnitTests/coverage.cobertura.xml'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/buildcontainercontents/testresults/coverage/coverage.cobertura.xml'
 
 - script: |
     docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$BUILD_BUILDID .
