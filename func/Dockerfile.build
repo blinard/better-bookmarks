@@ -9,6 +9,6 @@ COPY ./func/ .
 # dotnet commands to build, test, and publish
 RUN dotnet restore
 RUN dotnet build -c ${BUILDCONFIG} BetterBookmarks.Functions.sln
-RUN dotnet test BetterBookmarks.Functions.sln -c ${BUILDCONFIG} --logger "trx;LogFileName=TestResults.trx" /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit*]*,[Microsoft*]*,[Cosmos*]*"
+RUN dotnet test BetterBookmarks.Functions.sln -c ${BUILDCONFIG} --logger "trx;LogFileName=TestResults.trx" /p:CoverletOutputFormat=cobertura /p:Exclude="[xunit*]*%2c[Microsoft*]*%2c[Cosmos*]*"
 RUN dotnet publish BetterBookmarks.Functions/bb-funcs.csproj -c ${BUILDCONFIG} -o /out /p:Version=${VERSION}
 CMD tail -f /dev/null
