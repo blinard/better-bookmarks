@@ -27,9 +27,12 @@ pool:
 
 variables:
   buildConfiguration: 'Release'
-  buildVersion: $[format('1.0.{0}', $(Build.BuildNumber))]
 
 steps:
+
+- script: echo '##vso[task.setvariable variable=buildVersion]1.0.$(Build.BuildNumber)'
+  displayName: 'Setting build version'
+
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(buildVersion) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(buildVersion) .
   displayName: 'Performing Docker build and test'
 
