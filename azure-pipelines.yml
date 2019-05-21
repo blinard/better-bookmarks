@@ -74,3 +74,12 @@ steps:
     #targetPath: # Required when publishLocation == FilePath
     #parallel: false # Optional
     #parallelCount: # Optional
+
+- task: AzureFunctionApp@1
+  displayName: Azure Function App Deploy
+  inputs:
+    azureSubscription: outlookAzureSubscriptionConnection
+    appType: functionApp
+    appName: bbfunction
+    package: $(Build.ArtifactStagingDirectory)/package.zip
+    appSettings: -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api
