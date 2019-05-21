@@ -36,7 +36,7 @@ steps:
 - script: |
     docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$(Build.BuildNumber)
     docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/testresults $(System.DefaultWorkingDirectory)/testresults
-    docker cp dotnetcoreapp:/out/package.zip $(System.DefaultWorkingDirectory)/app/package.zip
+    docker cp dotnetcoreapp:/out $(System.DefaultWorkingDirectory)/app
     docker stop dotnetcoreapp
   displayName: 'Extract test results and publish bits from build container'
 
