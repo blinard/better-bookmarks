@@ -7,8 +7,11 @@ WORKDIR /app
 # copy the contents of agent working directory on host to workdir in container
 COPY ./func/ .
 # dotnet commands to build, test, and publish
-RUN dotnet restore
-RUN dotnet build -c ${BUILDCONFIG} BetterBookmarks.Functions.sln
+# RUN dotnet restore
+# RUN dotnet build -c ${BUILDCONFIG} BetterBookmarks.Functions.sln
 RUN dotnet test BetterBookmarks.Functions.sln -c ${BUILDCONFIG} --results-directory testresults --logger "trx;LogFileName=TestResults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=testresults/coverage/ /p:Exclude="[xunit*]*%2c[Microsoft*]*%2c[Cosmos*]*"
 RUN dotnet publish BetterBookmarks.Functions/bb-funcs.csproj -c ${BUILDCONFIG} -o /out /p:Version=${VERSION}
+WORKDIR /out
+RUN apt-get update && apt-get --assume-yes install zip
+RUN zip -r package.zip *
 CMD tail -f /dev/null

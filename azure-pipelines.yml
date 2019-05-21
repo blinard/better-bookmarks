@@ -36,7 +36,7 @@ steps:
 - script: |
     docker run --name dotnetcoreapp --rm -d $(dockerId)/dotnetcore-build:$(Build.BuildNumber)
     docker cp dotnetcoreapp:/app/BetterBookmarks.Functions.UnitTests/testresults $(System.DefaultWorkingDirectory)/testresults
-    docker cp dotnetcoreapp:/out $(System.DefaultWorkingDirectory)/app
+    docker cp dotnetcoreapp:/out/package.zip $(System.DefaultWorkingDirectory)/app/package.zip
     docker stop dotnetcoreapp
   displayName: 'Extract test results and publish bits from build container'
 
@@ -60,35 +60,17 @@ steps:
     codeCoverageTool: 'cobertura'
     summaryFileLocation: 'testresults/coverage/coverage.cobertura.xml'
 
-# Build and publish the release image
-- script: docker build -f func/BetterBookmarks.Functions/Dockerfile -t $(dockerId)/bb-func:$(Build.BuildNumber) .
-  displayName: 'Build production image'
-    # echo $(dockerPassword) | docker login -u $(dockerId) --password-stdin
-    # docker push $(dockerId)/bb-func:$(Build.BuildNumber)
-    # docker logout
+# Stage package for artifact creation
+- script: |
+    cp $(System.DefaultWorkingDirectory)/app/package.zip $(Build.ArtifactStagingDirectory)/package.zip
+  displayName: 'Stage package for artifact creation'
 
-- task: Docker@2
-  displayName: Login to Docker Hub
+# Publish build artifacts to Azure Pipelines/TFS
+- task: PublishBuildArtifacts@1
   inputs:
-    command: login
-    containerRegistry: dockerHubConnection
-- task: Docker@2
-  displayName: Push to Docker Hub
-  inputs:
-    command: push
-    containerRegistry: dockerHubConnection
-    repository: blinard/bb-func
-    tags: $(Build.BuildNumber)
-- task: Docker@2
-  displayName: Logout of Docker Hub
-  inputs:
-    command: logout
-    containerRegistry: dockerHubConnection
-
-- task: AzureFunctionAppContainer@1
-  displayName: Deploy image to Azure Function
-  inputs:
-    azureSubscription: outlookAzureSubscriptionConnection
-    appName: bbfunction
-    imageName: registry.hub.docker.com/library/blinard/bb-func:$(Build.BuildNumber)
-    appSettings: -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'drop' 
+    #publishLocation: 'Container' # Options: container, filePath
+    #targetPath: # Required when publishLocation == FilePath
+    #parallel: false # Optional
+    #parallelCount: # Optional
