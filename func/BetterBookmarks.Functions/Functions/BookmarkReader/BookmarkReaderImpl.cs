@@ -16,32 +16,29 @@ using Newtonsoft.Json;
 
 namespace BetterBookmarks.Functions
 {
-    public class BookmarkReader
+    public class BookmarkReaderImpl
     {
         private readonly IUserService _userService;
 
-        public BookmarkReader(IUserService userService) 
+        public BookmarkReaderImpl(IUserService userService)
         {
             _userService = userService;
         }
 
-        [FunctionName("Read")]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req,
-            ILogger log)
+        public async Task<IActionResult> Run(HttpRequest req, ILogger logger)
         {
-            if (! (await _userService.IsUserAuthorizedAsync(req, log)))
+            if (! (await _userService.IsUserAuthorizedAsync(req, logger)))
                 return new UnauthorizedResult();
 
             try
             {
-                log.LogInformation("User is authorized.");
-                var user = await _userService.GetOrCreateUserAsync(req, log);
+                logger.LogInformation("User is authorized.");
+                var user = await _userService.GetOrCreateUserAsync(req, logger);
                 return new OkObjectResult(user.GetNonDeletedBookmarks());
             }
             catch(Exception ex)
             {
-                log.LogError(ex, $"Exception occurred: {ex}");
+                logger.LogError(ex, $"Exception occurred: {ex}");
                 return new StatusCodeResult(500);
             }
         }
