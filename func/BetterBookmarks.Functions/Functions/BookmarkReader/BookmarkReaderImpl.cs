@@ -19,14 +19,18 @@ namespace BetterBookmarks.Functions
     public class BookmarkReaderImpl
     {
         private readonly IUserService _userService;
+        private readonly IApplicationSettingRepository _appSettings;
 
-        public BookmarkReaderImpl(IUserService userService)
+        public BookmarkReaderImpl(IUserService userService, IApplicationSettingRepository appSettings)
         {
             _userService = userService;
+            _appSettings = appSettings;
         }
 
         public async Task<IActionResult> Run(HttpRequest req, ILogger logger)
         {
+            logger.LogInformation("DbEndpoint={0}, DbAuthKey={1}", _appSettings.DbEndpoint, _appSettings.DbAuthKey);
+
             if (! (await _userService.IsUserAuthorizedAsync(req, logger)))
                 return new UnauthorizedResult();
 
