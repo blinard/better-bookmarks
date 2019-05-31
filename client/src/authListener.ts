@@ -1,6 +1,8 @@
 import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { authEnv } from './authEnv';
 import Auth0Chrome from 'auth0-chrome';
+import { BookmarkManager } from './bookmarkManager';
+import { SyncService } from './syncService';
 
 export function addAuthListeners() {
     var browserFacade = new ChromeBrowser();
@@ -33,6 +35,16 @@ function onMessageHandler(event: any) {
             localStorage.authResult = JSON.stringify(authResult);
             browserFacade.setRefreshToken(<string>authResult.refresh_token);
             browserFacade.postNotification('Login Successful', 'Nice, you\'ve logged in!');
+
+            console.log(`beginning bookmark sync`);
+            var bookmarkManager = new BookmarkManager();
+            bookmarkManager.getBookmarks()
+                .then((bookmarksArray) => {
+                    console.log(`initiating sync - ${bookmarksArray}`);
+                    var syncService = new SyncService();
+                    syncService.synchronizeWithService(bookmarksArray);
+                });
+        
         })
         .catch(function (err) {
             browserFacade.postNotification('Login Failed', err.message);

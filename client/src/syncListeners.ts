@@ -1,6 +1,5 @@
 import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { BookmarkManager } from './bookmarkManager';
-import { Bookmark } from './models/bookmark';
 import { SyncService } from './syncService';
 
 export function addSyncListeners() {
