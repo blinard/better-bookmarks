@@ -26,9 +26,11 @@ resource "azurerm_application_insights" "appinsights" {
   location = "${azurerm_resource_group.rg.location}"
   resource_group_name = "${azurerm_resource_group.rg.name}"
   application_type = "Web"
-  tags = {
-      "${format("hidden-link:%s/providers/Microsoft.Web/sites/%s", azurerm_resource_group.rg.id, var.azure_function_name)}" = "Resource"
-  }
+# This hidden tag is part of how Application Insights is configured for an Azure function but it's not the only thing
+# Until I can figure out the rest, I'm going to just do it by clicking the link in the portal :/
+#   tags = {
+#       "${format("hidden-link:%s/providers/Microsoft.Web/sites/%s", azurerm_resource_group.rg.id, var.azure_function_name)}" = "Resource"
+#   }
 }
 
 
