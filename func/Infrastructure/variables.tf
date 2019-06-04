@@ -26,3 +26,7 @@ variable "azure_app_insights_name" {
   default = "bbserviceinsights"
 }
 
+variable "azure_key_vault_name" {
+    default = "bbkv"
+}
+
