@@ -82,4 +82,4 @@ steps:
     appType: functionApp
     appName: bbfunction
     package: $(Build.ArtifactStagingDirectory)/package.zip
-    appSettings: -DbEndpoint https://betterbookmarks.documents.azure.com:443/ -DbAuthKey @Microsoft.KeyVault(SecretUri=https://bbkv.vault.azure.net/secrets/DbAuthKey/d2ee4c5c16f04183930c5a672069d99b) -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api
+    appSettings: -DbEndpoint https://betterbookmarks.documents.azure.com:443/ -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api
