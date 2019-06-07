@@ -8,7 +8,7 @@ export default class BookmarksService {
 
   async getBookmarks(accessToken) {
     const req = new Request(
-      "https://api.better-bookmarks.com/bookmarks",
+      "https://bbfunction.azurewebsites.net/api/read",
       {
         method: "GET",
         headers: {
@@ -30,7 +30,7 @@ export default class BookmarksService {
 
   async deleteBookmark(bookmark, accessToken) {
     const req = new Request(
-      `https://api.better-bookmarks.com/bookmarks?bookmarkKey=${encodeURIComponent(bookmark.key)}`,
+      `https://bbfunction.azurewebsites.net/api/delete?bookmarkKey=${encodeURIComponent(bookmark.key)}`,
       {
         method: "DELETE",
         headers: {
