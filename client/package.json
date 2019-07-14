@@ -32,6 +32,6 @@
   "dependencies": {
     "auth0-chrome": "^0.1.2",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.11"
+    "lodash": "^4.17.13"
   }
 }
