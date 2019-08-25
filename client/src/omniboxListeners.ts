@@ -12,17 +12,14 @@ export function addOmniboxListeners() {
 }
 
 export function inputChangedHandler(text: string, provideSuggestionsCallback: OmniboxProvideSuggestionsCallback): void {
-    var browserFacade = new ChromeBrowser();
     var bookmarkManager = new BookmarkManager();
 
-    // TODO: Add caching for this getBookmarks call.
     bookmarkManager.getBookmarks()
     .then((bookmarks) => {
-        if (!text.startsWith("go ") || text.length < 4) {
+        var inputText = text.toLowerCase();
+        if (inputText.startsWith("sv ")) {
             return;
         }
-
-        var inputText = text.replace("go ", "").toLowerCase();
 
         // TODO: Tweak order of suggestions based on closest match
         // simple 2-pass algorithm for now (first check for startsWith, second for includes and not already in the list).
@@ -46,7 +43,7 @@ export function inputChangedHandler(text: string, provideSuggestionsCallback: Om
 
         var suggestedBookmarks = 
             filteredBookmarks.map(bkmark => {
-                return { content: 'go ' + bkmark.key, description: _.escape(bkmark.key + ' - ') + '<url>' + _.escape(bkmark.url) + '</url>' };
+                return { content: bkmark.key, description: _.escape(bkmark.key + ' - ') + '<url>' + _.escape(bkmark.url) + '</url>' };
             });
 
         provideSuggestionsCallback(suggestedBookmarks);
@@ -59,12 +56,13 @@ export function inputEnteredHandler(text: string, disposition: chrome.omnibox.On
 
     // inputEnteredDisposition could be used to control url navigation tab behavior (currentTab, newForegroundTab, etc)
     // See: https://developer.chrome.com/extensions/omnibox#type-OnInputEnteredDisposition
-    var entry = text.toLowerCase().trim();
-    if (entry.startsWith("go ")) {
-        performGoNavigation(entry, browserFacade, bookmarkManager);
+    var bookmarkKey = text.toLowerCase().trim();
+    if (!bookmarkKey.startsWith("sv ")) {
+        performNavigation(bookmarkKey, browserFacade, bookmarkManager);
         return;
     }
     
+    bookmarkKey = bookmarkKey.replace("sv ", "");
     browserFacade.getCurrentTabUrl()
         .then((url) => {
             // TODO: Display error?
@@ -72,9 +70,9 @@ export function inputEnteredHandler(text: string, disposition: chrome.omnibox.On
                 return;
             }
 
-            bookmarkManager.saveBookmark(new Bookmark(entry, url))
+            bookmarkManager.saveBookmark(new Bookmark(bookmarkKey, url))
                 .then(() => {
-                    browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${entry}`);
+                    browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${bookmarkKey}`);
                     bookmarkManager.getBookmarks()
                         .then((allBookmarks) => {
                             var syncService = new SyncService();
@@ -84,16 +82,15 @@ export function inputEnteredHandler(text: string, disposition: chrome.omnibox.On
         });
 }
 
-function performGoNavigation(entry: string, browserFacade: BrowserFacade, bookmarkManager: BookmarkManager) {
-    var key = entry.replace("go ", "");
-    bookmarkManager.getBookmark(key)
+function performNavigation(bookmarkKey: string, browserFacade: BrowserFacade, bookmarkManager: BookmarkManager) {
+    bookmarkManager.getBookmark(bookmarkKey)
         .then((bookmark) => {
             if (!bookmark) {
-                browserFacade.postNotification("Bookmark not found", `No bookmark could be found for ${key}`);
+                browserFacade.postNotification("Bookmark not found", `No bookmark could be found for ${bookmarkKey}`);
                 return;
             }
             if (!bookmark.url) {
-                browserFacade.postNotification("Invalid bookmark", `${key} is an invalid bookmark`);
+                browserFacade.postNotification("Invalid bookmark", `${bookmarkKey} is an invalid bookmark`);
                 return;
             }
 
