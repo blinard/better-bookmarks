@@ -33,7 +33,11 @@ gulp.task("copy:manifest", function() {
         .pipe(gulp.dest("dist"))
 });
 
-gulp.task("copy:authenv", function() {
+gulp.task("compile:authenv", function(cb) {
+    cmd("node_modules/.bin/tsc src/authEnv.ts --module ES2015", cb)
+});
+
+gulp.task("copy:authenv", ["compile:authenv"], function() {
     return gulp.src("src/authEnv.js")
         .pipe(gulp.dest("dist/browserAction"))
 });
@@ -52,5 +56,6 @@ gulp.task("copy:auth0chrome", function() {
 gulp.task("build", ["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authenv"]);
 
 gulp.task("clean", function(cb) {
-    cmd('rm -rf dist', cb);
+    cmd("rm -rf dist", cb);
+    cmd("rm src/authEnv.js", cb);
 });
