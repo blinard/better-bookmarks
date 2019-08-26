@@ -70,6 +70,13 @@ resource "azurerm_function_app" "func" {
       type = "SystemAssigned"
   }
 
+  // Note: Need to clear all the allowed origins so Cors can be handled by the function code.
+  site_config {
+    cors {
+      allowed_origins = []
+    }
+  }
+
   depends_on = ["azurerm_key_vault_secret.dbauthkey"]
 }
 
@@ -79,9 +86,7 @@ resource "azurerm_key_vault" "kv" {
     resource_group_name = "${azurerm_resource_group.rg.name}"
     tenant_id = "${data.azurerm_client_config.current.tenant_id}"
 
-    sku {
-        name = "standard"
-    }
+    sku_name = "standard"
 }
 
 resource "azurerm_key_vault_secret" "dbauthkey" {
@@ -95,8 +100,7 @@ resource "azurerm_key_vault_secret" "dbauthkey" {
 }
 
 resource "azurerm_key_vault_access_policy" "tf" {
-  vault_name          = "${azurerm_key_vault.kv.name}"
-  resource_group_name = "${azurerm_key_vault.kv.resource_group_name}"
+  key_vault_id        = "${azurerm_key_vault.kv.id}"
 
   tenant_id = "${data.azurerm_client_config.current.tenant_id}"
   object_id = "${data.azurerm_client_config.current.client_id}"
@@ -124,8 +128,7 @@ resource "azurerm_key_vault_access_policy" "tf" {
 }
 
 resource "azurerm_key_vault_access_policy" "funcapp" {
-  vault_name          = "${azurerm_key_vault.kv.name}"
-  resource_group_name = "${azurerm_key_vault.kv.resource_group_name}"
+  key_vault_id        = "${azurerm_key_vault.kv.id}"
 
   tenant_id = "${azurerm_function_app.func.identity[0].tenant_id}"
   object_id = "${azurerm_function_app.func.identity[0].principal_id}"
@@ -142,8 +145,7 @@ resource "azurerm_key_vault_access_policy" "funcapp" {
 }
 
 resource "azurerm_key_vault_access_policy" "me" {
-  vault_name          = "${azurerm_key_vault.kv.name}"
-  resource_group_name = "${azurerm_key_vault.kv.resource_group_name}"
+  key_vault_id        = "${azurerm_key_vault.kv.id}"
 
   tenant_id = "${data.azurerm_client_config.current.tenant_id}"
   object_id = "${data.azuread_user.me.id}"

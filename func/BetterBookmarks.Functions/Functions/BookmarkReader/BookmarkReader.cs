@@ -26,6 +26,11 @@ namespace BetterBookmarks.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, 
             ILogger log)
         {
+            if (CorsHelper.ShouldRespondOkAfterProcessingCors(req))
+            {
+                return new OkResult();
+            }
+            
             var impl = DiContainer.Instance.Resolve<BookmarkReaderImpl>();
             return await impl.Run(req, log);
         }

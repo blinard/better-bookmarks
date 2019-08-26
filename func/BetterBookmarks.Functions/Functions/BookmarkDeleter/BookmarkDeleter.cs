@@ -20,6 +20,11 @@ namespace BetterBookmarks.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = null)] HttpRequest req,
             ILogger log)
         {
+            if (CorsHelper.ShouldRespondOkAfterProcessingCors(req))
+            {
+                return new OkResult();
+            }
+            
             var impl = DiContainer.Instance.Resolve<BookmarkDeleterImpl>();
             return await impl.Run(req, log);
         }
