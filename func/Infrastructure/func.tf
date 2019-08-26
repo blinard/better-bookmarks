@@ -1,11 +1,11 @@
 provider "azurerm" {
   subscription_id = "${var.azure_subscription_id}"
-  version = "~> 1.28"
+  version = "~> 1.33.0"
 }
 
 provider "azuread" {
   alias = "azad"
-  version = "~> 0.3"
+  version = "~> 0.6.0"
 }
 
 resource "azurerm_resource_group" "rg" {
