@@ -12,6 +12,8 @@ namespace BetterBookmarks
         public const string AccessControlAllowOriginKey = "Access-Control-Allow-Origin";
         public const string AccessControlAllowMethodsKey = "Access-Control-Allow-Methods";
         public const string AccessControlAllowCredentialsKey = "Access-Control-Allow-Credentials";
+        public const string AccessControlAllowHeadersKey = "Access-Control-Allow-Headers";
+
         public static List<string> AllowedOrigins = new List<string>() 
         {
             "https://functions.azure.com",
@@ -43,6 +45,7 @@ namespace BetterBookmarks
             req.HttpContext.Response.Headers.Add(AccessControlAllowCredentialsKey, true.ToString().ToLower());
             req.HttpContext.Response.Headers.Add(AccessControlAllowMethodsKey, "GET, POST, DELETE, OPTIONS");
             req.HttpContext.Response.Headers.Add(AccessControlAllowOriginKey, origin);
+            req.HttpContext.Response.Headers.Add(AccessControlAllowHeadersKey, "Authorization, *");
 
             // If this is an OPTIONS request, just respond ok now.
             if (req.Method.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase))
