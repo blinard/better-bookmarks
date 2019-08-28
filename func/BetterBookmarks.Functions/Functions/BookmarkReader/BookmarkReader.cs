@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -26,6 +27,11 @@ namespace BetterBookmarks.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = null)] HttpRequest req, 
             ILogger log)
         {
+            if (!RequestRestrictionHelper.IsRequestMethodAllowed(req, new List<string>() { "get", "options" }))
+            {
+                return new Microsoft.AspNetCore.Mvc.StatusCodeResult(405);
+            }
+
             if (CorsHelper.ShouldRespondOkAfterProcessingCors(req))
             {
                 return new OkResult();

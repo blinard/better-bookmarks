@@ -18,9 +18,14 @@ namespace BetterBookmarks.Functions
     {
         [FunctionName("Sync")]
         public static async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = null)] HttpRequest req,
+            [HttpTrigger(AuthorizationLevel.Anonymous, Route = null)] HttpRequest req,
             ILogger log)
         {
+            if (!RequestRestrictionHelper.IsRequestMethodAllowed(req, new List<string>() { "post", "options" }))
+            {
+                return new Microsoft.AspNetCore.Mvc.StatusCodeResult(405);
+            }
+
             if (CorsHelper.ShouldRespondOkAfterProcessingCors(req))
             {
                 return new OkResult();

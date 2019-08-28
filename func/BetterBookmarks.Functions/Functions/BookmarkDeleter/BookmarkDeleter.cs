@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using BetterBookmarks.Repositories;
 using BetterBookmarks.Services;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace BetterBookmarks.Functions
 {
@@ -20,6 +21,11 @@ namespace BetterBookmarks.Functions
             [HttpTrigger(AuthorizationLevel.Anonymous, "delete", Route = null)] HttpRequest req,
             ILogger log)
         {
+            if (!RequestRestrictionHelper.IsRequestMethodAllowed(req, new List<string>() { "delete", "options" }))
+            {
+                return new Microsoft.AspNetCore.Mvc.StatusCodeResult(405);
+            }
+
             if (CorsHelper.ShouldRespondOkAfterProcessingCors(req))
             {
                 return new OkResult();
