@@ -17,7 +17,7 @@ namespace BetterBookmarks
             "https://functions.azure.com",
             "https://functions-staging.azure.com",
             "https://functions-next.azure.com",
-            "chrome-extension://pefeencopjdpgkdkdpomklgfjkodmdhm/"
+            "chrome-extension://pefeencopjdpgkdkdpomklgfjkodmdhm"
         };
 
         public static bool ShouldRespondOkAfterProcessingCors(HttpRequest req)
