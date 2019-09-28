@@ -37,9 +37,9 @@ steps:
     apt-get install zip
     sudo npm install -g gulp yarn
     cd client
-    npm install
+    sudo npm install
     cd ../web
-    yarn install
+    sudo yarn install
     cd ..
   displayName: 'Installing build tools and project dependencies'
 
