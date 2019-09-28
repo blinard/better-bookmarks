@@ -1,0 +1,65 @@
+# Setting the name effectively sets the Build.BuildNumber variable
+# Older doc on version number details: https://github.com/MicrosoftDocs/vsts-docs/blob/e5d4e6f62d381a0d78b2c3dba7ffeedcf25be73a/docs/pipelines/build/options.md
+name: 1.1.0$(Rev:.r)
+
+trigger:
+    branches:
+        include:
+        - master
+    paths:
+        include:
+        - client/*
+        - web/*
+        - bb-extension-pipeline.yml
+
+pr:
+    branches:
+        include:
+        - master
+    paths:
+        include:
+        - client/*
+        - web/*
+        - bb-extension-pipeline.yml
+
+pool:
+  vmImage: 'ubuntu-16.04'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+
+- script: sudo chmod 777 build.sh
+  displayName: 'Making build.sh executable'
+
+- script: |
+    apt-get install zip
+    sudo npm install -g gulp yarn
+    cd client
+    npm install
+    cd ../web
+    yarn install
+    cd ..
+  displayName: 'Installing build tools and project dependencies'
+
+- script: |
+    ./build.sh
+  displayName: 'Building extension'
+
+  - script: |
+    cd client/dist
+    zip -r package.zip *
+    cp package.zip $(Build.ArtifactStagingDirectory)
+  displayName: 'Packaging extension'
+
+# Publish build artifacts to Azure Pipelines/TFS
+- task: PublishBuildArtifacts@1
+  displayName: 'Publishing build artifact'
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
+    artifactName: 'drop' 
+    #publishLocation: 'Container' # Options: container, filePath
+    #targetPath: # Required when publishLocation == FilePath
+    #parallel: false # Optional
+    #parallelCount: # Optional
