@@ -47,7 +47,7 @@ steps:
     ./build.sh
   displayName: 'Building extension'
 
-  - script: |
+- script: |
     cd client/dist
     zip -r package.zip *
     cp package.zip $(Build.ArtifactStagingDirectory)
