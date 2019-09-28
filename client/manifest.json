@@ -1,7 +1,7 @@
 {
   "name": "Better Bookmarks",
   "description" : "Type 'bb' plus a bookmark key into the Omnibox.",
-  "version": "1.0.1.5",
+  "version": "m.m.p.r",
   "background": {
     "scripts": [ "backgroundServices.js" ]
   },
