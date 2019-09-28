@@ -44,7 +44,7 @@ steps:
   displayName: 'Installing build tools and project dependencies'
 
 - script: |
-    ./build.sh
+    sudo ./build.sh
   displayName: 'Building extension'
 
 - script: |
