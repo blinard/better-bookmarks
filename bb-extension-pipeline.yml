@@ -49,7 +49,7 @@ steps:
 
 - script: |
     cd client/dist
-    zip -r package.zip *
+    sudo zip -r package.zip *
     cp package.zip $(Build.ArtifactStagingDirectory)
   displayName: 'Packaging extension'
 
