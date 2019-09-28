@@ -45,7 +45,7 @@ steps:
 
 - script: |
     sudo ./build.sh
-    ./version-client.sh $(Build.BuildNumber)
+    sudo ./version-client.sh $(Build.BuildNumber)
   displayName: 'Building extension'
 
 - script: |
