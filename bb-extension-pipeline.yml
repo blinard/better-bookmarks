@@ -67,8 +67,7 @@ steps:
     #parallelCount: # Optional
 
 - script: |
-    curl \
-    -d '{ client_id: '', client_secret: '', refresh_token: '' }
+    sudo ./publish-client.sh "$(ClientId)" "$CLIENT_SECRET" "$REFRESH_TOKEN"
   displayName: 'Publishing extension to testers'
   env: 
     CLIENT_SECRET: $(ClientSecret)
