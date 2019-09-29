@@ -35,6 +35,7 @@ steps:
 
 - script: |
     apt-get install zip
+    apt-get install jq
     sudo npm install -g gulp yarn
     cd client
     sudo npm install
@@ -64,3 +65,11 @@ steps:
     #targetPath: # Required when publishLocation == FilePath
     #parallel: false # Optional
     #parallelCount: # Optional
+
+- script: |
+    curl \
+    -d '{ client_id: '', client_secret: '', refresh_token: '' }
+  displayName: 'Publishing extension to testers'
+  env: 
+    CLIENT_SECRET: $(ClientSecret)
+    REFRESH_TOKEN: $(RefreshToken)
