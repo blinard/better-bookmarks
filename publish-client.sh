@@ -27,9 +27,10 @@ https://www.googleapis.com/upload/chromewebstore/v1.1/items/pefeencopjdpgkdkdpom
 echo Publishing the package to testers
 # Publish the new package to testers
 curl \
--d {} \
+-d '{}' \
 -H 'Authorization: Bearer '$authToken  \
 -H 'x-goog-api-version: 2' \
+-H 'Content-Type: application/json' \
 -X POST \
 -s \
 https://www.googleapis.com/chromewebstore/v1.1/items/pefeencopjdpgkdkdpomklgfjkodmdhm/publish?publishTarget=trustedTesters \
