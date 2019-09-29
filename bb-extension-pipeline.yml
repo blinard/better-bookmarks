@@ -69,6 +69,7 @@ steps:
     #parallelCount: # Optional
 
 - script: |
+    cp client/dist/package.zip .
     sudo ./publish-client.sh "$(ClientId)" "$CLIENT_SECRET" "$REFRESH_TOKEN"
   displayName: 'Publishing extension to testers'
   condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))

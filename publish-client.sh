@@ -18,7 +18,7 @@ curl \
 -H 'x-goog-api-version: 2' \
 -X PUT \
 -T package.zip \
--# \
+-# -s \
 https://www.googleapis.com/upload/chromewebstore/v1.1/items/pefeencopjdpgkdkdpomklgfjkodmdhm?uploadType=media
 
 # Publish the new package to testers
@@ -26,6 +26,7 @@ curl \
 -H 'Authorization: Bearer '$authToken  \
 -H 'x-goog-api-version: 2' \
 -X POST \
+-s \
 https://www.googleapis.com/chromewebstore/v1.1/items/pefeencopjdpgkdkdpomklgfjkodmdhm/publish?publishTarget=trustedTesters
 
 # Display current extension version from Chrome WebStore Api
