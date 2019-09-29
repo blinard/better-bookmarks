@@ -54,10 +54,12 @@ steps:
     sudo zip -r package.zip *
     cp package.zip $(Build.ArtifactStagingDirectory)
   displayName: 'Packaging extension'
+  condition: and(succeeded(), neq(variables['Build.Reason'], 'PullRequest'))
 
 # Publish build artifacts to Azure Pipelines/TFS
 - task: PublishBuildArtifacts@1
   displayName: 'Publishing build artifact'
+  condition: and(succeeded(), neq(variables['Build.Reason'], 'PullRequest'))
   inputs:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'drop' 
@@ -69,6 +71,7 @@ steps:
 - script: |
     sudo ./publish-client.sh "$(ClientId)" "$CLIENT_SECRET" "$REFRESH_TOKEN"
   displayName: 'Publishing extension to testers'
+  condition: and(succeeded(), neq(variables['Build.Reason'], 'PullRequest'))
   env: 
     CLIENT_SECRET: $(ClientSecret)
     REFRESH_TOKEN: $(RefreshToken)
