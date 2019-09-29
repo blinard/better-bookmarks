@@ -77,7 +77,7 @@ steps:
 
 - task: AzureFunctionApp@1
   displayName: Azure Function App Deploy
-  condition: and(succeeded(), neq(variables['Build.Reason'], 'PullRequest'))
+  condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
   inputs:
     azureSubscription: outlookAzureSubscriptionConnection
     appType: functionApp

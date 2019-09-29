@@ -34,8 +34,8 @@ steps:
   displayName: 'Making build.sh executable'
 
 - script: |
-    apt-get install zip
-    apt-get install jq
+    sudo apt-get install zip
+    sudo apt-get install jq
     sudo npm install -g gulp yarn
     cd client
     sudo npm install
