@@ -11,6 +11,9 @@ trigger:
         - client/*
         - web/*
         - bb-extension-pipeline.yml
+        - publish-client.sh
+        - build.sh
+        - version-client.sh
 
 pr:
     branches:
@@ -21,6 +24,8 @@ pr:
         - client/*
         - web/*
         - bb-extension-pipeline.yml
+        - build.sh
+        - version-client.sh
 
 pool:
   vmImage: 'ubuntu-16.04'
