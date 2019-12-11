@@ -4,8 +4,10 @@
   "description": "Webservice",
   "main": "index.js",
   "scripts": {
+    "clean": "gulp clean",
     "build": "gulp build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "ts-node node_modules/.bin/jasmine --config=jasmine.json",
+    "coverage": "nyc -r text -e .ts -x \"tests/*.test.ts\" npm run test "
   },
   "repository": {
     "type": "git",
