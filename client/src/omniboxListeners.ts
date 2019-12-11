@@ -21,7 +21,7 @@ export function inputChangedHandler(text: string, provideSuggestionsCallback: Om
             return;
         }
 
-        // TODO: Tweak order of suggestions based on closest match
+        // TODO: Tweak order of suggestions based on closest match - or most used.
         // simple 2-pass algorithm for now (first check for startsWith, second for includes and not already in the list).
         var filteredBookmarks = 
             bookmarks.filter(bkmark => bkmark.key.startsWith(inputText) || bkmark.url.startsWith(inputText));
@@ -56,13 +56,19 @@ export function inputEnteredHandler(text: string, disposition: chrome.omnibox.On
 
     // inputEnteredDisposition could be used to control url navigation tab behavior (currentTab, newForegroundTab, etc)
     // See: https://developer.chrome.com/extensions/omnibox#type-OnInputEnteredDisposition
-    var bookmarkKey = text.toLowerCase().trim();
-    if (!bookmarkKey.startsWith("sv ")) {
-        performNavigation(bookmarkKey, browserFacade, bookmarkManager);
+    let normalizedCommand = text.toLowerCase().trim();
+    let commandTokens = normalizedCommand.split(" ");
+    if (commandTokens && commandTokens.length === 1 && commandTokens[0] !== "sv") {
+        performNavigation(commandTokens[1], browserFacade, bookmarkManager);
         return;
     }
     
-    bookmarkKey = bookmarkKey.replace("sv ", "");
+    if (commandTokens && commandTokens.length === 3 && commandTokens[0] === "sv") {
+        // Command: sv bookmarkKey url
+        saveBookmarkAndSync(commandTokens[1], commandTokens[2]);
+        return;
+    }
+
     browserFacade.getCurrentTabUrl()
         .then((url) => {
             // TODO: Display error?
@@ -70,16 +76,23 @@ export function inputEnteredHandler(text: string, disposition: chrome.omnibox.On
                 return;
             }
 
-            bookmarkManager.saveBookmark(new Bookmark(bookmarkKey, url))
-                .then(() => {
-                    browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${bookmarkKey}`);
-                    bookmarkManager.getBookmarks()
-                        .then((allBookmarks) => {
-                            var syncService = new SyncService();
-                            syncService.synchronizeWithService(allBookmarks);
-                        });
-                });
+            saveBookmarkAndSync(commandTokens[1], url);
         });
+}
+
+function saveBookmarkAndSync(bookmarkKey: string, url: string): void {
+    const browserFacade = new ChromeBrowser();
+    const bookmarkManager = new BookmarkManager();
+
+    bookmarkManager.saveBookmark(new Bookmark(bookmarkKey, url))
+    .then(() => {
+        browserFacade.postNotification("Bookmark Saved", `Current url saved as bookmark: ${bookmarkKey}`);
+        bookmarkManager.getBookmarks()
+        .then((allBookmarks) => {
+            var syncService = new SyncService();
+            syncService.synchronizeWithService(allBookmarks);
+        });
+    });
 }
 
 function performNavigation(bookmarkKey: string, browserFacade: BrowserFacade, bookmarkManager: BookmarkManager) {

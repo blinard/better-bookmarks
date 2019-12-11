@@ -37,10 +37,10 @@ gulp.task("compile:authenv", function(cb) {
     cmd("node_modules/.bin/tsc src/authEnv.ts --module ES2015", cb)
 });
 
-gulp.task("copy:authenv", ["compile:authenv"], function() {
+gulp.task("copy:authenv", gulp.series(["compile:authenv"], function() {
     return gulp.src("src/authEnv.js")
         .pipe(gulp.dest("dist/browserAction"))
-});
+}));
 
 gulp.task("copy:jwtdecode", function() {
     return gulp.src("node_modules/jwt-decode/build/jwt-decode*.js")
@@ -53,7 +53,7 @@ gulp.task("copy:auth0chrome", function() {
         .pipe(gulp.dest("dist"))
 });
 
-gulp.task("build", ["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authenv"]);
+gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authenv"]));
 
 gulp.task("clean", function(cb) {
     cmd("rm -rf dist", cb);
