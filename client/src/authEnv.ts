@@ -1,5 +1,5 @@
 
-//TODO: Maybe just rename this to Config or something non-specific to authentication
+// TODO: Maybe just rename this to Config or something non-specific to authentication
 
 export interface AuthenticationConfig {
     AUTH0_DOMAIN: string;

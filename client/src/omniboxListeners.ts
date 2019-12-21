@@ -59,6 +59,7 @@ export function inputEnteredHandler(text: string, disposition: chrome.omnibox.On
     let normalizedCommand = text.toLowerCase().trim();
     let commandTokens = normalizedCommand.split(" ");
     if (commandTokens && commandTokens.length === 1 && commandTokens[0] !== "sv") {
+        //performNavigation(commandTokens[1], browserFacade, bookmarkManager); //TODO: Write test for this.
         performNavigation(commandTokens[1], browserFacade, bookmarkManager);
         return;
     }
