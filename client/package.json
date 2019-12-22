@@ -18,6 +18,15 @@
   "bugs": {
     "url": "https://github.com/blinard/better-bookmarks/issues"
   },
+  "source": "src/backgroundServices.ts",
+  "browser": "dist/backgroundServices.js",
+  "targets": {
+    "browser": {
+      "sourceMap": {
+        "inline": true
+      }
+    }
+  },
   "homepage": "https://github.com/blinard/better-bookmarks#readme",
   "devDependencies": {
     "@types/chrome": "0.0.77",
@@ -31,6 +40,7 @@
     "karma-jasmine": "^2.0.1",
     "karma-typescript": "^4.1.1",
     "karma-typescript-es6-transform": "^4.1.1",
+    "parcel": "^1.12.4",
     "parcel-bundler": "^1.12.4",
     "typescript": "^3.7.3"
   },

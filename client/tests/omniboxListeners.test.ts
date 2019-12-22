@@ -1,18 +1,20 @@
-import { ConstructorSpies } from "./testHelpers";
+import { ConstructorSpies } from "./testHelpers.test";
 import { BrowserFacade } from "../src/browserFacades/browserFacade";
 import { BookmarkManager } from "../src/bookmarkManager";
+import { ChromeBrowser } from "../src/browserFacades/chromeBrowser";
 import { inputEnteredHandler } from "../src/omniboxListeners";
 
 describe("omniboxListener -", () => {
-    // let browserConstructorSpy = jasmine.createSpy();
+    /// let browserConstructorSpy: any;
     // let bookmarkManagerConstructorSpy = jasmine.createSpy();
     let browserConstructorSpy: ConstructorSpies<BrowserFacade>;
     let bookmarkManagerConstructorSpy: ConstructorSpies<BookmarkManager>;
+    let blah: any;
 
     beforeEach(() => {
         // window["ChromeBrowser"] = browserConstructorSpy;
         // window["BookmarkManager"] = bookmarkManagerConstructorSpy;
-
+        blah = jasmine.createSpy("blah", <any>ChromeBrowser).and.callThrough();
         browserConstructorSpy = new ConstructorSpies<BrowserFacade>("ChromeBrowser");
         bookmarkManagerConstructorSpy = new ConstructorSpies<BookmarkManager>("BookmarkManager");
     });
@@ -25,7 +27,7 @@ describe("omniboxListener -", () => {
             
             inputEnteredHandler("sv derp", "currentTab");
 
-            expect(browserConstructorSpy.getConstructorSpy).toHaveBeenCalledTimes(1);
+            expect(blah).toHaveBeenCalledTimes(1);
         });
 
         it("can save a bookmark", () => {

@@ -12,7 +12,7 @@ export class ConstructorSpies<T> {
         // Hinky note: Technically this is making the constructor function return the same
         //   object every call (like a singleton). This could cause odd behavior for some unit tests.
         this._spyObject = <T>{};
-        this._constructorSpy = jasmine.createSpy().and.returnValue(this._spyObject);
+        this._constructorSpy = jasmine.createSpy(constructorName + " constructor").and.returnValue(this._spyObject);
         window[constructorName] = this._constructorSpy;
     }
 
