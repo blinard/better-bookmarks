@@ -1,42 +1,39 @@
 import { mock, instance, verify, anyFunction } from 'ts-mockito';
 
 import { IBookmarkManager } from '../src/bookmarkManager';
-import { Bookmark } from '../src/models/bookmark';
 import { ISyncService } from '../src/syncService';
 import { BrowserFacade } from '../src/browserFacades/browserFacade';
 import { OmniboxListener } from '../src/omniboxListener';
 
-import { ConstructorSpies } from "./testHelpers.test";
-
 describe("omniboxListener -", () => {
-    let browserMock: BrowserFacade;
-    let bookmarkManagerMock: IBookmarkManager;
-    let syncServiceMock: ISyncService;
+    let mockedBrowser: BrowserFacade;
+    let mockedBookmarkManager: IBookmarkManager;
+    let mockedSyncService: ISyncService;
 
-    let fakeBrowser: BrowserFacade;
-    let fakeBookmarkManager: IBookmarkManager;
-    let fakeSyncService: ISyncService;
+    let browser: BrowserFacade;
+    let bookmarkManager: IBookmarkManager;
+    let syncService: ISyncService;
 
     let omniboxListener: OmniboxListener;
 
     beforeEach(() => {
-        browserMock = mock<BrowserFacade>();
-        bookmarkManagerMock = mock<IBookmarkManager>();
-        syncServiceMock = mock<ISyncService>();        
+        mockedBrowser = mock<BrowserFacade>();
+        mockedBookmarkManager = mock<IBookmarkManager>();
+        mockedSyncService = mock<ISyncService>();        
     });
 
     describe("addOmniboxListeners -", () => {
 
         it("adds an omnibox input changed listener on the browser", () => {
-            fakeBrowser = instance(browserMock);
-            fakeBookmarkManager = instance(bookmarkManagerMock);
-            fakeSyncService = instance(syncServiceMock);
+            browser = instance(mockedBrowser);
+            bookmarkManager = instance(mockedBookmarkManager);
+            syncService = instance(mockedSyncService);
 
-            omniboxListener = new OmniboxListener(fakeBrowser, fakeBookmarkManager, fakeSyncService);
+            omniboxListener = new OmniboxListener(browser, bookmarkManager, syncService);
             omniboxListener.addOmniboxListeners();
             
-            verify(browserMock.addOmniboxInputChangedListener(anyFunction())).once();
-            verify(browserMock.addOmniboxInputEnteredListener(anyFunction())).once();
+            verify(mockedBrowser.addOmniboxInputChangedListener(anyFunction())).once();
+            verify(mockedBrowser.addOmniboxInputEnteredListener(anyFunction())).once();
         });
 
         it("can save a bookmark", () => {
