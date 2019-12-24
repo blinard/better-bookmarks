@@ -1,16 +1,27 @@
+import { injectable, inject } from "inversify";
+import "reflect-metadata";
+import TYPES from "./dependencyInjection/types";
+
 import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { Bookmark } from './models/bookmark';
 import { DecodedToken } from './types/decodedToken';
-import { BookmarkManager } from './bookmarkManager';
+import { IBookmarkManager } from './bookmarkManager';
 import { authEnv } from './authEnv';
 import jwt_decode from 'jwt-decode';
 
-// Note: This class can only function within the extension's backgroundPage (where it can access stored auth token)
-export class SyncService {
+export interface ISyncService {
+    synchronizeWithService(bookmarksArray: Array<Bookmark>): void
+}
+
+// Note: This class can only function within the extension's backgroundPage (where it can access the stored auth token)
+@injectable()
+export class SyncService implements ISyncService {
+    constructor(@inject(TYPES.IBookmarkManager) private _bookmarkManager: IBookmarkManager) { }
 
     synchronizeWithService(bookmarksArray: Array<Bookmark>) {
+        let self = this;
         console.log(`fetching token for sync...`);
-        this._getCachedAccessToken()
+        this.getCachedAccessToken()
             .then((accessToken) => {
                 if (!accessToken) {
                     return;
@@ -39,20 +50,19 @@ export class SyncService {
                         resp.json()
                             .then(bookmarks => {
                                 console.log(`received bookmarks - ${bookmarks}`);
-                                let mgr = new BookmarkManager();
-                                mgr.saveBookmarks(bookmarks);
+                                self._bookmarkManager.saveBookmarks(bookmarks);
                             });
                     });
             });
     }
 
-    _getCachedAccessToken() {
+    private getCachedAccessToken() {
         const authResult = JSON.parse(localStorage.authResult || '{}');
         const token = authResult.id_token;
         if (token) {
-            if (this._isTokenActive(token))
+            if (this.isTokenActive(token))
                 return Promise.resolve(authResult.access_token);
-            return this._getAccessTokenUsingRefreshToken()
+            return this.getAccessTokenUsingRefreshToken()
                 .then((tokenRefreshAuthResult) => {
                     return tokenRefreshAuthResult && tokenRefreshAuthResult.access_token;
                 });
@@ -61,7 +71,7 @@ export class SyncService {
         return Promise.resolve(undefined);
     }
 
-    _getAccessTokenUsingRefreshToken() {
+    private getAccessTokenUsingRefreshToken() {
         var browserFacade = new ChromeBrowser();
         return browserFacade.getRefreshToken()
             .then(refreshToken => {
@@ -109,7 +119,7 @@ export class SyncService {
             });
     }
 
-    _isTokenActive(token: string) {
+    private isTokenActive(token: string) {
         // The user is logged in if their token isn't expired
         let decodedToken = <DecodedToken> jwt_decode(token);
         return decodedToken.exp > Date.now() / 1000;

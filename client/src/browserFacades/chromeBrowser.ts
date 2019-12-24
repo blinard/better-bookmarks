@@ -1,10 +1,12 @@
 import {BrowserFacade, OmniboxInputChangedCallback, OnMessageCallback, OmniboxInputEnteredCallback} from "./browserFacade";
 import { Bookmark } from "../models/bookmark";
 import { Dictionary } from "../types/dictionary";
+import { injectable } from "inversify";
 
 const CHROME_BOOKMARKS_KEY = "bb-bookmarks";
 const CHROME_REFRESHTOKEN_KEY = "bb-refreshtoken";
 
+@injectable()
 export class ChromeBrowser implements BrowserFacade {
 
     // This event is fired each time the user updates the text in the omnibox,

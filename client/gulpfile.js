@@ -10,7 +10,7 @@ function cmd(cmdString, cb) {
 }
 
 gulp.task("build:bgservices", function (cb) {
-    cmd("node_modules/.bin/parcel build src/backgroundServices.ts --out-dir dist", cb)
+    cmd("node_modules/.bin/parcel build ./src/backgroundServices.ts", cb)
 });
 
 gulp.task("copy:browseraction", function() {
@@ -58,4 +58,16 @@ gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "cop
 gulp.task("clean", function(cb) {
     cmd("rm -rf dist", cb);
     cmd("rm src/authEnv.js", cb);
+
+    cmd("rm src/*.js", cb);
+    cmd("rm src/*.js.map", cb);
+
+    cmd("rm src/browserFacades/*.js", cb);
+    cmd("rm src/browserFacades/*.js.map", cb);
+
+    cmd("rm src/models/*.js", cb);
+    cmd("rm src/models/*.js.map", cb);
+
+    cmd("rm src/types/*.js", cb);
+    cmd("rm src/types/*.js.map", cb);
 });

@@ -1,52 +1,69 @@
-import { ChromeBrowser } from './browserFacades/chromeBrowser';
+import { injectable, inject, interfaces } from "inversify";
+import "reflect-metadata";
+import TYPES from "./dependencyInjection/types";
+
 import { authEnv } from './authEnv';
 import Auth0Chrome from 'auth0-chrome';
-import { BookmarkManager } from './bookmarkManager';
-import { SyncService } from './syncService';
+import { IBookmarkManager, BookmarkManager } from './bookmarkManager';
+import { ISyncService } from './syncService';
+import { BrowserFacade } from './browserFacades/browserFacade';
 
-export function addAuthListeners() {
-    var browserFacade = new ChromeBrowser();
-    browserFacade.addOnMessageListener(onMessageHandler);
+export interface IAuthListener {
+    addAuthListener(): void;
 }
 
-function onMessageHandler(event: any) {
-    if (!event || !event.type || event.type !== 'authenticate') {
-        return;
+@injectable()
+export class AuthListener implements IAuthListener {
+    private _auth0: Auth0Chrome;
+
+    constructor(
+        @inject(TYPES.BrowserFacade) private _browser: BrowserFacade, 
+        @inject(TYPES.IBookmarkManager) private _bookmarkManager: IBookmarkManager, 
+        @inject(TYPES.ISyncService) private _syncService: ISyncService,
+        @inject(TYPES.Auth0ChromeFactory) private _auth0Factory: () => Auth0Chrome) {
+            this._auth0 = _auth0Factory();
+        }
+
+    addAuthListener(): void {
+        this._browser.addOnMessageListener(this.onMessageHandler.bind(this));
     }
 
-    var browserFacade = new ChromeBrowser();
-
-    // scope
-    //  - openid if you want an id_token returned
-    //  - offline_access if you want a refresh_token returned
-    //  - profile if you want an additional claims like name, nickname, picture and updated_at.
-    // device
-    //  - required if requesting the offline_access scope.
-    let options = {
-        scope: 'openid profile offline_access',
-        device: 'chrome-extension',
-        audience: authEnv.AUDIENCE
-    };
-
-    new Auth0Chrome(authEnv.AUTH0_DOMAIN, authEnv.AUTH0_CLIENT_ID)
-        .authenticate(options)
-        .then(function (authResult) {
-            // TODO: Store in chrome.storage rather than localStorage.
-            localStorage.authResult = JSON.stringify(authResult);
-            browserFacade.setRefreshToken(<string>authResult.refresh_token);
-            browserFacade.postNotification('Login Successful', 'Nice, you\'ve logged in!');
-
-            console.log(`beginning bookmark sync`);
-            var bookmarkManager = new BookmarkManager();
-            bookmarkManager.getBookmarks()
-                .then((bookmarksArray) => {
-                    console.log(`initiating sync - ${bookmarksArray}`);
-                    var syncService = new SyncService();
-                    syncService.synchronizeWithService(bookmarksArray);
-                });
-        
-        })
-        .catch(function (err) {
-            browserFacade.postNotification('Login Failed', err.message);
-        });
+    private onMessageHandler(event: any) {
+        const self = this;
+        if (!event || !event.type || event.type !== 'authenticate') {
+            return;
+        }
+    
+        // scope
+        //  - openid if you want an id_token returned
+        //  - offline_access if you want a refresh_token returned
+        //  - profile if you want an additional claims like name, nickname, picture and updated_at.
+        // device
+        //  - required if requesting the offline_access scope.
+        let options = {
+            scope: 'openid profile offline_access',
+            device: 'chrome-extension',
+            audience: authEnv.AUDIENCE
+        };
+    
+        self._auth0
+            .authenticate(options)
+            .then(function (authResult) {
+                // TODO: Store in chrome.storage rather than localStorage.
+                localStorage.authResult = JSON.stringify(authResult);
+                self._browser.setRefreshToken(<string>authResult.refresh_token);
+                self._browser.postNotification('Login Successful', 'Nice, you\'ve logged in!');
+    
+                console.log(`beginning bookmark sync`);
+                self._bookmarkManager.getBookmarks()
+                    .then((bookmarksArray) => {
+                        console.log(`initiating sync - ${bookmarksArray}`);
+                        self._syncService.synchronizeWithService(bookmarksArray);
+                    });
+            
+            })
+            .catch(function (err) {
+                self._browser.postNotification('Login Failed', err.message);
+            });
+    }    
 }
