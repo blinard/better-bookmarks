@@ -51,7 +51,7 @@ steps:
 
 - script: |
     sudo ./test.sh
-    displayName: 'Running tests'
+  displayName: 'Running tests'
 
 # Publish Test Results
 - task: PublishTestResults@2
@@ -73,7 +73,7 @@ steps:
 - script: |
     sudo ./build.sh
     sudo ./version-client.sh $(Build.BuildNumber)
-  displayName: 'Packaging extension'
+  displayName: 'Building extension for release'
 
 - script: |
     cd client/dist
