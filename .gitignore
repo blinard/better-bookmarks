@@ -283,3 +283,4 @@ client/**/*.js.map
 
 **/.parcel-cache
 **/coverage
+**/test-results
