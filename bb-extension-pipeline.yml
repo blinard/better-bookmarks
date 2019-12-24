@@ -54,7 +54,8 @@ steps:
   displayName: 'Installing build tools and project dependencies'
 
 - script: |
-    sudo export CHROME_BIN=/usr/bin/google-chrome
+    export CHROME_BIN=/usr/bin/google-chrome
+    set
     sudo ./test.sh
   displayName: 'Running tests'
 
