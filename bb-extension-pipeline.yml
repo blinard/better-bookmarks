@@ -41,7 +41,10 @@ steps:
 - script: |
     sudo apt-get install zip
     sudo apt-get install jq
+    sudo apt-get install wget
     sudo npm install -g gulp yarn
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo dpkg -i google-chrome-stable_current_amd64.deb
     cd client
     sudo npm install
     cd ../web
