@@ -55,7 +55,6 @@ steps:
 
 - script: |
     export CHROME_BIN=/usr/bin/google-chrome
-    set
     sudo ./test.sh
   displayName: 'Running tests'
 
