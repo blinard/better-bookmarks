@@ -41,7 +41,11 @@ steps:
 - script: |
     sudo apt-get install zip
     sudo apt-get install jq
+    sudo apt-get install wget
     sudo npm install -g gulp yarn
+    wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+    sudo dpkg -i google-chrome-stable_current_amd64.deb
+    which google-chrome
     cd client
     sudo npm install
     cd ../web
@@ -50,9 +54,32 @@ steps:
   displayName: 'Installing build tools and project dependencies'
 
 - script: |
+    export CHROME_BIN=/usr/bin/google-chrome
+    set
+    sudo ./test.sh
+  displayName: 'Running tests'
+
+# Publish Test Results
+- task: PublishTestResults@2
+  displayName: 'Publishing test results'
+  inputs:
+    testResultsFormat: 'JUnit' # Options: JUnit, NUnit, VSTest, xUnit, cTest
+    testResultsFiles: '**/test.results.xml' 
+    searchFolder: '$(System.DefaultWorkingDirectory)' # Optional
+    mergeTestResults: true
+    failTaskOnFailedTests: true
+
+# Publish code coverage results
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish coverage results'
+  inputs:
+    codeCoverageTool: 'cobertura'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage/**/coverage.xml'
+
+- script: |
     sudo ./build.sh
     sudo ./version-client.sh $(Build.BuildNumber)
-  displayName: 'Building extension'
+  displayName: 'Building extension for release'
 
 - script: |
     cd client/dist
