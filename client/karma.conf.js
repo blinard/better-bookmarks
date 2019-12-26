@@ -88,7 +88,8 @@ module.exports = function(config) {
             },
         },
         bundlerOptions: {
-            entrypoints: /\.test\.(ts)$/
+            entrypoints: /\.test\.(ts)$/,
+            sourceMap: true
         },
         reports: {
             html: "coverage",

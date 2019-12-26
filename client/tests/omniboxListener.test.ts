@@ -1,9 +1,10 @@
-import { mock, instance, verify, anyFunction } from 'ts-mockito';
+import { mock, instance, verify, anyFunction, capture, when } from 'ts-mockito';
 
 import { IBookmarkManager } from '../src/bookmarkManager';
 import { ISyncService } from '../src/syncService';
 import { BrowserFacade } from '../src/browserFacades/browserFacade';
 import { OmniboxListener } from '../src/omniboxListener';
+import { Bookmark } from '../src/models/bookmark';
 
 describe("omniboxListener -", () => {
     let mockedBrowser: BrowserFacade;
@@ -14,8 +15,6 @@ describe("omniboxListener -", () => {
     let bookmarkManager: IBookmarkManager;
     let syncService: ISyncService;
 
-    let omniboxListener: OmniboxListener;
-
     beforeEach(() => {
         mockedBrowser = mock<BrowserFacade>();
         mockedBookmarkManager = mock<IBookmarkManager>();
@@ -23,27 +22,38 @@ describe("omniboxListener -", () => {
     });
 
     describe("addOmniboxListeners -", () => {
-
-        it("adds an omnibox input changed listener on the browser", () => {
-            browser = instance(mockedBrowser);
-            bookmarkManager = instance(mockedBookmarkManager);
-            syncService = instance(mockedSyncService);
-
-            omniboxListener = new OmniboxListener(browser, bookmarkManager, syncService);
+        it("adds omnibox input changed and entered listeners on the browser", () => {
+            let omniboxListener = getOmniboxListenerWithMocks();
             omniboxListener.addOmniboxListeners();
             
             verify(mockedBrowser.addOmniboxInputChangedListener(anyFunction())).once();
             verify(mockedBrowser.addOmniboxInputEnteredListener(anyFunction())).once();
         });
-
-        it("can save a bookmark", () => {
-            let result = 5 + 2;
-            expect(result).toBe(7);
-        });
-
-        // it("does not honor capitalization in bookmark keys", () => {
-        // });
-
     });
 
+    describe("input entered listener", () => {
+        it("navigates the current tab when a bookmark key is entered", () => {
+            let omniboxListener = getOmniboxListenerWithMocks();
+            omniboxListener.addOmniboxListeners();
+
+            const resultBookmark = new Bookmark("bbcode", "https://github.com");
+            when(mockedBookmarkManager.getBookmark("bbcode")).thenResolve(resultBookmark);
+
+            // capture the input entered handler
+            const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
+            inputEnteredHandler("bbcode", "currentTab");
+
+            setTimeout(() => {
+                verify(mockedBrowser.navigateCurrentTab(resultBookmark.url)).once();
+            }, 100);
+        });
+    });
+
+    function getOmniboxListenerWithMocks() {
+        browser = instance(mockedBrowser);
+        bookmarkManager = instance(mockedBookmarkManager);
+        syncService = instance(mockedSyncService);
+
+        return new OmniboxListener(browser, bookmarkManager, syncService);
+    }    
 });
