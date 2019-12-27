@@ -25,6 +25,33 @@ export class OmniboxListener implements IOmniboxListener {
         this._browser.addOmniboxInputEnteredListener(this.inputEnteredHandler.bind(this));
     }
 
+    private inputEnteredHandler(text: string, disposition: chrome.omnibox.OnInputEnteredDisposition): void {    
+        // inputEnteredDisposition could be used to control url navigation tab behavior (currentTab, newForegroundTab, etc)
+        // See: https://developer.chrome.com/extensions/omnibox#type-OnInputEnteredDisposition
+        let normalizedCommand = text.toLowerCase().trim();
+        let commandTokens = normalizedCommand.split(" ");
+        if (commandTokens && commandTokens.length === 1 && commandTokens[0] !== "sv") {
+            this.performNavigation(commandTokens[0]);
+            return;
+        }
+        
+        if (commandTokens && commandTokens.length === 3 && commandTokens[0] === "sv") {
+            // Command: sv bookmarkKey url
+            this.saveBookmarkAndSync(commandTokens[1], commandTokens[2]);
+            return;
+        }
+    
+        this._browser.getCurrentTabUrl()
+            .then((url) => {
+                // TODO: Display error?
+                if (!url) {
+                    return;
+                }
+    
+                this.saveBookmarkAndSync(commandTokens[1], url);
+            });
+    }
+
     private inputChangedHandler(text: string, provideSuggestionsCallback: OmniboxProvideSuggestionsCallback): void {    
         this._bookmarkManager.getBookmarks()
         .then((bookmarks) => {
@@ -61,34 +88,6 @@ export class OmniboxListener implements IOmniboxListener {
             provideSuggestionsCallback(suggestedBookmarks);
         });
     }    
-
-    private inputEnteredHandler(text: string, disposition: chrome.omnibox.OnInputEnteredDisposition): void {    
-        // inputEnteredDisposition could be used to control url navigation tab behavior (currentTab, newForegroundTab, etc)
-        // See: https://developer.chrome.com/extensions/omnibox#type-OnInputEnteredDisposition
-        let normalizedCommand = text.toLowerCase().trim();
-        let commandTokens = normalizedCommand.split(" ");
-        if (commandTokens && commandTokens.length === 1 && commandTokens[0] !== "sv") {
-            //performNavigation(commandTokens[1], browserFacade, bookmarkManager); //TODO: Write test for this.
-            this.performNavigation(commandTokens[0]);
-            return;
-        }
-        
-        if (commandTokens && commandTokens.length === 3 && commandTokens[0] === "sv") {
-            // Command: sv bookmarkKey url
-            this.saveBookmarkAndSync(commandTokens[1], commandTokens[2]);
-            return;
-        }
-    
-        this._browser.getCurrentTabUrl()
-            .then((url) => {
-                // TODO: Display error?
-                if (!url) {
-                    return;
-                }
-    
-                this.saveBookmarkAndSync(commandTokens[1], url);
-            });
-    }
 
     private saveBookmarkAndSync(bookmarkKey: string, url: string): void {
         this._bookmarkManager.saveBookmark(new Bookmark(bookmarkKey, url))

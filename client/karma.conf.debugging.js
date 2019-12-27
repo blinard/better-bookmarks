@@ -14,6 +14,7 @@ module.exports = function(config) {
   
       // list of files / patterns to load in the browser
       files: [
+        //{ pattern: 'src/**/backgroundServices.ts', included: false },
         'src/**/*.ts',
         'tests/**/*.test.ts'
       ],
@@ -34,10 +35,7 @@ module.exports = function(config) {
       // test results reporter to use
       // possible values: 'dots', 'progress'
       // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-      reporters: [
-          'karma-typescript',
-          'spec'
-      ],
+      reporters: ['karma-typescript', 'spec'],
   
   
       // web server port
@@ -59,12 +57,8 @@ module.exports = function(config) {
   
       // start these browsers
       // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-      browsers: ['ChromeHeadless'],
+      browsers: ['ChromeDebugging'],
       customLaunchers: {
-        ChromeHeadlessNoSandbox: {
-            base: 'ChromeHeadless',
-            flags: ['--no-sandbox']
-        },
         ChromeDebugging: {
           base: 'Chrome',
           flags: ['--remote-debugging-port=9333']
@@ -73,7 +67,7 @@ module.exports = function(config) {
   
       // Continuous Integration mode
       // if true, Karma captures browsers, runs the tests and exits
-      singleRun: true,
+      singleRun: false,
   
       // Concurrency level
       // how many browser should be started simultaneous

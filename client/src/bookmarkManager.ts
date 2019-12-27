@@ -22,6 +22,7 @@ export class BookmarkManager implements IBookmarkManager {
     }
 
     getBookmark(bookmarkKey: string) {
+        if (!bookmarkKey) return Promise.resolve(undefined);
         return this.getBookmarks()
             .then((bookmarksArray) => {
                 return BookmarkManager.getBookmarkFromList(bookmarkKey, bookmarksArray);

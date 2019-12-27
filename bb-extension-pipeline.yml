@@ -55,8 +55,7 @@ steps:
 
 - script: |
     export CHROME_BIN=/usr/bin/google-chrome
-    set
-    sudo ./test.sh
+    sudo ./test-ci.sh
   displayName: 'Running tests'
 
 # Publish Test Results

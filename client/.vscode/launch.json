@@ -16,6 +16,17 @@
             "outFiles": ["${workspaceFolder}/TSOutput/**/*.js"],
             "console": "integratedTerminal",
             "internalConsoleOptions": "neverOpen"
+        },
+        {
+            "type": "chrome",
+            "request": "attach",
+            "name": "Chrome Unit Test Debugging",
+            "address": "localhost",
+            "port": 9333,
+            "pathMapping": {
+                "/": "${workspaceRoot}",
+                "/base/": "${workspaceRoot}/"
+            }
         }
     ]
 }
