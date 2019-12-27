@@ -285,4 +285,4 @@ client/**/*.js.map
 **/coverage
 **/test-results
 
-!**/karma.conf.js
+!**/karma.conf*.js

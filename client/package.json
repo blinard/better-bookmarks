@@ -7,7 +7,8 @@
     "clean": "gulp clean",
     "build": "gulp build",
     "test": "./node_modules/.bin/karma start",
-    "test-debug": "./node_modules/.bin/karma start karma.conf.debugging.js"
+    "test-debug": "./node_modules/.bin/karma start karma.conf.debugging.js",
+    "test-ci": "./node_modules/.bin/karma start karma.conf.ci.js"
   },
   "repository": {
     "type": "git",
@@ -34,11 +35,12 @@
     "@types/lodash": "^4.14.126",
     "gulp": "^4.0.2",
     "gulp-sequence": "^1.0.0",
-    "jasmine": "^3.5.0",
+    "jasmine-core": "^3.5.0",
     "karma": "^4.4.1",
     "karma-chrome-launcher": "^3.1.0",
     "karma-jasmine": "^2.0.1",
     "karma-junit-reporter": "^2.0.1",
+    "karma-spec-reporter": "0.0.32",
     "karma-typescript": "^4.1.1",
     "karma-typescript-es6-transform": "^4.1.1",
     "parcel": "^1.12.4",
