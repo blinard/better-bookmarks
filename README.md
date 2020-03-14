@@ -1,5 +1,12 @@
 # better-bookmarks
 
+Next steps
+    
+- Enable bookmark tagging (adding tags when saving a bookmark)
+- Make the management experience better (not part of extension options most likely)
+- Enable bookmark 'groups' - all tabs in current window under one bookmark group name
+- Make/acquire a prettier logo (cheaply)
+
 Webservice
 
     Create user
@@ -18,7 +25,3 @@ Chrome Extension Ideas:
     Example where 'bb' precursor isn't necessary (automatically intercepts and converts requests)
     Ability to index bookmarked docs using Azure Search, then allow you to search across only your bookmarks.
     Easily add bookmark using shortcut key or by opening browser toolbar button (detects current tab link and allows u to just enter a key)
-    Maybe handle bookmark groups too?
-    Typescript
-    https://www.npmjs.com/package/@types/chrome
-    See Chrome Extension examples previously downloaded
