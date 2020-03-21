@@ -1,3 +1,4 @@
+/// <reference types="jasmine" />
 import { mock, instance, verify, anyFunction, capture, when, objectContaining, anything, anyString } from 'ts-mockito';
 
 import { IBookmarkManager } from '../src/bookmarkManager';
@@ -51,6 +52,23 @@ describe("omniboxListener -", () => {
             });
         });
 
+        it("normalizes the bookmark key before searching for bookmark to navigate to", (done) => {
+            let omniboxListener = getOmniboxListenerWithMocks();
+            omniboxListener.addOmniboxListeners();
+
+            when(mockedBookmarkManager.getBookmark("bbcode")).thenResolve(theBookmark);
+
+            // capture the input entered handler
+            const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
+            inputEnteredHandler("BBCode", "currentTab");
+
+            setTimeout(() => {
+                // needs to be inside a timeout to allow the promise(s) to resolve
+                verify(mockedBrowser.navigateCurrentTab(theBookmark.url)).once();
+                done();
+            });
+        });
+
         it("saves current url with provided key for sv command", (done) => {
             let omniboxListener = getOmniboxListenerWithMocks();
             omniboxListener.addOmniboxListeners();
@@ -70,6 +88,44 @@ describe("omniboxListener -", () => {
             });
         });
 
+        it("normalizes bookmark key before saving", (done) => {
+            let omniboxListener = getOmniboxListenerWithMocks();
+            omniboxListener.addOmniboxListeners();
+
+            const testUrl = "https://the.currenturl.com";
+            when(mockedBrowser.getCurrentTabUrl()).thenResolve(testUrl);
+            when(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).thenResolve();
+
+            // capture the input entered handler
+            const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
+            inputEnteredHandler("sv TestKey", "currentTab");
+
+            setTimeout(() => {
+                // needs to be inside a timeout to allow the promise(s) to resolve
+                verify(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).once();
+                done();
+            });
+        });
+
+        it("retains current tab url capitlization when saving", (done) => {
+            let omniboxListener = getOmniboxListenerWithMocks();
+            omniboxListener.addOmniboxListeners();
+
+            const testUrl = "https://The.CurrentUrl.com";
+            when(mockedBrowser.getCurrentTabUrl()).thenResolve(testUrl);
+            when(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).thenResolve();
+
+            // capture the input entered handler
+            const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
+            inputEnteredHandler("sv TestKey", "currentTab");
+
+            setTimeout(() => {
+                // needs to be inside a timeout to allow the promise(s) to resolve
+                verify(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).once();
+                done();
+            });
+        });
+
         it("saves provided url with provided key for complex sv command", (done) => {
             let omniboxListener = getOmniboxListenerWithMocks();
             omniboxListener.addOmniboxListeners();
@@ -81,6 +137,44 @@ describe("omniboxListener -", () => {
             // capture the input entered handler
             const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
             inputEnteredHandler(`sv testkey ${testUrl}`, "currentTab");
+
+            setTimeout(() => {
+                // needs to be inside a timeout to allow the promise(s) to resolve
+                verify(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).once();
+                done();
+            });
+        });
+
+        it("normalizes provided key before saving for complex sv command", (done) => {
+            let omniboxListener = getOmniboxListenerWithMocks();
+            omniboxListener.addOmniboxListeners();
+
+            const testUrl = "https://the.providedurl.com";
+            when(mockedBrowser.getCurrentTabUrl()).thenResolve("https://some.url.com");
+            when(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).thenResolve();
+
+            // capture the input entered handler
+            const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
+            inputEnteredHandler(`sv TestKey ${testUrl}`, "currentTab");
+
+            setTimeout(() => {
+                // needs to be inside a timeout to allow the promise(s) to resolve
+                verify(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).once();
+                done();
+            });
+        });
+
+        it("retains capitalization for provided url for complex sv command", (done) => {
+            let omniboxListener = getOmniboxListenerWithMocks();
+            omniboxListener.addOmniboxListeners();
+
+            const testUrl = "https://The.ProvidedUrl.com";
+            when(mockedBrowser.getCurrentTabUrl()).thenResolve("https://some.url.com");
+            when(mockedBookmarkManager.saveBookmark(objectContaining({key: "testkey", url: testUrl }))).thenResolve();
+
+            // capture the input entered handler
+            const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
+            inputEnteredHandler(`sv TestKey ${testUrl}`, "currentTab");
 
             setTimeout(() => {
                 // needs to be inside a timeout to allow the promise(s) to resolve
@@ -121,6 +215,27 @@ describe("omniboxListener -", () => {
             // capture the input entered handler
             const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
             inputEnteredHandler("sv testkey", "currentTab");
+
+            setTimeout(() => {
+                // needs to be inside a timeout to allow the promise(s) to resolve
+                verify(mockedSyncService.synchronizeWithService(testBookmarks)).once();
+                done();
+            });
+        });
+
+        it("syncs bookmarks for refresh command", (done) => {
+            let omniboxListener = getOmniboxListenerWithMocks();
+            omniboxListener.addOmniboxListeners();
+
+            const testUrl = "https://the.currenturl.com";
+            const testBookmarks = [new Bookmark("testkey", testUrl)];
+            when(mockedBrowser.getCurrentTabUrl()).thenResolve(testUrl);
+            when(mockedBookmarkManager.saveBookmark(anything())).thenResolve();
+            when(mockedBookmarkManager.getBookmarks()).thenResolve(testBookmarks);
+
+            // capture the input entered handler
+            const [inputEnteredHandler] = capture(mockedBrowser.addOmniboxInputEnteredListener).last();
+            inputEnteredHandler("refresh", "currentTab");
 
             setTimeout(() => {
                 // needs to be inside a timeout to allow the promise(s) to resolve
