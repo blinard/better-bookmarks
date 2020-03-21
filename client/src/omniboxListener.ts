@@ -28,19 +28,37 @@ export class OmniboxListener implements IOmniboxListener {
     private inputEnteredHandler(text: string, disposition: chrome.omnibox.OnInputEnteredDisposition): void {    
         // inputEnteredDisposition could be used to control url navigation tab behavior (currentTab, newForegroundTab, etc)
         // See: https://developer.chrome.com/extensions/omnibox#type-OnInputEnteredDisposition
-        let normalizedCommand = text.toLowerCase().trim();
-        let commandTokens = normalizedCommand.split(" ");
+        let commandTokens = text.trim().split(" ");
+        if (!commandTokens || commandTokens.length <= 0) {
+            // Error - log error
+            return;
+        }
+
+        // First command token should always be normalized
+        commandTokens[0] = commandTokens[0].toLowerCase();
+
+        if (commandTokens && commandTokens.length === 1 && commandTokens[0] === "refresh") {
+            // Command: refresh
+            this.syncBookmarks();
+            this._browser.postNotification("Bookmarks Synced", `Your bookmarks have been synced!`);
+            return;
+        }
+
         if (commandTokens && commandTokens.length === 1 && commandTokens[0] !== "sv") {
+            // Command: bookmarkkey
             this.performNavigation(commandTokens[0]);
             return;
         }
         
         if (commandTokens && commandTokens.length === 3 && commandTokens[0] === "sv") {
             // Command: sv bookmarkKey url
+            commandTokens[1] = commandTokens[1].toLowerCase();
             this.saveBookmarkAndSync(commandTokens[1], commandTokens[2]);
             return;
         }
     
+        // Command: sv bookmarkKey
+        commandTokens[1] = commandTokens[1].toLowerCase();
         this._browser.getCurrentTabUrl()
             .then((url) => {
                 // TODO: Display error?
@@ -93,10 +111,14 @@ export class OmniboxListener implements IOmniboxListener {
         this._bookmarkManager.saveBookmark(new Bookmark(bookmarkKey, url))
         .then(() => {
             this._browser.postNotification("Bookmark Saved", `Current url saved as bookmark: ${bookmarkKey}`);
-            this._bookmarkManager.getBookmarks()
-            .then((allBookmarks) => {
-                this._syncService.synchronizeWithService(allBookmarks);
-            });
+            this.syncBookmarks();
+        });
+    }
+
+    private syncBookmarks(): void {
+        this._bookmarkManager.getBookmarks()
+        .then((allBookmarks) => {
+            this._syncService.synchronizeWithService(allBookmarks);
         });
     }
     

@@ -1,4 +1,4 @@
-import { authEnv } from "./authEnv.js";
+import { authConfig } from "./auth.config.js";
 
 function isLoggedIn(token) {
   // The user is logged in if their token isn't expired
@@ -19,7 +19,7 @@ const $  = document.querySelector.bind(document);
 function renderProfileView(authResult) {
   $('.default').classList.add('hidden');
   $('.loading').classList.remove('hidden');
-  fetch(`https://${authEnv.AUTH0_DOMAIN}/userinfo`, {
+  fetch(`https://${authConfig.AUTH0_DOMAIN}/userinfo`, {
     headers: {
       'Authorization': `Bearer ${authResult.access_token}`
     }

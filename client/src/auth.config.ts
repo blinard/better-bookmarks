@@ -1,5 +1,5 @@
 
-// TODO: Maybe just rename this to Config or something non-specific to authentication
+// TODO: Sync Endpoint is not specific to authentication. Rename this to something non-specific to authentication?
 
 export interface AuthenticationConfig {
     AUTH0_DOMAIN: string;
@@ -8,7 +8,7 @@ export interface AuthenticationConfig {
     SYNC_ENDPOINT: string;
 }
 
-export const authEnv: AuthenticationConfig = {
+export const authConfig: AuthenticationConfig = {
   AUTH0_DOMAIN: 'betterbookmarks.auth0.com',
   AUTH0_CLIENT_ID: '0zcROlNg3IBulToh1PEAGSkjfYmfsrBT',
   AUDIENCE: 'https://betterbookmarks.com/api',

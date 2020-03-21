@@ -90,6 +90,9 @@ module.exports = function(config) {
             entrypoints: /\.test\.(ts)$/,
             sourceMap: true
         },
+        coverageOptions: {
+            exclude: [ /\.(d|spec|test|config)\.ts/i ]
+        },
         reports: {
             html: "coverage",
             cobertura: {

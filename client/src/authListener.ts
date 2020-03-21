@@ -2,7 +2,7 @@ import { injectable, inject, interfaces } from "inversify";
 import "reflect-metadata";
 import TYPES from "./dependencyInjection/types";
 
-import { authEnv } from './authEnv';
+import { authConfig } from './auth.config';
 import Auth0Chrome from 'auth0-chrome';
 import { IBookmarkManager, BookmarkManager } from './bookmarkManager';
 import { ISyncService } from './syncService';
@@ -43,7 +43,7 @@ export class AuthListener implements IAuthListener {
         let options = {
             scope: 'openid profile offline_access',
             device: 'chrome-extension',
-            audience: authEnv.AUDIENCE
+            audience: authConfig.AUDIENCE
         };
     
         self._auth0
