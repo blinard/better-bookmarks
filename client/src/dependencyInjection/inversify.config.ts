@@ -11,7 +11,7 @@ import { SyncListener } from "../syncListener";
 import { IOptionsListener, OptionsListener } from "../optionsListener";
 import { IOmniboxListener, OmniboxListener } from "../omniboxListener";
 import Auth0Chrome from "auth0-chrome";
-import { authEnv } from "../authEnv";
+import { authConfig } from "../auth.config";
 import { IAuthListener, AuthListener } from "../authListener";
 
 var container = new Container();
@@ -27,7 +27,7 @@ container.bind<IAuthListener>(TYPES.IAuthListener).to(AuthListener);
 
 container.bind<interfaces.Factory<Auth0Chrome>>(TYPES.Auth0ChromeFactory).toFactory<Auth0Chrome>((context: interfaces.Context) => {
     return () => {
-        return new Auth0Chrome(authEnv.AUTH0_DOMAIN, authEnv.AUTH0_CLIENT_ID);
+        return new Auth0Chrome(authConfig.AUTH0_DOMAIN, authConfig.AUTH0_CLIENT_ID);
     }
 });
 

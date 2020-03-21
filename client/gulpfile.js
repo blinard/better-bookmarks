@@ -33,12 +33,12 @@ gulp.task("copy:manifest", function() {
         .pipe(gulp.dest("dist"))
 });
 
-gulp.task("compile:authenv", function(cb) {
-    cmd("node_modules/.bin/tsc src/authEnv.ts --module ES2015", cb)
+gulp.task("compile:authconfig", function(cb) {
+    cmd("node_modules/.bin/tsc src/auth.config.ts --module ES2015", cb)
 });
 
-gulp.task("copy:authenv", gulp.series(["compile:authenv"], function() {
-    return gulp.src("src/authEnv.js")
+gulp.task("copy:authconfig", gulp.series(["compile:authconfig"], function() {
+    return gulp.src("src/auth.config.js")
         .pipe(gulp.dest("dist/browserAction"))
 }));
 
@@ -53,11 +53,11 @@ gulp.task("copy:auth0chrome", function() {
         .pipe(gulp.dest("dist"))
 });
 
-gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authenv"]));
+gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authconfig"]));
 
 gulp.task("clean", function(cb) {
     cmd("rm -rf dist", cb);
-    cmd("rm src/authEnv.js", cb);
+    cmd("rm src/auth.config.js", cb);
 
     cmd("rm src/*.js", cb);
     cmd("rm src/*.js.map", cb);

@@ -6,7 +6,7 @@ import { ChromeBrowser } from './browserFacades/chromeBrowser';
 import { Bookmark } from './models/bookmark';
 import { DecodedToken } from './types/decodedToken';
 import { IBookmarkManager } from './bookmarkManager';
-import { authEnv } from './authEnv';
+import { authConfig } from './auth.config';
 import jwt_decode from 'jwt-decode';
 
 export interface ISyncService {
@@ -29,7 +29,7 @@ export class SyncService implements ISyncService {
             
                 console.log(`token received - constructing request`);
                 var req = new Request(
-                    authEnv.SYNC_ENDPOINT,
+                    authConfig.SYNC_ENDPOINT,
                     {
                         method: "POST",
                         headers: {
@@ -81,12 +81,12 @@ export class SyncService implements ISyncService {
         
                 var tokReqBody = {
                     "grant_type": "refresh_token",
-                    "client_id": authEnv.AUTH0_CLIENT_ID,
+                    "client_id": authConfig.AUTH0_CLIENT_ID,
                     "refresh_token": refreshToken
                 };
         
                 var req = new Request(
-                    `https://${authEnv.AUTH0_DOMAIN}/oauth/token`,
+                    `https://${authConfig.AUTH0_DOMAIN}/oauth/token`,
                     {
                         method: "POST",
                         headers: {
