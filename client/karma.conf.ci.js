@@ -97,7 +97,7 @@ module.exports = function(config) {
                 filename: "coverage.xml"
             }
         },
-        exclude: ["node_modules"]
+        exclude: ["node_modules", "src/dependencyInjection/inversify.config.ts"]
     },
 
     junitReporter: {
