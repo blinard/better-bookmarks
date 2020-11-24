@@ -9,7 +9,6 @@ trigger:
     paths:
         include:
         - func/*
-        - azure-pipelines.yml
 
 pr:
     branches:
@@ -18,7 +17,6 @@ pr:
     paths:
         include:
         - func/*
-        - azure-pipelines.yml
 
 pool:
   vmImage: 'ubuntu-16.04'
