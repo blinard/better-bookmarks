@@ -6,6 +6,7 @@ Next steps
 - Make the management experience better (not part of extension options most likely)
 - Enable bookmark 'groups' - all tabs in current window under one bookmark group name
 - Make/acquire a prettier logo (cheaply)
+- Add 'help' experience (first bookmark == bb help....loads extension content with simple, general, help)
 
 Webservice
 
