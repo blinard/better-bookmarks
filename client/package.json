@@ -52,7 +52,7 @@
     "auth0-chrome": "^0.1.2",
     "inversify": "^5.0.1",
     "jwt-decode": "^2.2.0",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "reflect-metadata": "^0.1.13"
   }
 }
