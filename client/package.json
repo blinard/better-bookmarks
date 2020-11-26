@@ -49,6 +49,7 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
+    "@azure/msal-browser": "^2.7.0",
     "auth0-chrome": "^0.1.2",
     "inversify": "^5.0.1",
     "jwt-decode": "^2.2.0",

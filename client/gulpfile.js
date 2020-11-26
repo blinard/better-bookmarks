@@ -48,12 +48,24 @@ gulp.task("copy:jwtdecode", function() {
         .pipe(gulp.dest("dist"))
 });
 
+gulp.task("copy:msal-browser", function() {
+    return gulp.src("node_modules/@azure/msal-browser/dist/index.es.*")
+        .pipe(gulp.dest("dist/browserAction/msal-browser"))
+        .pipe(gulp.dest("dist/msal-browser"))
+});
+
+gulp.task("copy:msal-common", function() {
+    return gulp.src("node_modules/@azure/msal-common/dist/index.es.*")
+        .pipe(gulp.dest("dist/browserAction/msal-common"))
+        .pipe(gulp.dest("dist/msal-common"))
+});
+
 gulp.task("copy:auth0chrome", function() {
     return gulp.src("node_modules/auth0-chrome/dist/auth0chrome*.js")
         .pipe(gulp.dest("dist"))
 });
 
-gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authconfig"]));
+gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:msal-browser", "copy:msal-common", "copy:auth0chrome", "copy:images", "copy:authconfig"]));
 
 gulp.task("clean", function(cb) {
     cmd("rm -rf dist", cb);
