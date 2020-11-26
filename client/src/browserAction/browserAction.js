@@ -1,4 +1,5 @@
 import { authConfig } from "./auth.config.js";
+import * as msal from "./msal-browser/index.es.js";
 
 function isLoggedIn(token) {
   // The user is logged in if their token isn't expired
@@ -49,20 +50,79 @@ function renderDefaultView() {
   $('.login-button').addEventListener('click', () => {
     $('.default').classList.add('hidden');
     $('.loading').classList.remove('hidden');
-    chrome.runtime.sendMessage({
-      type: "authenticate"
-    });
+
+    var loginRequest = {
+        scopes: ["user.read"] // optional Array<string>
+    };
+    
+    /*
+        https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=ab8d1625-d6be-4548-ab9f-0a0c0f958d6b&scope=user.read%20openid%20profile&redirect_uri=http%3A%2F%2Flocalhost%3A8080%2FbrowserAction%2FbrowserAction.html&client-request-id=ecfe9a3b-b43a-429e-bad3-38e28140f5fa&response_mode=fragment&response_type=code&x-client-SKU=msal.js.browser&x-client-VER=2.7.0&x-client-OS=&x-client-CPU=&client_info=1&code_challenge=qwoAUUylw3oqlX88BxQbKU9lu5K_LBUhzHezJzClhqI&code_challenge_method=S256&nonce=b51df905-d9eb-4caa-a1d6-f19d3002d663&state=eyJpZCI6IjdkNWU0Y2E0LTQyMzEtNGQwZC04ZjM3LTAzZWQwNmJiMzA4NSIsInRzIjoxNjA2MzI1OTg3LCJtZXRhIjp7ImludGVyYWN0aW9uVHlwZSI6InJlZGlyZWN0In19
+
+        pefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org
+        https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=ab8d1625-d6be-4548-ab9f-0a0c0f958d6b&scope=user.read%20openid%20profile&redirect_uri=https%3A%2F%2Fpefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org%2FbrowserAction%2FbrowserAction.html&client-request-id=ecfe9a3b-b43a-429e-bad3-38e28140f5fa&response_mode=fragment&response_type=code&x-client-SKU=msal.js.browser&x-client-VER=2.7.0&x-client-OS=&x-client-CPU=&client_info=1&code_challenge=qwoAUUylw3oqlX88BxQbKU9lu5K_LBUhzHezJzClhqI&code_challenge_method=S256&nonce=b51df905-d9eb-4caa-a1d6-f19d3002d663&state=eyJpZCI6IjdkNWU0Y2E0LTQyMzEtNGQwZC04ZjM3LTAzZWQwNmJiMzA4NSIsInRzIjoxNjA2MzI1OTg3LCJtZXRhIjp7ImludGVyYWN0aW9uVHlwZSI6InJlZGlyZWN0In19
+
+        redirect url
+        https://pefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org/browserAction/browserAction.html#code=<authorizationcode>&client_info=eyJ2ZXIiOiIxLjAiLCJzdWIiOiJBQUFBQUFBQUFBQUFBQUFBQUFBQUFNUGtldEs3SkVGTTVkazE3YWVwWExFIiwibmFtZSI6IkJyYWQgTGluYXJkIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYnJhZC5saW5hcmRAb3V0bG9vay5jb20iLCJvaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtNGQwZC1iMzBhYzk5OWQ3OGEiLCJ0aWQiOiI5MTg4MDQwZC02YzY3LTRjNWItYjExMi0zNmEzMDRiNjZkYWQiLCJob21lX29pZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC00ZDBkLWIzMGFjOTk5ZDc4YSIsInVpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC00ZDBkLWIzMGFjOTk5ZDc4YSIsInV0aWQiOiI5MTg4MDQwZC02YzY3LTRjNWItYjExMi0zNmEzMDRiNjZkYWQifQ&state=eyJpZCI6IjdkNWU0Y2E0LTQyMzEtNGQwZC04ZjM3LTAzZWQwNmJiMzA4NSIsInRzIjoxNjA2MzI1OTg3LCJtZXRhIjp7ImludGVyYWN0aW9uVHlwZSI6InJlZGlyZWN0In19
+    */
+
+    try {
+        chrome.identity.launchWebAuthFlow({ url: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=ab8d1625-d6be-4548-ab9f-0a0c0f958d6b&scope=user.read%20openid%20profile&redirect_uri=https%3A%2F%2Fpefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org%2FbrowserAction%2FbrowserAction.html&client-request-id=ecfe9a3b-b43a-429e-bad3-38e28140f5fa&response_mode=fragment&response_type=code&x-client-SKU=msal.js.browser&x-client-VER=2.7.0&x-client-OS=&x-client-CPU=&client_info=1&code_challenge=qwoAUUylw3oqlX88BxQbKU9lu5K_LBUhzHezJzClhqI&code_challenge_method=S256&nonce=b51df905-d9eb-4caa-a1d6-f19d3002d663&state=eyJpZCI6IjdkNWU0Y2E0LTQyMzEtNGQwZC04ZjM3LTAzZWQwNmJiMzA4NSIsInRzIjoxNjA2MzI1OTg3LCJtZXRhIjp7ImludGVyYWN0aW9uVHlwZSI6InJlZGlyZWN0In19", interactive: true }, (redirectUrl) => {
+
+            //Grab responseHash from redirectUrl (everything after first #....including the hash symbol itself)
+            handleHash
+                //        const serverParams = BrowserProtocolUtils.parseServerResponseFromHash(responseHash);
+
+            console.log(redirectUrl);
+        });
+        // msalInstance.loginRedirect(loginRequest)
+        // .then((tokenResponse) => {
+        //     if (!tokenResponse) return;
+        //     const accounts = msalInstance.getAllAccounts();
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // });
+    } catch (err) {
+        // handle error
+        console.log(err);
+    }
+
+    // chrome.runtime.sendMessage({
+    //   type: "authenticate"
+    // });
   });
 }
 
+let msalInstance;
 function main () {
-  const authResult = JSON.parse(localStorage.authResult || '{}');
-  const token = authResult.id_token;
-  if (token && isLoggedIn(token)) {
-    renderProfileView(authResult);
-  } else {
+    const msalConfig = {
+        auth: {
+            clientId: 'ab8d1625-d6be-4548-ab9f-0a0c0f958d6b',
+            redirectUri: chrome.identity.getRedirectURL('browserAction/browserAction.html')
+        }
+    };
+    
+    msalInstance = new msal.PublicClientApplication(msalConfig);
+    if (!msalInstance) return;
+
+    msalInstance.handleRedirectPromise().then((tokenResponse) => {
+        console.log(tokenResponse);
+        // Check if the tokenResponse is null
+        // If the tokenResponse !== null, then you are coming back from a successful authentication redirect. 
+        // If the tokenResponse === null, you are not coming back from an auth redirect.
+    }).catch((error) => {
+        // handle error, either in the library or coming back from the server
+        console.log(error);
+    });
+
     renderDefaultView();
-  }
+//   const authResult = JSON.parse(localStorage.authResult || '{}');
+//   const token = authResult.id_token;
+//   if (token && isLoggedIn(token)) {
+//     renderProfileView(authResult);
+//   } else {
+//     renderDefaultView();
+//   }
 }
 
 document.addEventListener('DOMContentLoaded', main);
