@@ -3,6 +3,8 @@
  * Licensed under the MIT License.
  */
 
+import { injectable } from "inversify";
+
 export interface IBrowserStringUtils {
     stringToUtf8Arr (sDOMStr: string): Uint8Array;
     stringToArrayBuffer(dataString: string): ArrayBuffer;
@@ -13,6 +15,7 @@ export interface IBrowserStringUtils {
  * Utility functions for strings in a browser. See here for implementation details:
  * https://developer.mozilla.org/en-US/docs/Web/API/WindowBase64/Base64_encoding_and_decoding#Solution_2_%E2%80%93_JavaScript's_UTF-16_%3E_UTF-8_%3E_base64
  */
+@injectable()
 export class BrowserStringUtils implements IBrowserStringUtils {
 
     /**

@@ -68,18 +68,25 @@ function renderDefaultView() {
     */
 
     try {
-        msalInstance.getLoginStartUrl(loginRequest).then((loginStartUrl) => {
-            console.log("LoginStartUrl: " + loginStartUrl);
-            chrome.identity.launchWebAuthFlow({ url: loginStartUrl, interactive: true }, (redirectUrl) => {
-                console.log("redirectUrl: " + redirectUrl);
-                const hash = redirectUrl.substring(redirectUrl.indexOf("#"));
-                console.log("hash: " + hash);
-                msalInstance.handleChromeExtensionRedirect(hash).then((authResult) => {
-                    console.log("Success?");
-                    console.log(authResult);
-                });
-            });
-        })
+        chrome.runtime.sendMessage({
+          type: "authenticate"
+        });
+
+
+        // msalInstance.getLoginStartUrl(loginRequest).then((loginStartUrl) => {
+        //     console.log("LoginStartUrl: " + loginStartUrl);
+        //     chrome.identity.launchWebAuthFlow({ url: loginStartUrl, interactive: true }, (redirectUrl) => {
+        //         console.log("redirectUrl: " + redirectUrl);
+        //         const hash = redirectUrl.substring(redirectUrl.indexOf("#"));
+        //         console.log("hash: " + hash);
+        //         msalInstance.handleChromeExtensionRedirect(hash).then((authResult) => {
+        //             console.log("Success?");
+        //             console.log(authResult);
+        //         });
+        //     });
+        // })
+
+
         // chrome.identity.launchWebAuthFlow({ url: "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?client_id=ab8d1625-d6be-4548-ab9f-0a0c0f958d6b&scope=user.read%20openid%20profile&redirect_uri=https%3A%2F%2Fpefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org%2FbrowserAction%2FbrowserAction.html&client-request-id=ecfe9a3b-b43a-429e-bad3-38e28140f5fa&response_mode=fragment&response_type=code&x-client-SKU=msal.js.browser&x-client-VER=2.7.0&x-client-OS=&x-client-CPU=&client_info=1&code_challenge=qwoAUUylw3oqlX88BxQbKU9lu5K_LBUhzHezJzClhqI&code_challenge_method=S256&nonce=b51df905-d9eb-4caa-a1d6-f19d3002d663&state=eyJpZCI6IjdkNWU0Y2E0LTQyMzEtNGQwZC04ZjM3LTAzZWQwNmJiMzA4NSIsInRzIjoxNjA2MzI1OTg3LCJtZXRhIjp7ImludGVyYWN0aW9uVHlwZSI6InJlZGlyZWN0In19", interactive: true }, (redirectUrl) => {
 
         //     //Grab responseHash from redirectUrl (everything after first #....including the hash symbol itself)

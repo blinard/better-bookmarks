@@ -1,7 +1,7 @@
 import { injectable, inject, interfaces } from "inversify";
 import "reflect-metadata";
 import TYPES from "../dependencyInjection/types";
-import { IPKCEChallengeProvider, IPKCEVerifierProvider, PKCEChallengeMethod } from "./pkceImplementation";
+import { IPKCEChallengeProvider, IPKCEVerifierProvider, PKCEChallengeMethod } from "./pkceChallengeAndVerifier";
 
 export enum ResponseMode {
     Query = "query",
@@ -57,14 +57,14 @@ export interface IMSAAuthHelper {
         scopes: Array<string>,
         authCode: string,
         pkceVerifierProvider?: IPKCEVerifierProvider,
-    ): string;
+    ): TokenRequestInfo;
 
     getTokenRequestUrlUsingRefreshToken(
         clientId: string,
         redirectUri: string,
         scopes: Array<string>,
         refreshToken: string
-    ): string;
+    ): TokenRequestInfo;
 }
 
 export interface IStringKeyValuePairObject {
@@ -100,6 +100,11 @@ export class ScopeQueryStringFormatter implements IScopeQueryStringFormatter {
         result = result.trim();
         return encodeURIComponent(result);
     }
+}
+
+export interface TokenRequestInfo {
+    url: string;
+    fetchOptions: any;
 }
 
 @injectable()
@@ -183,7 +188,7 @@ export class MSAAuthHelper implements IMSAAuthHelper {
         scopes: Array<string>,
         authCode: string,
         pkceVerifierProvider?: IPKCEVerifierProvider,
-    ): string {
+    ): TokenRequestInfo {
 
         /*
         // Line breaks for legibility only
@@ -220,8 +225,18 @@ export class MSAAuthHelper implements IMSAAuthHelper {
             }
         }
 
-        const queryString = this._queryStringBuilder.buildQueryStringParams(params);
-        return "https://login.microsoftonline.com/common/oauth2/v2.0/token?" + queryString;
+        const tokenRequestInfo = {
+            url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+            fetchOptions: {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(params) // body data type must match "Content-Type" header
+            } 
+        }
+        return tokenRequestInfo;
     }
 
     getTokenRequestUrlUsingRefreshToken(
@@ -229,7 +244,7 @@ export class MSAAuthHelper implements IMSAAuthHelper {
         redirectUri: string,
         scopes: Array<string>,
         refreshToken: string
-    ): string {
+    ): TokenRequestInfo {
 
         /*
 
@@ -259,8 +274,18 @@ export class MSAAuthHelper implements IMSAAuthHelper {
             params["scope"] = formattedScopes;
         }
 
-        const queryString = this._queryStringBuilder.buildQueryStringParams(params);
-        return "https://login.microsoftonline.com/common/oauth2/v2.0/token?" + queryString;
-    }
+        const tokenRequestInfo = {
+            url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+            fetchOptions: {
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                headers: {
+                  'Content-Type': 'application/json'
+                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: JSON.stringify(params) // body data type must match "Content-Type" header
+            } 
+        }
+        return tokenRequestInfo;
+   }
 
 }

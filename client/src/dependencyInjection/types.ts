@@ -12,7 +12,9 @@ let TYPES = {
     IQueryStringBuilder: Symbol("IQueryStringBuilder"),
     IScopeQueryStringFormatter: Symbol("IScopeQueryStringFormatter"),
     IBase64Encode: Symbol("IBase64Encode"),
-    IBrowserStringUtils: Symbol("IBrowserStringUtils")
+    IBrowserStringUtils: Symbol("IBrowserStringUtils"),
+    IMSAAuthHelper: Symbol("IMSAAuthHelper"),
+    IPKCEChallengeAndVerifierFactory: Symbol("IPKCEChallengeAndVerifierFactory")
 };
 
 export default TYPES;

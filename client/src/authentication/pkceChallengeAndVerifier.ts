@@ -24,19 +24,42 @@ export interface IPKCEVerifierProvider {
     getPKCEVerifier(): string
 }
 
+export interface IPKCEChallengeAndVerifier extends IPKCEChallengeProvider, IPKCEVerifierProvider {
+}
+
+export interface IPKCEChallengeAndVerifierFactory {
+    getNewPKCEChallengeAndVerifier(): IPKCEChallengeAndVerifier
+}
+
 injectable()
-export class PKCEChallengeAndVerifierFactory implements IPKCEVerifierProvider, IPKCEChallengeProvider {
+export class PKCEChallengAndVerifierFactory implements IPKCEChallengeAndVerifierFactory {
     private RANDOM_BYTE_ARR_LENGTH = 32;
-    private S256_HASH_ALG = "SHA-256";
     private _cryptoObj = window.crypto;
-    private _dataBuffer: Uint8Array;
 
     constructor(
         @inject(TYPES.IBase64Encode) private _base64Encode: IBase64Encode, 
         @inject(TYPES.IBrowserStringUtils) private _browserStringUtils: IBrowserStringUtils
         ) {
-        this._dataBuffer = new Uint8Array(this.RANDOM_BYTE_ARR_LENGTH);
-        this._cryptoObj.getRandomValues(this._dataBuffer);
+    }
+
+    getNewPKCEChallengeAndVerifier(): IPKCEChallengeAndVerifier {
+        const dataBuffer = new Uint8Array(this.RANDOM_BYTE_ARR_LENGTH);
+        this._cryptoObj.getRandomValues(dataBuffer);
+        return new PKCEChallengeAndVerifier(this._base64Encode, this._browserStringUtils, dataBuffer);
+    }
+}
+
+injectable()
+export class PKCEChallengeAndVerifier implements IPKCEChallengeAndVerifier {
+    private S256_HASH_ALG = "SHA-256";
+    private _dataBuffer: Uint8Array;
+
+    constructor(
+        @inject(TYPES.IBase64Encode) private _base64Encode: IBase64Encode, 
+        @inject(TYPES.IBrowserStringUtils) private _browserStringUtils: IBrowserStringUtils,
+        dataBuffer: Uint8Array
+        ) {
+        this._dataBuffer = dataBuffer;
     }
 
     getPKCEVerifier(): string {
