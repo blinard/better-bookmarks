@@ -1,3 +1,5 @@
+/// <reference types="jasmine" />
+
 import { BookmarkManager } from "../src/bookmarkManager";
 import { BrowserFacade } from "../src/browserFacades/browserFacade";
 import { mock, instance, when } from "ts-mockito";

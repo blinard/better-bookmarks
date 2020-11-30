@@ -49,7 +49,7 @@ gulp.task("copy:jwtdecode", function() {
 });
 
 gulp.task("copy:msal-browser", function() {
-    return gulp.src("node_modules/@azure/msal-browser/dist/index.es.*")
+    return gulp.src("../../microsoft-authentication-library-for-js/lib/msal-browser/dist/index.es.*")
         .pipe(gulp.dest("dist/browserAction/msal-browser"))
         .pipe(gulp.dest("dist/msal-browser"))
 });

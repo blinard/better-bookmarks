@@ -8,7 +8,11 @@ let TYPES = {
     IOptionsListener: Symbol("IOptionsListener"),
     IOmniboxListener: Symbol("IOmniboxListener"),
     IAuthListener: Symbol("IAuthListener"),
-    Auth0ChromeFactory: Symbol("Factory<Auth0Chrome>")
+    Auth0ChromeFactory: Symbol("Factory<Auth0Chrome>"),
+    IQueryStringBuilder: Symbol("IQueryStringBuilder"),
+    IScopeQueryStringFormatter: Symbol("IScopeQueryStringFormatter"),
+    IBase64Encode: Symbol("IBase64Encode"),
+    IBrowserStringUtils: Symbol("IBrowserStringUtils")
 };
 
 export default TYPES;
