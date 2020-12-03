@@ -52,7 +52,7 @@ function renderDefaultView() {
     $('.loading').classList.remove('hidden');
 
     var loginRequest = {
-        scopes: ["user.read", "openid", "offline_access", "api://ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa/Bookmarks.Sync"] // optional Array<string>
+        scopes: ["user.read", "openid", "offline_access"] //, "api://ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa/Bookmarks.Sync"] // optional Array<string>
     };
     // "openid", "offline_access", "api://ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa/Bookmarks.Sync"
     /*
@@ -65,6 +65,8 @@ function renderDefaultView() {
         https://pefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org/browserAction/browserAction.html#code=<authorizationcode>&client_info=eyJ2ZXIiOiIxLjAiLCJzdWIiOiJBQUFBQUFBQUFBQUFBQUFBQUFBQUFNUGtldEs3SkVGTTVkazE3YWVwWExFIiwibmFtZSI6IkJyYWQgTGluYXJkIiwicHJlZmVycmVkX3VzZXJuYW1lIjoiYnJhZC5saW5hcmRAb3V0bG9vay5jb20iLCJvaWQiOiIwMDAwMDAwMC0wMDAwLTAwMDAtNGQwZC1iMzBhYzk5OWQ3OGEiLCJ0aWQiOiI5MTg4MDQwZC02YzY3LTRjNWItYjExMi0zNmEzMDRiNjZkYWQiLCJob21lX29pZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC00ZDBkLWIzMGFjOTk5ZDc4YSIsInVpZCI6IjAwMDAwMDAwLTAwMDAtMDAwMC00ZDBkLWIzMGFjOTk5ZDc4YSIsInV0aWQiOiI5MTg4MDQwZC02YzY3LTRjNWItYjExMi0zNmEzMDRiNjZkYWQifQ&state=eyJpZCI6IjdkNWU0Y2E0LTQyMzEtNGQwZC04ZjM3LTAzZWQwNmJiMzA4NSIsInRzIjoxNjA2MzI1OTg3LCJtZXRhIjp7ImludGVyYWN0aW9uVHlwZSI6InJlZGlyZWN0In19
 
         AADSTS70011: The provided value for the input parameter 'scope' is not valid. One or more scopes in 'user.read openid offline_access api://ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa/Bookmarks.Sync profile' are not compatible with each other.
+
+        client_id=ab8d1625-d6be-4548-ab9f-0a0c0f958d6b&redirect_uri=https%3A%2F%2Fpefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org%2FbrowserAction%2FbrowserAction.html&scope=user.read%20openid%20offline_access%20profile&code=M.R3_BL2.3eb19750-792c-a4a8-461a-c010df9c981d&code_verifier=Lpx43jxxoTDuwRr9s07XBZLa4mL5MWApUn2Y5t_oke4&grant_type=authorization_code&client_info=1&client-request-id=142b4114-d960-4275-9ea1-2de16dfe30d7
     */
 
     try {
@@ -72,6 +74,7 @@ function renderDefaultView() {
           type: "authenticate"
         });
 
+        // chrome.browserAction.setIcon({ path: "../images/bb-icon-disabled.png" });
 
         // msalInstance.getLoginStartUrl(loginRequest).then((loginStartUrl) => {
         //     console.log("LoginStartUrl: " + loginStartUrl);

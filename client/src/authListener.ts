@@ -7,8 +7,10 @@ import Auth0Chrome from 'auth0-chrome';
 import { IBookmarkManager, BookmarkManager } from './bookmarkManager';
 import { ISyncService } from './syncService';
 import { BrowserFacade } from './browserFacades/browserFacade';
-import { MSAAuthHelper, ResponseMode } from "./authentication/msaAuthHelper";
+import { IOAuthResponse, IMSAAuthHelper, ResponseMode } from "./authentication/msaAuthHelper";
 import { IPKCEChallengeAndVerifierFactory } from "./authentication/pkceChallengeAndVerifier";
+import { IBase64Encode } from "./authentication/base64Encode";
+import { IBrowserStringUtils } from "./authentication/browserStringUtils";
 
 export interface IAuthListener {
     addAuthListener(): void;
@@ -23,8 +25,9 @@ export class AuthListener implements IAuthListener {
         @inject(TYPES.IBookmarkManager) private _bookmarkManager: IBookmarkManager, 
         @inject(TYPES.ISyncService) private _syncService: ISyncService,
         @inject(TYPES.Auth0ChromeFactory) private _auth0Factory: () => Auth0Chrome,
-        @inject(TYPES.IMSAAuthHelper) private _msaAuthHelper: MSAAuthHelper,
-        @inject(TYPES.IPKCEChallengeAndVerifierFactory) private _pkceChallengeAndVerifierFactory: IPKCEChallengeAndVerifierFactory) {
+        @inject(TYPES.IMSAAuthHelper) private _msaAuthHelper: IMSAAuthHelper,
+        @inject(TYPES.IPKCEChallengeAndVerifierFactory) private _pkceChallengeAndVerifierFactory: IPKCEChallengeAndVerifierFactory
+        ) {
             this._auth0 = _auth0Factory();
         }
 
@@ -64,7 +67,15 @@ export class AuthListener implements IAuthListener {
             const tokenRequestInfo = this._msaAuthHelper.getTokenRequestUrlUsingAuthCode(clientId, redirectUri, msaAuthorityScopes, responseValues.code, pkceChallengeAndVerfier);
             
             const resp = await fetch(tokenRequestInfo.url, tokenRequestInfo.fetchOptions);
+            console.log(tokenRequestInfo);
             console.log(resp)
+            if (!resp.ok) {
+                console.error("Token request failed.")
+                return;
+            }
+
+            const authResp: IOAuthResponse = await resp.json();
+            console.log(authResp.access_token);
         });
     }
 

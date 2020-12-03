@@ -34,6 +34,16 @@ client_id=6731de76-14a6-49ae-97bc-6eba6914391e
 
 // Will also need to handle case where refresh_token is expired....should try to renew/re-login through iframe silently first.
 
+export interface IOAuthResponse {
+    "token_type": string; // eg. "Bearer"
+    "scope": string; // eg. "api://ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa/Bookmarks.Sync"
+    "expires_in": number; //eg. 3600
+    "ext_expires_in": number; //eg. 3600
+    "access_token": string; //eg. "eyJ0eXAiOiJKV1..."
+    "refresh_token": string; //eg. "M.R3_BL2.CXI9u...",
+    "id_token": string; //eg. "eyJ0eXA..."
+}
+
 export enum GrantType {
     AuthorizationCode = "authorization_code",
     RefreshToken = "refresh_token"
@@ -45,11 +55,11 @@ export interface IMSAAuthHelper {
         redirectUri: string, 
         responseMode: ResponseMode, 
         scopes: Array<string>, 
-        state: string,
-        pkceChallengeProvider: IPKCEChallengeProvider,
-        promptSetting: PromptSetting,
-        loginHint: string,
-        domainHint: string): Promise<string>
+        state?: string,
+        pkceChallengeProvider?: IPKCEChallengeProvider,
+        promptSetting?: PromptSetting,
+        loginHint?: string,
+        domainHint?: string): Promise<string>;
     
     getTokenRequestUrlUsingAuthCode(
         clientId: string,
@@ -213,7 +223,7 @@ export class MSAAuthHelper implements IMSAAuthHelper {
             "code": authCode
         };
 
-        const formattedScopes = this._scopeQueryStringFormatter.formatScopesForQueryString(scopes);
+        const formattedScopes = scopes.join(" ");
         if (formattedScopes) {
             params["scope"] = formattedScopes;
         }
@@ -225,15 +235,17 @@ export class MSAAuthHelper implements IMSAAuthHelper {
             }
         }
 
+        const formBody = Object.keys(params).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key])).join('&');
+        //const formBody = "client_id=ab8d1625-d6be-4548-ab9f-0a0c0f958d6b&redirect_uri=https%3A%2F%2Fpefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org%2FbrowserAction%2FbrowserAction.html&scope=user.read%20openid%20offline_access%20profile&code=M.R3_BL2.29613a28-a6af-9c58-85b1-fca997b38fb3&code_verifier=XwiUjPSpnJ9YQFVSuOZu_QejCt5O7E3LsJsu7VkKXc4&grant_type=authorization_code&client_info=1&client-request-id=45170c82-ed39-4a08-a863-f0ae05b9cb35";
         const tokenRequestInfo = {
             url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
             fetchOptions: {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 headers: {
-                  'Content-Type': 'application/json'
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                  // 'Content-Type': 'application/json'
+                  'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
                 },
-                body: JSON.stringify(params) // body data type must match "Content-Type" header
+                body: formBody // body data type must match "Content-Type" header
             } 
         }
         return tokenRequestInfo;

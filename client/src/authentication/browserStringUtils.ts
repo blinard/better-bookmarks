@@ -18,6 +18,8 @@ export interface IBrowserStringUtils {
 @injectable()
 export class BrowserStringUtils implements IBrowserStringUtils {
 
+    constructor() {}
+
     /**
      * Converts string to Uint8Array
      * @param sDOMStr 

@@ -5,7 +5,7 @@
 
 import { inject, injectable } from "inversify";
 import TYPES from "../dependencyInjection/types";
-import { BrowserStringUtils, IBrowserStringUtils } from "./browserStringUtils";
+import { IBrowserStringUtils } from "./browserStringUtils";
 
 export interface IBase64Encode {
     urlEncode(input: string): string;

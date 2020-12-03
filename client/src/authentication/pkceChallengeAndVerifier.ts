@@ -1,4 +1,3 @@
-
 // Proof Key for Code Exchange (PKCE)
 
 import { inject, injectable } from "inversify";
@@ -31,7 +30,7 @@ export interface IPKCEChallengeAndVerifierFactory {
     getNewPKCEChallengeAndVerifier(): IPKCEChallengeAndVerifier
 }
 
-injectable()
+@injectable()
 export class PKCEChallengAndVerifierFactory implements IPKCEChallengeAndVerifierFactory {
     private RANDOM_BYTE_ARR_LENGTH = 32;
     private _cryptoObj = window.crypto;
@@ -49,14 +48,13 @@ export class PKCEChallengAndVerifierFactory implements IPKCEChallengeAndVerifier
     }
 }
 
-injectable()
 export class PKCEChallengeAndVerifier implements IPKCEChallengeAndVerifier {
     private S256_HASH_ALG = "SHA-256";
     private _dataBuffer: Uint8Array;
 
     constructor(
-        @inject(TYPES.IBase64Encode) private _base64Encode: IBase64Encode, 
-        @inject(TYPES.IBrowserStringUtils) private _browserStringUtils: IBrowserStringUtils,
+        private _base64Encode: IBase64Encode, 
+        private _browserStringUtils: IBrowserStringUtils,
         dataBuffer: Uint8Array
         ) {
         this._dataBuffer = dataBuffer;
