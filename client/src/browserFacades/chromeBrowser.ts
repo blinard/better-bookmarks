@@ -2,9 +2,11 @@ import {BrowserFacade, OmniboxInputChangedCallback, OnMessageCallback, OmniboxIn
 import { Bookmark } from "../models/bookmark";
 import { Dictionary } from "../types/dictionary";
 import { injectable } from "inversify";
+import { IAuthResult } from "../authentication/authManager";
 
 const CHROME_BOOKMARKS_KEY = "bb-bookmarks";
 const CHROME_REFRESHTOKEN_KEY = "bb-refreshtoken";
+const CHROME_AUTHRESULT_KEY = "bb-authresult";
 
 @injectable()
 export class ChromeBrowser implements BrowserFacade {
@@ -111,5 +113,34 @@ export class ChromeBrowser implements BrowserFacade {
             });
         });
         return deferred;
+    }
+
+    getCachedAuthResult(): Promise<IAuthResult | undefined> {
+        return new Promise((resolve, reject) => {
+            chrome.storage.local.get(CHROME_AUTHRESULT_KEY, (cacheObject) => {
+                const result: IAuthResult = (cacheObject && cacheObject[CHROME_AUTHRESULT_KEY]);
+                if (!result) return result;
+                result.access_token_expiration = new Date(<number>result.access_token_expiration_val);
+                result.refresh_token_expiration = new Date(<number>result.refresh_token_expiration_val);
+                resolve(result);
+            });
+        });
+    }
+
+    setCachedAuthResult(authResult: IAuthResult): Promise<boolean> {
+        authResult.access_token_expiration_val = authResult.access_token_expiration.valueOf();
+        authResult.refresh_token_expiration_val = authResult.refresh_token_expiration.valueOf();
+        return new Promise<boolean>((resolve, reject) => {
+            let storageShim: Dictionary<object> = {};
+            storageShim[CHROME_AUTHRESULT_KEY] = authResult
+            chrome.storage.local.set(storageShim, () => {
+                if (chrome.runtime.lastError) {
+                    reject(chrome.runtime.lastError);
+                    return;
+                }
+
+                resolve(true);
+            });
+        });
     }
 }

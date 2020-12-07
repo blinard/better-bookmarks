@@ -17,6 +17,7 @@ import { IMSAAuthHelper, IQueryStringBuilder, IScopeQueryStringFormatter, MSAAut
 import { Base64Encode, IBase64Encode } from "../authentication/base64Encode";
 import { BrowserStringUtils, IBrowserStringUtils } from "../authentication/browserStringUtils";
 import { IPKCEChallengeAndVerifierFactory, PKCEChallengAndVerifierFactory } from "../authentication/pkceChallengeAndVerifier";
+import { AuthManager, IAuthManager } from "../authentication/authManager";
 
 
 var container = new Container();
@@ -36,6 +37,7 @@ container.bind<IBase64Encode>(TYPES.IBase64Encode).to(Base64Encode);
 container.bind<IBrowserStringUtils>(TYPES.IBrowserStringUtils).to(BrowserStringUtils);
 container.bind<IMSAAuthHelper>(TYPES.IMSAAuthHelper).to(MSAAuthHelper);
 container.bind<IPKCEChallengeAndVerifierFactory>(TYPES.IPKCEChallengeAndVerifierFactory).to(PKCEChallengAndVerifierFactory);
+container.bind<IAuthManager>(TYPES.IAuthManager).to(AuthManager);
 
 container.bind<interfaces.Factory<Auth0Chrome>>(TYPES.Auth0ChromeFactory).toFactory<Auth0Chrome>((context: interfaces.Context) => {
     return () => {

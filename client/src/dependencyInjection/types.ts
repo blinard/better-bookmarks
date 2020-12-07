@@ -14,7 +14,8 @@ let TYPES = {
     IBase64Encode: Symbol("IBase64Encode"),
     IBrowserStringUtils: Symbol("IBrowserStringUtils"),
     IMSAAuthHelper: Symbol("IMSAAuthHelper"),
-    IPKCEChallengeAndVerifierFactory: Symbol("IPKCEChallengeAndVerifierFactory")
+    IPKCEChallengeAndVerifierFactory: Symbol("IPKCEChallengeAndVerifierFactory"),
+    IAuthManager: Symbol("IAuthManager")
 };
 
 export default TYPES;

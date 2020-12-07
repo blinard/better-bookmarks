@@ -281,20 +281,22 @@ export class MSAAuthHelper implements IMSAAuthHelper {
             "refresh_token": refreshToken
         };
 
-        const formattedScopes = this._scopeQueryStringFormatter.formatScopesForQueryString(scopes);
+        const formattedScopes = scopes.join(" ");
         if (formattedScopes) {
             params["scope"] = formattedScopes;
         }
 
+        const formBody = Object.keys(params).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(params[key])).join('&');
+        //const formBody = "client_id=ab8d1625-d6be-4548-ab9f-0a0c0f958d6b&redirect_uri=https%3A%2F%2Fpefeencopjdpgkdkdpomklgfjkodmdhm.chromiumapp.org%2FbrowserAction%2FbrowserAction.html&scope=user.read%20openid%20offline_access%20profile&code=M.R3_BL2.29613a28-a6af-9c58-85b1-fca997b38fb3&code_verifier=XwiUjPSpnJ9YQFVSuOZu_QejCt5O7E3LsJsu7VkKXc4&grant_type=authorization_code&client_info=1&client-request-id=45170c82-ed39-4a08-a863-f0ae05b9cb35";
         const tokenRequestInfo = {
             url: "https://login.microsoftonline.com/common/oauth2/v2.0/token",
             fetchOptions: {
                 method: 'POST', // *GET, POST, PUT, DELETE, etc.
                 headers: {
-                  'Content-Type': 'application/json'
-                  // 'Content-Type': 'application/x-www-form-urlencoded',
+                  // 'Content-Type': 'application/json'
+                  'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
                 },
-                body: JSON.stringify(params) // body data type must match "Content-Type" header
+                body: formBody // body data type must match "Content-Type" header
             } 
         }
         return tokenRequestInfo;

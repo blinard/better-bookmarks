@@ -1,3 +1,4 @@
+import { IAuthResult } from "src/authentication/authManager";
 import {Bookmark} from "../models/bookmark";
 
 export type OmniboxProvideSuggestionsCallback = (suggestions: chrome.omnibox.SuggestResult[]) => void;
@@ -17,4 +18,6 @@ export interface BrowserFacade {
     setLocalBookmarksData(bookmarks: Array<Bookmark>): Promise<boolean | chrome.runtime.LastError>;
     getRefreshToken(): Promise<string | undefined>;
     setRefreshToken(refreshToken: string): Promise<boolean | chrome.runtime.LastError>;
+    getCachedAuthResult(): Promise<IAuthResult | undefined>;
+    setCachedAuthResult(authResult: IAuthResult): Promise<boolean>;
 }
