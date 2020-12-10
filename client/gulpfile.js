@@ -18,6 +18,11 @@ gulp.task("copy:browseraction", function() {
         .pipe(gulp.dest("dist/browserAction"));
 });
 
+gulp.task("copy:contentScript", function() {
+    return gulp.src("src/contentScript/*")
+        .pipe(gulp.dest("dist/contentScript"));
+});
+
 gulp.task("copy:options", function() {
     return gulp.src("src/options/*")
         .pipe(gulp.dest("dist/options"));
@@ -65,7 +70,7 @@ gulp.task("copy:auth0chrome", function() {
         .pipe(gulp.dest("dist"))
 });
 
-gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:msal-browser", "copy:msal-common", "copy:auth0chrome", "copy:images", "copy:authconfig"]));
+gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:contentScript", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:msal-browser", "copy:msal-common", "copy:auth0chrome", "copy:images", "copy:authconfig"]));
 
 gulp.task("clean", function(cb) {
     cmd("rm -rf dist", cb);

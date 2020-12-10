@@ -45,6 +45,7 @@ namespace BetterBookmarks
             container.Register<ISyncService, SyncService>();
             container.Register<IUserRepository, UserRepository>();
             container.Register<IUserService, UserService>();
+            container.Register<IAuthStatesRepository, AuthStatesRepository>();
             Console.WriteLine("**** BB-FUNC STARTUP CONFIGURATION END ****");
         }
 

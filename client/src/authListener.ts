@@ -11,7 +11,7 @@ import { IOAuthResponse, IMSAAuthHelper, ResponseMode } from "./authentication/m
 import { IPKCEChallengeAndVerifierFactory } from "./authentication/pkceChallengeAndVerifier";
 import { IBase64Encode } from "./authentication/base64Encode";
 import { IBrowserStringUtils } from "./authentication/browserStringUtils";
-import { IAuthManager } from "./authentication/authManager";
+import { IAuthManager, IAuthResult } from "./authentication/authManager";
 
 export interface IAuthListener {
     addAuthListener(): void;
@@ -66,6 +66,33 @@ export class AuthListener implements IAuthListener {
         chrome.runtime.sendMessage(getTokenSilentResp);
     }
 
+    private handleInteractiveAuthResponse(event: any) {
+        const oauthResp: IOAuthResponse = JSON.parse(event.authResponse);;
+        console.log("token below:");
+        console.log(oauthResp);
+
+        const access_token_expiration = new Date();
+        // Note: Padding the expiration by 5 minutes. Typically it's 1 hour expiration
+        access_token_expiration.setSeconds(access_token_expiration.getSeconds() + oauthResp.expires_in - 300);
+        const refresh_token_expiration = new Date();
+        // Note: Typically refresh tokens are valid for 24 hrs. Padding the expiration by 2 hrs.
+        // Note: It'd be nice to be able to get a concrete expiry time on this.
+        // Note: Since this token is from a 'mobile app' - it should last much longer now.
+        refresh_token_expiration.setHours(refresh_token_expiration.getHours() + 1000);
+        const myResponse: IAuthResult = {
+            //bbUserId: "tbd", //tid+oid claims in the token
+            ...oauthResp,
+            access_token_expiration,
+            refresh_token_expiration,
+            name: "tbd" // TODO: parse the access_token or id_token and acquire the name property.
+        };
+
+        console.log("myResponse");
+        console.log(myResponse);
+        this._browser.setCachedAuthResult(myResponse);
+        return myResponse;
+    }
+
     private onMessageHandler(event: any) {
         const self = this;
         if (!event || !event.type) {
@@ -81,6 +108,12 @@ export class AuthListener implements IAuthListener {
             this.getTokenSilent();
             return; 
         }
+
+        if(event.type === "authResponse") {
+            this.handleInteractiveAuthResponse(event);
+            return;
+        }
+
 
         return;
         // scope

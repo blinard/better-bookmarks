@@ -18,6 +18,13 @@
     "identity",
     "notifications"
   ],
+  "content_scripts": [
+    {
+      "matches": ["https://df306839473c.ngrok.io/*"],
+      "run_at": "document_idle",
+      "js": ["contentScript/inject.js"]
+    }
+  ],
   "web_accessible_resources": [
       "browserAction/browserAction.html"
   ],

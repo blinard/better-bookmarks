@@ -31,35 +31,75 @@ export class AuthManager implements IAuthManager {
         @inject(TYPES.BrowserFacade) private _browserFacade: BrowserFacade
     ) {}
 
+    /*
+        Chrome Extension auth as Mobile app Overall process:
+
+        1. Extension does post to bbfunction (sending state key and bits for pkce verifier)
+        2. Extension creates authorize url (with auth code and uses redirect_uri of https://bbfunction.azurewebsites.net/api/auth), opens new tab and navigates to authorize url
+        3. User auths, auth flow redirects to https://bbfunction.azurewebsites.net/api/auth
+        4. Function accepts state and code, looks up code verifier by state key, issues request for access and refresh token, receives tokens, provides them in the html response.
+        5. Extension acquires tokens (function could poll for the token response but, better yet, the response page could trigger something in the extension to let it know the token is available.)
+        6. Extension uses tokens, including refresh_token. 
+    */
+
     async loginInteractive(): Promise<IAuthResult> {
+        const urlBase = "https://df306839473c.ngrok.io"
         // Implementation based on: https://docs.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow
         const pkceChallengeAndVerfier = this._pkceChallengeAndVerifierFactory.getNewPKCEChallengeAndVerifier();
         const msaAuthorityScopes = ["openid", "profile", "offline_access"];
         const betterBookmarksScopes = ["api://ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa/Bookmarks.Sync"]; // TODO: Move this to a config
         const allScopes = [...msaAuthorityScopes, ...betterBookmarksScopes];
         const clientId = "ab8d1625-d6be-4548-ab9f-0a0c0f958d6b"; // TODO: Move this to a config
-        const redirectUri = chrome.identity.getRedirectURL('browserAction/browserAction.html'); // TODO: Move this to browserFacade
+        const redirectUri = urlBase + "/api/Authenticate" //chrome.identity.getRedirectURL('browserAction/browserAction.html'); // TODO: Move this to browserFacade
 
+        // Section: Stores verifier
+        // TODO: Generate a state key instead of hard-coding one.
+        const stateKey = "111112"
+        const verifierContent = {
+            id: stateKey,
+            StateKey: stateKey,
+            VerifierCode: pkceChallengeAndVerfier.getPKCEVerifier()
+        };
+
+        let storageResp = await fetch(urlBase + "/api/StorePkceVerifier", {
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            headers: {
+              'Content-Type': 'application/json'
+              // 'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8',
+            },
+            body: JSON.stringify(verifierContent) // body data type must match "Content-Type" header
+        });
+
+        if (!storageResp.ok) {
+            throw new Error("StorePkceVerifier call failed");
+        }
+
+        // Section: Begins auth with Authorize call (that is redirected to service).
         const authorizeUrl = await this._msaAuthHelper.getAuthorizeRequestUrl(
-            clientId, redirectUri, ResponseMode.Fragment, allScopes, "54321", pkceChallengeAndVerfier); // TODO: Do I need state?
+            clientId, redirectUri, ResponseMode.Query, allScopes, stateKey, pkceChallengeAndVerfier); // TODO: Do I need state?
 
         console.log("authorizeUrl: " + authorizeUrl);
 
-        const redirectResponseUrlAwaiter = new Promise<string>((resolve, reject) => {
-            chrome.identity.launchWebAuthFlow({ url: authorizeUrl, interactive: true }, async (redirectResponseUrl) => { resolve(redirectResponseUrl); });
-        });
+        // const redirectResponseUrlAwaiter = new Promise<string>((resolve, reject) => {
+        //     chrome.identity.launchWebAuthFlow({ url: authorizeUrl, interactive: true }, async (redirectResponseUrl) => { resolve(redirectResponseUrl); });
+        // });
 
-        const redirectResponseUrl = await redirectResponseUrlAwaiter;
-        if (!redirectResponseUrl) {
-            throw new Error("redirectResponseUrl is empty, null or undefined.");
-        }
+        chrome.tabs.create({ url: authorizeUrl });
 
-        console.log("redirectUrl: " + redirectResponseUrl);
-        const responseValues = this.parseAuthorizeRedirectResponseUrl(redirectResponseUrl);
-        const myResponse = await this.acquireAccessTokenViaAuthCode(responseValues.code, clientId, redirectUri, msaAuthorityScopes, pkceChallengeAndVerfier);
-        // TODO: Set browser action icon to enabled ux.
+        // Section: Now I'm done until the service sends me a response event via a contentScript integration in the response
 
-        return myResponse;
+
+        // const redirectResponseUrl = await redirectResponseUrlAwaiter;
+        // if (!redirectResponseUrl) {
+        //     throw new Error("redirectResponseUrl is empty, null or undefined.");
+        // }
+
+        // console.log("redirectUrl: " + redirectResponseUrl);
+        // const responseValues = this.parseAuthorizeRedirectResponseUrl(redirectResponseUrl);
+        // const myResponse = await this.acquireAccessTokenViaAuthCode(responseValues.code, clientId, redirectUri, msaAuthorityScopes, pkceChallengeAndVerfier);
+        // // TODO: Set browser action icon to enabled ux.
+        
+        // return myResponse;
     }
 
     async acquireToken(): Promise<IAuthResult> {
