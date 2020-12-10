@@ -3,6 +3,7 @@ using System;
 using AzureFunctions.Security.Auth0;
 using BetterBookmarks.Repositories;
 using BetterBookmarks.Services;
+using BetterBookmarks.Wrappers;
 using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.IdentityModel.Protocols;
@@ -46,6 +47,7 @@ namespace BetterBookmarks
             container.Register<IUserRepository, UserRepository>();
             container.Register<IUserService, UserService>();
             container.Register<IAuthStatesRepository, AuthStatesRepository>();
+            container.Register<IHttpClientWrapper, HttpClientWrapper>().AsSingleton();
             Console.WriteLine("**** BB-FUNC STARTUP CONFIGURATION END ****");
         }
 

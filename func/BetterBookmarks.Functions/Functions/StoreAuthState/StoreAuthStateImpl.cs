@@ -15,13 +15,13 @@ using System.Linq;
 
 namespace BetterBookmarks.Functions
 {
-    public class StorePkceVerifierImpl
+    public class StoreAuthStateImpl
     {
-        private readonly IAuthStatesRepository _pkceVerifierRepository;
+        private readonly IAuthStatesRepository _authStateRepository;
 
-        public StorePkceVerifierImpl(IAuthStatesRepository pkceVerifierRepository)
+        public StoreAuthStateImpl(IAuthStatesRepository authStateRepository)
         {
-            _pkceVerifierRepository = pkceVerifierRepository;
+            _authStateRepository = authStateRepository;
         }
 
         public async Task<IActionResult> Run(HttpRequest req, ILogger log)
@@ -29,8 +29,8 @@ namespace BetterBookmarks.Functions
             var requestBody = await new StreamReader(req.Body).ReadToEndAsync();
             var pkceVerifier = JsonConvert.DeserializeObject<AuthState>(requestBody);
 
-            Console.WriteLine("Storing pkceVerifier with StateKey: " + pkceVerifier.StateKey);
-            await _pkceVerifierRepository.SaveAuthStateAsync(pkceVerifier);
+            Console.WriteLine("Storing authState with StateKey: " + pkceVerifier.StateKey);
+            await _authStateRepository.SaveAuthStateAsync(pkceVerifier);
             return new StatusCodeResult(204);
         }
     }
