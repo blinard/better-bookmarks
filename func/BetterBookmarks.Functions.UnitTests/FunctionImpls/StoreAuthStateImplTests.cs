@@ -1,8 +1,10 @@
 ﻿using BetterBookmarks.Functions.UnitTests.Builders;
 using BetterBookmarks.Models;
 using BetterBookmarks.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -41,14 +43,46 @@ namespace BetterBookmarks.Functions.UnitTests.FunctionImpls
         [Fact]
         public async Task SavesProvidedAuthState()
         {
+            var isCalled = false;
+            _mockAuthStatesRepository
+                .Setup(o => o.SaveAuthStateAsync(It.IsAny<AuthState>()))
+                .Callback<AuthState>((authState) =>
+                {
+                    Assert.Equal(authState.ClientId, _fakeAuthState.ClientId);
+                    Assert.Equal(authState.RedirectUrl, _fakeAuthState.RedirectUrl);
+                    Assert.Equal(authState.AuthCodeVerifier, _fakeAuthState.AuthCodeVerifier);
+                    Assert.Equal(authState.Scopes, _fakeAuthState.Scopes);
+                    Assert.Equal(authState.StateKey, _fakeAuthState.StateKey);
+                    isCalled = true;
+                })
+                .Returns(Task.CompletedTask);
+                
+            var req = 
+                _httpRequestBuilder
+                    .HavingBody(JsonConvert.SerializeObject(_fakeAuthState))
+                    .Build();
 
-            var resp = await _storeAuthStateImpl.Run(null, _mockLogger.Object);
+            var resp = await _storeAuthStateImpl.Run(req, _mockLogger.Object);
+
+            Assert.True(isCalled);
         }
 
         [Fact]
         public async Task RespondsWith204StatusWhenSuccessful()
         {
-            var resp = await _storeAuthStateImpl.Run(null, _mockLogger.Object);
+            var isCalled = false;
+            _mockAuthStatesRepository
+                .Setup(o => o.SaveAuthStateAsync(It.IsAny<AuthState>()))
+                .Returns(Task.CompletedTask);
+
+            var req =
+                _httpRequestBuilder
+                    .HavingBody(JsonConvert.SerializeObject(_fakeAuthState))
+                    .Build();
+
+            var resp = await _storeAuthStateImpl.Run(req, _mockLogger.Object);
+
+            Assert.Equal(204, ((StatusCodeResult)resp).StatusCode);
         }
     }
 }

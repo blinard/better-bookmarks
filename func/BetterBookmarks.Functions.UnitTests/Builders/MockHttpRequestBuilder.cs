@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Moq;
@@ -8,6 +10,7 @@ namespace BetterBookmarks.Functions.UnitTests.Builders
     public class MockHttpRequestBuilder
     {
         private readonly Dictionary<string, StringValues> headers;
+        private string body = string.Empty;
 
         public MockHttpRequestBuilder()
         {
@@ -17,6 +20,12 @@ namespace BetterBookmarks.Functions.UnitTests.Builders
         public MockHttpRequestBuilder WithHeader(string key, string value)
         {
             headers.Add(key, new StringValues(value));
+            return this;
+        }
+
+        public MockHttpRequestBuilder HavingBody(string body)
+        {
+            this.body = body;
             return this;
         }
 
@@ -34,6 +43,13 @@ namespace BetterBookmarks.Functions.UnitTests.Builders
             mockReq
                 .SetupGet(o => o.Headers)
                 .Returns(mockHeaders.Object);
+
+            if (string.IsNullOrWhiteSpace(body))
+                return mockReq.Object;
+
+            mockReq
+                .SetupGet(o => o.Body)
+                .Returns(new MemoryStream(Encoding.UTF8.GetBytes(body)));
 
             return mockReq.Object;
         }
