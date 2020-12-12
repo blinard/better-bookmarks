@@ -8,6 +8,7 @@ using BetterBookmarks.Wrappers;
 using System.Net.Http;
 using System.Collections.Generic;
 using System;
+using System.Web;
 
 namespace BetterBookmarks.Functions
 {

@@ -1,5 +1,6 @@
 ﻿using BetterBookmarks.Functions.UnitTests.Builders;
 using BetterBookmarks.Wrappers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Newtonsoft.Json;
@@ -39,17 +40,44 @@ namespace BetterBookmarks.Functions.UnitTests.FunctionImpls
         [Fact]
         public async Task RequestsTokenWithExpectedParameters()
         {
-            /*
             var testRequest = new MockHttpRequestBuilder()
                 .HavingBody(JsonConvert.SerializeObject(_fakeRefreshAccessTokenRequest))
                 .Build();
 
+            var wasCalled = false;
             _mockHttpClient
                 .Setup(o => o.SendAsync(It.IsAny<HttpRequestMessage>()))
-                .Returns(Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest)));
+                .Callback<HttpRequestMessage>(async (req) => {
+                    wasCalled = true;
+                    var reqBody = await req.Content.ReadAsStringAsync();
+                    Assert.Contains($"client_id={_fakeRefreshAccessTokenRequest.ClientId}", reqBody);
+                    Assert.Contains($"redirect_uri={_fakeRefreshAccessTokenRequest.RedirectUrl}", reqBody);
+                    Assert.Contains($"grant_type=refresh_token", reqBody);
+                    Assert.Contains($"refresh_token={_fakeRefreshAccessTokenRequest.RefreshToken}", reqBody);
+                    Assert.Contains($"scope={_fakeRefreshAccessTokenRequest.Scopes}", reqBody);
+                })
+                .Returns(Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent("{}")}));
 
             var resp = await _refreshAccessTokenImpl.Run(testRequest, _mockLogger.Object);
-            */
+
+            Assert.True(wasCalled);
+        }
+
+        [Fact]
+        public async Task ForwardsTokenResponseAsItsResponse()
+        {
+            var testRequest = new MockHttpRequestBuilder()
+                .HavingBody(JsonConvert.SerializeObject(_fakeRefreshAccessTokenRequest))
+                .Build();
+
+            var mockTokenResponse = "{\"someRespProperty\":\"someRespPropertyValue\"}";
+            _mockHttpClient
+                .Setup(o => o.SendAsync(It.IsAny<HttpRequestMessage>()))
+                .Returns(Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK) { Content = new StringContent(mockTokenResponse)}));
+
+            var resp = await _refreshAccessTokenImpl.Run(testRequest, _mockLogger.Object);
+            
+            Assert.Equal(mockTokenResponse, JsonConvert.SerializeObject(((JsonResult)resp).Value));
         }
 
         [Fact]
