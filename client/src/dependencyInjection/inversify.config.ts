@@ -10,8 +10,6 @@ import { ISyncListener } from "../syncListener";
 import { SyncListener } from "../syncListener";
 import { IOptionsListener, OptionsListener } from "../optionsListener";
 import { IOmniboxListener, OmniboxListener } from "../omniboxListener";
-import Auth0Chrome from "auth0-chrome";
-import { authConfig } from "../auth.config";
 import { IAuthListener, AuthListener } from "../authListener";
 import { IMSAAuthHelper, IQueryStringBuilder, IScopeQueryStringFormatter, MSAAuthHelper, QueryStringBuilder, ScopeQueryStringFormatter } from "../authentication/msaAuthHelper";
 import { Base64Encode, IBase64Encode } from "../authentication/base64Encode";
@@ -45,11 +43,5 @@ container.bind<IApplicationSettings>(TYPES.IApplicationSettings).to(ApplicationS
 container.bind<IGuidFactory>(TYPES.IGuidFactory).to(GuidFactory);
 container.bind<IAuthStateFactory>(TYPES.IAuthStateFactory).to(AuthStateFactory);
 container.bind<IHttpClient>(TYPES.IHttpClient).to(HttpClient);
-
-container.bind<interfaces.Factory<Auth0Chrome>>(TYPES.Auth0ChromeFactory).toFactory<Auth0Chrome>((context: interfaces.Context) => {
-    return () => {
-        return new Auth0Chrome(authConfig.AUTH0_DOMAIN, authConfig.AUTH0_CLIENT_ID);
-    }
-});
 
 export default container;

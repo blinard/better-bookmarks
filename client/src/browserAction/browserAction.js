@@ -1,4 +1,3 @@
-import { authConfig } from "./auth.config.js";
 
 function logout() {
   // Remove the idToken from storage

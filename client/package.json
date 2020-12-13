@@ -49,7 +49,6 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
-    "auth0-chrome": "^0.1.2",
     "bootstrap": "^5.0.0-beta1",
     "inversify": "^5.0.1",
     "jwt-decode": "^2.2.0",
