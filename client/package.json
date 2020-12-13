@@ -49,11 +49,12 @@
     "typescript": "^3.7.3"
   },
   "dependencies": {
-    "@azure/msal-browser": "^2.7.0",
     "auth0-chrome": "^0.1.2",
+    "bootstrap": "^5.0.0-beta1",
     "inversify": "^5.0.1",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.19",
-    "reflect-metadata": "^0.1.13"
+    "reflect-metadata": "^0.1.13",
+    "uuid": "^8.3.2"
   }
 }

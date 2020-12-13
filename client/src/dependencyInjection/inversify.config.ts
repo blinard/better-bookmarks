@@ -18,7 +18,10 @@ import { Base64Encode, IBase64Encode } from "../authentication/base64Encode";
 import { BrowserStringUtils, IBrowserStringUtils } from "../authentication/browserStringUtils";
 import { IPKCEChallengeAndVerifierFactory, PKCEChallengAndVerifierFactory } from "../authentication/pkceChallengeAndVerifier";
 import { AuthManager, IAuthManager } from "../authentication/authManager";
-
+import { IApplicationSettings, ApplicationSettings } from "../applicationSettings";
+import { IGuidFactory, GuidFactory } from "../guidFactory";
+import { IAuthStateFactory, AuthStateFactory } from "../authStateFactory";
+import { IHttpClient, HttpClient } from "../httpClient";
 
 var container = new Container();
 
@@ -38,6 +41,10 @@ container.bind<IBrowserStringUtils>(TYPES.IBrowserStringUtils).to(BrowserStringU
 container.bind<IMSAAuthHelper>(TYPES.IMSAAuthHelper).to(MSAAuthHelper);
 container.bind<IPKCEChallengeAndVerifierFactory>(TYPES.IPKCEChallengeAndVerifierFactory).to(PKCEChallengAndVerifierFactory);
 container.bind<IAuthManager>(TYPES.IAuthManager).to(AuthManager);
+container.bind<IApplicationSettings>(TYPES.IApplicationSettings).to(ApplicationSettings);
+container.bind<IGuidFactory>(TYPES.IGuidFactory).to(GuidFactory);
+container.bind<IAuthStateFactory>(TYPES.IAuthStateFactory).to(AuthStateFactory);
+container.bind<IHttpClient>(TYPES.IHttpClient).to(HttpClient);
 
 container.bind<interfaces.Factory<Auth0Chrome>>(TYPES.Auth0ChromeFactory).toFactory<Auth0Chrome>((context: interfaces.Context) => {
     return () => {

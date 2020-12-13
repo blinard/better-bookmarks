@@ -8,7 +8,7 @@
   },
   "omnibox": { "keyword" : "bb" },
   "browser_action": {
-    "default_icon": "images/bb-icon.png",
+    "default_icon": "images/bb-icon-disabled.png",
     "default_popup": "browserAction/browserAction.html"
   },
   "options_page": "options/index.html",
@@ -20,7 +20,7 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://df306839473c.ngrok.io/*"],
+      "matches": ["https://81698c771334.ngrok.io/*"],
       "run_at": "document_idle",
       "js": ["contentScript/inject.js"]
     }

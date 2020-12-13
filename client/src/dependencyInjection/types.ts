@@ -15,7 +15,11 @@ let TYPES = {
     IBrowserStringUtils: Symbol("IBrowserStringUtils"),
     IMSAAuthHelper: Symbol("IMSAAuthHelper"),
     IPKCEChallengeAndVerifierFactory: Symbol("IPKCEChallengeAndVerifierFactory"),
-    IAuthManager: Symbol("IAuthManager")
+    IAuthManager: Symbol("IAuthManager"),
+    IApplicationSettings: Symbol("IApplicationSettings"),
+    IGuidFactory: Symbol("IGuidFactory"),
+    IAuthStateFactory: Symbol("IAuthStateFactory"),
+    IHttpClient: Symbol("IHttpClient")
 };
 
 export default TYPES;

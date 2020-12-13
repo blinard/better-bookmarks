@@ -1,130 +1,8 @@
 <!doctype html>
 <html>
 	<head>
-		<style type="text/css">
-			html, body{
-				margin: 0px;
-			}
-
-			*{
-				box-sizing: border-box;
-			}
-
-			*:focus{
-				outline: none;
-			}
-
-			#mainPopup {
-				padding: 10px;
-				width: 320px;
-				min-height: 100px;
-				font-family: Helvetica, Ubuntu, Arial, sans-serif;
-			}
-
-			.hidden {
-				display: none;
-			}
-
-			.profile{
-				min-height: 420px;
-			}
-
-			.picture {
-				height: 100%;
-				width: 100%;
-				position: absolute;
-				top: 0px;
-				left: 0px;
-				background-position: center;
-				background-size: cover;
-			}
-
-			.loading {
-				transform: translate(-50%, -50%);
-			  position: absolute;
-			  top: 50%;
-			  left: 50%;
-			}
-
-			.loading-bar {
-			  display: inline-block;
-			  width: 2px;
-			  height: 16px;
-			  border-radius: 0px;
-			  animation: loading 1s ease-in-out infinite;
-			}
-
-			.loading-bar:nth-child(1) {
-			  background-color: #eb5424;
-			  animation-delay: 0;
-			}
-
-			.loading-bar:nth-child(2) {
-			  background-color: #44c7f4;
-			  animation-delay: 0.09s;
-			}
-
-			.loading-bar:nth-child(3) {
-			  background-color: #16214d;
-			  animation-delay: .18s;
-			}
-
-			.loading-bar:nth-child(4) {
-			  background-color: #eaca2c;
-			  animation-delay: .27s;
-			}
-
-			@keyframes loading {
-			  0% {
-			    transform: scale(1);
-			  }
-			  20% {
-			    transform: scale(1, 2.2);
-			  }
-			  40% {
-			    transform: scale(1);
-			  }
-			}
-
-			.floater-profile {
-				position: absolute;
-				text-align: center;
-				width: 100%;
-				bottom: 0px;
-				left: 0px;
-			}
-
-			.user-info {
-				position: relative;
-				z-index: 1;
-			}
-
-			.floater-background {
-				position: absolute;
-				right: 0;
-				top: 0;
-				bottom: 0;
-				left: 0;
-				background: #343434;
-				opacity: 0.7;
-			}
-
-			.logout-button {
-				margin-bottom: 15px !important;
-			}
-
-			.floater-profile * {
-				color: #fff;
-			}
-
-			.nickname::before {
-				content: '@'
-			}
-
-
-		</style>
-		<link href="https://cdn.auth0.com/styleguide/4.8.12/index.min.css" rel="stylesheet" />
-
+        <link href="./browserAction.css" rel="stylesheet" />
+        <link href="./bootstrap.min.css" rel="stylesheet" />
 	</head>
 	<body>
 		<div id="mainPopup">
@@ -135,7 +13,7 @@
 						<h5 class="name"></h5>
 					</div>
 					<hr />
-					<button class="btn btn-danger logout-button">Log Out</button>
+					<button id="btnLogout" type="button" class="btn btn-danger">Log Out</button>
 				</div>
 			</div>
 			<div class="loading hidden">
@@ -146,14 +24,12 @@
 			</div>
 			<div class="default">
 				<div class="text-center">
-					<h3>Chrome Demo</h1>
-					<button class="btn btn-success login-button">Log In With Auth0</button>
+					<h3>Better Bookmarks</h1>
+					<button id="btnLogin" type="button" class="btn btn-outline-primary btn-lg">Log in with Microsoft</button>
 					<p class="caption">Press the Log In button above to log in.</p>
 				</div>
 			</div>
 		</div>
-		<script src="./jwt-decode.js"></script>
-		<script type="module" src="./auth.config.js"></script>
 		<script type="module" src="./browserAction.js"></script>
 	</body>
 </html>

@@ -7,9 +7,9 @@ namespace BetterBookmarks.Wrappers
     {
         private HttpClient _httpClient;
 
-        public HttpClientWrapper(HttpClient httpClient)
+        public HttpClientWrapper()
         {
-            _httpClient = httpClient;
+            _httpClient = new HttpClient();
         }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)

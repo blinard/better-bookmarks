@@ -66,6 +66,10 @@ export class ChromeBrowser implements BrowserFacade {
         );
     }
 
+    navigateNewTab(url: string): void {
+        chrome.tabs.create({ url: url });
+    }
+
     getLocalBookmarksData(): Promise<Array<Bookmark>> {
         var deferred = new Promise<Array<Bookmark>>((resolve, reject) => {
             chrome.storage.local.get(CHROME_BOOKMARKS_KEY, (bookmarksObj) => {
@@ -121,7 +125,6 @@ export class ChromeBrowser implements BrowserFacade {
                 const result: IAuthResult = (cacheObject && cacheObject[CHROME_AUTHRESULT_KEY]);
                 if (!result) return result;
                 result.access_token_expiration = new Date(<number>result.access_token_expiration_val);
-                result.refresh_token_expiration = new Date(<number>result.refresh_token_expiration_val);
                 resolve(result);
             });
         });
@@ -129,7 +132,6 @@ export class ChromeBrowser implements BrowserFacade {
 
     setCachedAuthResult(authResult: IAuthResult): Promise<boolean> {
         authResult.access_token_expiration_val = authResult.access_token_expiration.valueOf();
-        authResult.refresh_token_expiration_val = authResult.refresh_token_expiration.valueOf();
         return new Promise<boolean>((resolve, reject) => {
             let storageShim: Dictionary<object> = {};
             storageShim[CHROME_AUTHRESULT_KEY] = authResult
