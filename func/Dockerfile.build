@@ -1,5 +1,5 @@
 # Build and run tests inside the docker container
-FROM microsoft/dotnet:2.2-sdk
+FROM dotnet/sdk:3.1
 ARG VERSION
 ARG BUILDCONFIG=Debug
 
