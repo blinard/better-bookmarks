@@ -9,7 +9,6 @@ function logout() {
 const $  = document.querySelector.bind(document);
 
 function renderProfileView(profile) {
-  chrome.browserAction.setIcon({ path: "../images/bb-icon.png" });
   $('.default').classList.add('hidden');
   ['name'].forEach((key) => {
 
@@ -26,8 +25,6 @@ function renderProfileView(profile) {
 }
 
 function renderDefaultView() {
-  chrome.browserAction.setIcon({ path: "../images/bb-icon-disabled.png" });
-
   $('.default').classList.remove('hidden');
   $('.profile').classList.add('hidden');
   $('.loading').classList.add('hidden');

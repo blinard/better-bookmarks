@@ -29,6 +29,7 @@ namespace BetterBookmarks.Functions
         {
             if (! (await _userService.IsUserAuthorizedAsync(req, log)))
                 return new UnauthorizedResult();
+            // TODO: Need to validate that is has the Bookmark.Sync scope as well? (ClaimType: http://schemas.microsoft.com/identity/claims/scope) Value: "Bookmarks.Sync"
 
             // TODO: Need to handle scenario where multiple clients sync under the same account?
             var user = await _userService.GetOrCreateUserAsync(req, log);

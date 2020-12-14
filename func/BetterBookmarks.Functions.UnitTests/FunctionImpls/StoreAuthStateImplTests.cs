@@ -70,7 +70,6 @@ namespace BetterBookmarks.Functions.UnitTests.FunctionImpls
         [Fact]
         public async Task RespondsWith204StatusWhenSuccessful()
         {
-            var isCalled = false;
             _mockAuthStatesRepository
                 .Setup(o => o.SaveAuthStateAsync(It.IsAny<AuthState>()))
                 .Returns(Task.CompletedTask);

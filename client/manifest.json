@@ -20,7 +20,7 @@
   ],
   "content_scripts": [
     {
-      "matches": ["https://81698c771334.ngrok.io/*"],
+      "matches": ["https://bbfunction.azurewebsites.net/*"],
       "run_at": "document_idle",
       "js": ["contentScript/inject.js"]
     }

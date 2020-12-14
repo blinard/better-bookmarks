@@ -80,51 +80,76 @@ export class AuthManager implements IAuthManager {
     }
 
     async acquireTokenSilent(): Promise<IAuthResult> {
-        console.log("Attempting to acquire token...");
-        // Fetch most recent full response token from cache.
-        // If it doesn't exist, do the full silent auth flow (if that fails, admit defeat and display the signed out ux)
-        const cachedAuthResult = await this._browserFacade.getCachedAuthResult();
-        if (!cachedAuthResult) {
-            throw new Error("Cached auth token not found. Cannot perform silent auth.")
+        try {
+            console.log("Attempting to acquire token...");
+            // Fetch most recent full response token from cache.
+            // If it doesn't exist, do the full silent auth flow (if that fails, admit defeat and display the signed out ux)
+            const cachedAuthResult = await this._browserFacade.getCachedAuthResult();
+            if (!cachedAuthResult) {
+                throw new Error("Cached auth token not found. Cannot perform silent auth.")
+            }
+    
+            // If it's not expired, return it
+            const now = new Date();
+            if (now <= cachedAuthResult.access_token_expiration && cachedAuthResult.access_token) {
+                this._browserFacade.setBrowserActionIconEnabled();
+                console.log("Cached token is good, returning cached token");
+                return cachedAuthResult
+            }
+    
+            // Cached access_token is expired. Try refreshing it.
+            if (!cachedAuthResult.refresh_token) {
+                throw new Error("No refresh token found on cached auth result. Cannot perform silent auth.");
+            }
+    
+            const authResponse = await this.acquireAccessTokenViaRefreshToken(cachedAuthResult.refresh_token);
+            if (authResponse && authResponse.access_token) {
+                this._browserFacade.setBrowserActionIconEnabled();
+            }
+            else {
+                this._browserFacade.setBrowserActionIconDisabled();
+            }
+            return authResponse;
         }
-
-        // If it's not expired, return it
-        const now = new Date();
-        if (now <= cachedAuthResult.access_token_expiration && cachedAuthResult.access_token) {
-            console.log("Cached token is good, returning cached token");
-            return cachedAuthResult
+        catch(e) {
+            this._browserFacade.setBrowserActionIconDisabled();
+            throw e;
         }
-
-        // Cached access_token is expired. Try refreshing it.
-        if (!cachedAuthResult.refresh_token) {
-            throw new Error("No refresh token found on cached auth result. Cannot perform silent auth.");
-        }
-
-        return await this.acquireAccessTokenViaRefreshToken(cachedAuthResult.refresh_token);
     }
 
     async acquireAccessTokenViaRefreshToken(refreshToken: string): Promise<IAuthResult> {
-        console.log("running acquireAccessTokenViaRefreshToken");
+        try {
+            console.log("running acquireAccessTokenViaRefreshToken");
 
-        // TODO: Add logic to validate that token is for bb service scope and that audience is my client id.
-        //  and if it isn't, fetch a token explicitly for it's scope.
-        const resp = await this._httpClient.postAccessTokenRequestToService(refreshToken);
-        if (!resp.ok) {
-            throw new Error("Access token fetch request failed.");
+            // TODO: Add logic to validate that token is for bb service scope and that audience is my client id.
+            //  and if it isn't, fetch a token explicitly for it's scope.
+            const resp = await this._httpClient.postAccessTokenRequestToService(refreshToken);
+            if (!resp.ok) {
+                throw new Error("Access token fetch request failed.");
+            }
+
+            const oauthResp: IOAuthResponse = await resp.json();
+            const access_token_expiration = new Date();
+            // Note: Padding the expiration by 5 minutes. Typically it's 1 hour expiration
+            access_token_expiration.setSeconds(access_token_expiration.getSeconds() + oauthResp.expires_in - 300);
+            const myResponse: IAuthResult = {
+                ...oauthResp,
+                access_token_expiration,
+                name: "tbd" // TODO: parse the access_token or id_token and acquire the name property.
+            };
+
+            this._browserFacade.setCachedAuthResult(myResponse);
+            if (myResponse && myResponse.access_token) {
+                this._browserFacade.setBrowserActionIconEnabled();
+            }
+            else {
+                this._browserFacade.setBrowserActionIconDisabled();
+            }
+            return myResponse;
         }
-
-        const oauthResp: IOAuthResponse = await resp.json();
-        const access_token_expiration = new Date();
-        // Note: Padding the expiration by 5 minutes. Typically it's 1 hour expiration
-        access_token_expiration.setSeconds(access_token_expiration.getSeconds() + oauthResp.expires_in - 300);
-        const myResponse: IAuthResult = {
-            //bbUserId: "tbd", //tid+oid claims in the token
-            ...oauthResp,
-            access_token_expiration,
-            name: "tbd" // TODO: parse the access_token or id_token and acquire the name property.
-        };
-
-        this._browserFacade.setCachedAuthResult(myResponse);
-        return myResponse;
+        catch(e) {
+            this._browserFacade.setBrowserActionIconDisabled();
+            throw e;
+        }
     }
 }

@@ -1,6 +1,6 @@
 
 using System;
-using AzureFunctions.Security.Auth0;
+using System.IdentityModel.Tokens.Jwt;
 using BetterBookmarks.Repositories;
 using BetterBookmarks.Services;
 using BetterBookmarks.Wrappers;
@@ -8,6 +8,7 @@ using Microsoft.Azure.Documents;
 using Microsoft.Azure.Documents.Client;
 using Microsoft.IdentityModel.Protocols;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
 using TinyIoC;
 
 namespace BetterBookmarks
@@ -25,24 +26,21 @@ namespace BetterBookmarks
             container.Register<IApplicationSettingRepository>(appSettings);
             Console.WriteLine("**** BB-FUNC AppSettings Configured ****");
 
-            var auth0Settings = new Auth0ApiSettings() {
-                Issuer = appSettings.AuthIssuer,
-                Audience = appSettings.AuthAudience
-            };
-            container.Register<Auth0ApiSettings>(auth0Settings);
-            Console.WriteLine("**** BB-FUNC ApiSettings Configured ****");
-
-            var authConfigMgr = ConfigurationManagerFactory.GetConfigurationManager(auth0Settings);
-            container.Register<IConfigurationManager<OpenIdConnectConfiguration>>(authConfigMgr);
-            Console.WriteLine("**** BB-FUNC ConfigManager Configured ****");
-
             container.Register<Lazy<IDocumentClient>>(new Lazy<IDocumentClient>(() => {
                 return new DocumentClient(new Uri(appSettings.DbEndpoint), appSettings.DbAuthKey);
                 // TODO: Create DB and Collection if not exists?
             }));
             Console.WriteLine("**** BB-FUNC Lazy DocumentClient Configured ****");
 
-            container.Register<IAuthenticationService>((c, npo) => new AuthenticationService(auth0Settings, authConfigMgr));
+            var configManager =
+                new ConfigurationManager<OpenIdConnectConfiguration>(
+                    $"{appSettings.AuthAuthority}/.well-known/openid-configuration",
+                    new OpenIdConnectConfigurationRetriever());
+            container.Register<IConfigurationManager<OpenIdConnectConfiguration>>(configManager);
+            Console.WriteLine("**** BB-FUNC OpenIdConnect ConfigurationManager Configured ****");
+
+            container.Register<ISecurityTokenValidator, JwtSecurityTokenHandler>();
+            container.Register<IAuthService, AuthService>();
             container.Register<ISyncService, SyncService>();
             container.Register<IUserRepository, UserRepository>();
             container.Register<IUserService, UserService>();

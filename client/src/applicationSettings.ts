@@ -19,7 +19,13 @@ export interface IAuthSettings {
 export class ApplicationSettings implements IApplicationSettings {
     constructor() {}
 
-    readonly UrlBase: string = "https://81698c771334.ngrok.io"; //"https://bbfunction.azurewebsites.net";
+    /*
+        New ngrok url? There are 3 places that you need to update it:
+        1. Here. The UrlBase.
+        2. In the manifest.json of the client application (for the content script)
+        3. In the AAD App registration. As an allowed redirect url for the mobile authentication.
+    */
+    readonly UrlBase: string = "https://bbfunction.azurewebsites.net";
     readonly SyncUrl: string = this.UrlBase + "/api/Sync";
     readonly Auth: IAuthSettings = {
         ClientId: "ab8d1625-d6be-4548-ab9f-0a0c0f958d6b",

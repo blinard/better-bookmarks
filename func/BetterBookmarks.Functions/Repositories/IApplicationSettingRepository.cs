@@ -9,5 +9,9 @@ namespace BetterBookmarks.Repositories
         string AuthStatesCollectionName { get; }
         string AuthIssuer { get; }
         string AuthAudience { get; }
+
+        string AuthAuthority { get; }
+        string AuthClientId { get; }
+        string AuthValidIssuers { get; }
     }
 }

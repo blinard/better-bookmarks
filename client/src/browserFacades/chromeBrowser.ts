@@ -145,4 +145,12 @@ export class ChromeBrowser implements BrowserFacade {
             });
         });
     }
+
+    setBrowserActionIconDisabled(): void {
+        chrome.browserAction.setIcon({ path: "../images/bb-icon-disabled.png" });
+    }
+
+    setBrowserActionIconEnabled(): void {
+        chrome.browserAction.setIcon({ path: "../images/bb-icon.png" });
+    }
 }

@@ -21,4 +21,6 @@ export interface BrowserFacade {
     setRefreshToken(refreshToken: string): Promise<boolean | chrome.runtime.LastError>;
     getCachedAuthResult(): Promise<IAuthResult | undefined>;
     setCachedAuthResult(authResult: IAuthResult): Promise<boolean>;
+    setBrowserActionIconEnabled(): void;
+    setBrowserActionIconDisabled(): void;
 }
