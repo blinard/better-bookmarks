@@ -33,9 +33,22 @@ steps:
 
 - task: DotNetCoreCLI@2
   inputs:
-    command: 'build'
+    command: 'test'
     projects: './func/BetterBookmarks.Functions.sln'
+    publishTestResults: true
+  
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    arguments: '-c $(buildConfiguration)'
+    projects: './func/BetterBookmarks.Functions/bb-funcs.csproj'
+    zipAfterPublish: true
+    versioningScheme: byBuildNumber    
 
+- script: |
+    ls -alR
+  displayName: 'Get folder structure'  
+    
 # Be sure that you have the 'coverlet.msbuild' package added to your unit test project for code coverage to work
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
   displayName: 'Performing Docker build and test'
