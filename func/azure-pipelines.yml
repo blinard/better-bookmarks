@@ -26,8 +26,15 @@ variables:
 
 steps:
 
-- script: dotnet test BetterBookmarks.Functions.sln -c $(buildConfiguration) --results-directory testresults --logger "trx;LogFileName=TestResults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=testresults/coverage/ /p:Exclude="[xunit*]*%2c[Microsoft*]*%2c[Cosmos*]*"
-  displayName: 'Running tests'
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: './func/BetterBookmarks.Functions.sln'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+    projects: './func/BetterBookmarks.Functions.sln'
 
 # Be sure that you have the 'coverlet.msbuild' package added to your unit test project for code coverage to work
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
