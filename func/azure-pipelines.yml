@@ -30,12 +30,14 @@ steps:
   inputs:
     command: 'restore'
     projects: './func/BetterBookmarks.Functions.sln'
+  displayName: 'Restore nuget packages'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
     projects: './func/BetterBookmarks.Functions.sln'
     publishTestResults: true
+  displayName: 'Run unit tests'
   
 - task: DotNetCoreCLI@2
   inputs:
@@ -43,12 +45,14 @@ steps:
     arguments: '-c $(buildConfiguration)'
     projects: './func/BetterBookmarks.Functions/bb-funcs.csproj'
     zipAfterPublish: true
-    versioningScheme: byBuildNumber    
+    versioningScheme: byBuildNumber
+    publishWebProjects: false
+  displayName: 'Build azure function'
 
 - script: |
     ls -alR
   displayName: 'Get folder structure'  
-    
+
 # Be sure that you have the 'coverlet.msbuild' package added to your unit test project for code coverage to work
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
   displayName: 'Performing Docker build and test'
