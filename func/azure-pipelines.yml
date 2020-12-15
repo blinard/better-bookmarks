@@ -39,15 +39,20 @@ steps:
     publishTestResults: true
   displayName: 'Run unit tests'
   
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    arguments: '-c $(buildConfiguration)'
-    projects: './func/BetterBookmarks.Functions/bb-funcs.csproj'
-    zipAfterPublish: true
-    versioningScheme: byBuildNumber
-    publishWebProjects: false
-  displayName: 'Build azure function'
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'publish'
+#     arguments: '-c $(buildConfiguration)'
+#     projects: './func/BetterBookmarks.Functions/bb-funcs.csproj'
+#     zipAfterPublish: true
+#     versioningScheme: byBuildNumber
+#     publishWebProjects: false
+#   displayName: 'Build azure function'
+
+- script: |
+    dotnet publish ./func/BetterBookmarks.Functions/bb-funcs.csproj -c $(buildConfiguration) -o ./out /p:Version=$(Build.BuildNumber)
+  displayName: 'Building azure function'  
+
 
 - script: |
     ls -alR
