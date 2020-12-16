@@ -2,7 +2,7 @@
   "name": "Better Bookmarks",
   "description" : "Type 'bb' plus a bookmark key into the Omnibox.",
   "version": "m.m.p.r",
-  "key": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhEqHrLFeAwGip97HeTmkWBuFZ9P1Q97+TsTpupK5MdpdzGzfDkDhcTe2L8QiCK2yc1/afk5gKt+gNMbbUuqX3pwxZywwe21jdc3jtXJxASWvFidLdDHz1tvRhzjoVnQzLeqvzFzXlf7qgjps03Y7dDt4iYu1mmM6EMCEP/pwlAAme+922ux8IU1GdIPkK4GEki0MogSgVE5iDq2JBFsIdEC+dGGFsai7OeZ7Z6Uv2fF38oKShD09/IMys/I+XQQaEnL5KHKQPR2RQLh/RVJNf8PyVMard8snrLvTj4ahyL+q2CvldrM6IHqSQMKqdL5tSSrNwOyF6GigiMXP2B/ktwIDAQAB-----END PUBLIC KEY-----",
+  "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhEqHrLFeAwGip97HeTmkWBuFZ9P1Q97+TsTpupK5MdpdzGzfDkDhcTe2L8QiCK2yc1/afk5gKt+gNMbbUuqX3pwxZywwe21jdc3jtXJxASWvFidLdDHz1tvRhzjoVnQzLeqvzFzXlf7qgjps03Y7dDt4iYu1mmM6EMCEP/pwlAAme+922ux8IU1GdIPkK4GEki0MogSgVE5iDq2JBFsIdEC+dGGFsai7OeZ7Z6Uv2fF38oKShD09/IMys/I+XQQaEnL5KHKQPR2RQLh/RVJNf8PyVMard8snrLvTj4ahyL+q2CvldrM6IHqSQMKqdL5tSSrNwOyF6GigiMXP2B/ktwIDAQAB",
   "background": {
     "scripts": [ "backgroundServices.js" ]
   },
