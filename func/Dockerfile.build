@@ -11,6 +11,7 @@ COPY ./func/ .
 # RUN dotnet build -c ${BUILDCONFIG} BetterBookmarks.Functions.sln
 RUN dotnet test BetterBookmarks.Functions.sln -c ${BUILDCONFIG} --results-directory testresults --logger "trx;LogFileName=TestResults.trx" /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=testresults/coverage/ /p:Exclude="[xunit*]*%2c[Microsoft*]*%2c[Cosmos*]*"
 RUN dotnet publish BetterBookmarks.Functions/bb-funcs.csproj -c ${BUILDCONFIG} -o /out /p:Version=${VERSION}
+RUN cp BetterBookmarks.Functions/_bin-dependencies/* /out/bin/
 WORKDIR /out
 RUN apt-get update && apt-get --assume-yes install zip
 RUN zip -r package.zip *

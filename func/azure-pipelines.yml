@@ -39,24 +39,24 @@ steps:
     publishTestResults: true
   displayName: 'Run unit tests'
   
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    arguments: '-c $(buildConfiguration)'
-    projects: './func/BetterBookmarks.Functions/bb-funcs.csproj'
-    zipAfterPublish: true
-    versioningScheme: byBuildNumber
-    publishWebProjects: false
-  displayName: 'Build azure function'
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'publish'
+#     arguments: '-c $(buildConfiguration)'
+#     projects: './func/BetterBookmarks.Functions/bb-funcs.csproj'
+#     zipAfterPublish: true
+#     versioningScheme: byBuildNumber
+#     publishWebProjects: false
+#   displayName: 'Build azure function'
 
 # - script: |
 #     dotnet publish ./func/BetterBookmarks.Functions/bb-funcs.csproj -c $(buildConfiguration) -o ./out /p:Version=$(Build.BuildNumber)
 #   displayName: 'Building azure function'  
 
 
-- script: |
-    ls -alR
-  displayName: 'Get folder structure'  
+# - script: |
+#     ls -alR
+#   displayName: 'Get folder structure'  
 
 # Be sure that you have the 'coverlet.msbuild' package added to your unit test project for code coverage to work
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
