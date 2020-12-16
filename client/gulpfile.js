@@ -18,6 +18,11 @@ gulp.task("copy:browseraction", function() {
         .pipe(gulp.dest("dist/browserAction"));
 });
 
+gulp.task("copy:contentScript", function() {
+    return gulp.src("src/contentScript/*")
+        .pipe(gulp.dest("dist/contentScript"));
+});
+
 gulp.task("copy:options", function() {
     return gulp.src("src/options/*")
         .pipe(gulp.dest("dist/options"));
@@ -33,31 +38,20 @@ gulp.task("copy:manifest", function() {
         .pipe(gulp.dest("dist"))
 });
 
-gulp.task("compile:authconfig", function(cb) {
-    cmd("node_modules/.bin/tsc src/auth.config.ts --module ES2015", cb)
-});
-
-gulp.task("copy:authconfig", gulp.series(["compile:authconfig"], function() {
-    return gulp.src("src/auth.config.js")
-        .pipe(gulp.dest("dist/browserAction"))
-}));
-
 gulp.task("copy:jwtdecode", function() {
     return gulp.src("node_modules/jwt-decode/build/jwt-decode*.js")
+        .pipe(gulp.dest("dist"))
+});
+
+gulp.task("copy:bootstrapcss", function() {
+    return gulp.src("node_modules/bootstrap/dist/css/bootstrap.min.*")
         .pipe(gulp.dest("dist/browserAction"))
-        .pipe(gulp.dest("dist"))
 });
 
-gulp.task("copy:auth0chrome", function() {
-    return gulp.src("node_modules/auth0-chrome/dist/auth0chrome*.js")
-        .pipe(gulp.dest("dist"))
-});
-
-gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:auth0chrome", "copy:images", "copy:authconfig"]));
+gulp.task("build", gulp.parallel(["build:bgservices", "copy:browseraction", "copy:contentScript", "copy:options", "copy:manifest", "copy:jwtdecode", "copy:bootstrapcss", "copy:images"]));
 
 gulp.task("clean", function(cb) {
     cmd("rm -rf dist", cb);
-    cmd("rm src/auth.config.js", cb);
 
     cmd("rm src/*.js", cb);
     cmd("rm src/*.js.map", cb);

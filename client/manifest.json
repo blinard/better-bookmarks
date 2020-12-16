@@ -2,12 +2,13 @@
   "name": "Better Bookmarks",
   "description" : "Type 'bb' plus a bookmark key into the Omnibox.",
   "version": "m.m.p.r",
+  "key": "-----BEGIN PUBLIC KEY-----MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAhEqHrLFeAwGip97HeTmkWBuFZ9P1Q97+TsTpupK5MdpdzGzfDkDhcTe2L8QiCK2yc1/afk5gKt+gNMbbUuqX3pwxZywwe21jdc3jtXJxASWvFidLdDHz1tvRhzjoVnQzLeqvzFzXlf7qgjps03Y7dDt4iYu1mmM6EMCEP/pwlAAme+922ux8IU1GdIPkK4GEki0MogSgVE5iDq2JBFsIdEC+dGGFsai7OeZ7Z6Uv2fF38oKShD09/IMys/I+XQQaEnL5KHKQPR2RQLh/RVJNf8PyVMard8snrLvTj4ahyL+q2CvldrM6IHqSQMKqdL5tSSrNwOyF6GigiMXP2B/ktwIDAQAB-----END PUBLIC KEY-----",
   "background": {
     "scripts": [ "backgroundServices.js" ]
   },
   "omnibox": { "keyword" : "bb" },
   "browser_action": {
-    "default_icon": "images/bb-icon.png",
+    "default_icon": "images/bb-icon-disabled.png",
     "default_popup": "browserAction/browserAction.html"
   },
   "options_page": "options/index.html",
@@ -16,6 +17,16 @@
     "storage",
     "identity",
     "notifications"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://bbfunction.azurewebsites.net/*"],
+      "run_at": "document_idle",
+      "js": ["contentScript/inject.js"]
+    }
+  ],
+  "web_accessible_resources": [
+      "browserAction/browserAction.html"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
   "manifest_version": 2

@@ -81,4 +81,4 @@ steps:
     appType: functionApp
     appName: bbfunction
     package: $(Build.ArtifactStagingDirectory)/package.zip
-    appSettings: -DbEndpoint https://betterbookmarks.documents.azure.com:443/ -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api
+    appSettings: -DbEndpoint https://betterbookmarks.documents.azure.com:443/ -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api -AuthAuthority https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0 -AuthClientId ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa -AuthValidIssuers https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0

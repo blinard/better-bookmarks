@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AzureFunctions.Security.Auth0;
 using BetterBookmarks.Functions.UnitTests.Builders;
 using BetterBookmarks.Models;
 using BetterBookmarks.Repositories;
@@ -17,7 +16,7 @@ namespace BetterBookmarks.Functions.UnitTests.Services
     public class UserServiceTests
     {
         private readonly UserService _userService;
-        private readonly Mock<IAuthenticationService> _authService;
+        private readonly Mock<IAuthService> _authService;
         private readonly Mock<IUserRepository> _userRepository;
         private readonly Mock<ILogger> _logger;
         private readonly MockHttpRequestBuilder _httpRequestBuilder;
@@ -32,9 +31,9 @@ namespace BetterBookmarks.Functions.UnitTests.Services
                 Id = "FakeUserId"
             };
 
-            _authService = new Mock<IAuthenticationService>();
+            _authService = new Mock<IAuthService>();
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
                 .ReturnsAsync(new ClaimsPrincipal());
             
             _userRepository = new Mock<IUserRepository>();
@@ -58,7 +57,7 @@ namespace BetterBookmarks.Functions.UnitTests.Services
         public async Task IsUserAuthorizedAsync_ReturnsFalseWhenExceptionOccurs()
         {
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
                 .Throws<ApplicationException>();
 
             var result = await _userService.IsUserAuthorizedAsync(_validReq, _logger.Object);
@@ -69,8 +68,8 @@ namespace BetterBookmarks.Functions.UnitTests.Services
         public async Task IsUserAuthorizedAsync_ReturnsFalseWhenUserIdClaimCannotBeFound()
         {
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
-                .ReturnsAsync(new ClaimsPrincipal() );
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
+                .ReturnsAsync(new ClaimsPrincipal());
 
             var result = await _userService.IsUserAuthorizedAsync(_validReq, _logger.Object);
             Assert.False(result);
@@ -79,11 +78,15 @@ namespace BetterBookmarks.Functions.UnitTests.Services
         [Fact]
         public async Task IsUserAuthorizedAsync_ReturnsTrueWhenTheUserIsAuthorized()
         {
-            var claimsPrincipal = GetValidClaimsPrincipal();
+            var claimsPrincipal = new ClaimsPrincipal();
 
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
                 .ReturnsAsync(claimsPrincipal);
+            _authService
+                .Setup(o => o.AcquireUniqueUserId(It.Is<ClaimsPrincipal>(cp => cp == claimsPrincipal)))
+                .Returns("ValidUserId");
+
 
             var result = await _userService.IsUserAuthorizedAsync(_validReq, _logger.Object);
             Assert.True(result);
@@ -93,7 +96,7 @@ namespace BetterBookmarks.Functions.UnitTests.Services
         public async Task GetOrCreateUserAsync_ThrowsExceptionIfUserIdClaimCannotBeFound()
         {
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
                 .ReturnsAsync(new ClaimsPrincipal());
 
             await Assert.ThrowsAsync<ArgumentException>(async () => 
@@ -106,7 +109,7 @@ namespace BetterBookmarks.Functions.UnitTests.Services
         public async Task GetOrCreateUserAsync_BubblesUpExceptionIfAuthServiceFails()
         {
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
                 .Throws<ApplicationException>();
 
             await Assert.ThrowsAsync<ApplicationException>(async () => 
@@ -118,11 +121,14 @@ namespace BetterBookmarks.Functions.UnitTests.Services
         [Fact]
         public async Task GetOrCreateUserAsync_ReturnsDbUserIfFound()
         {
-             var claimsPrincipal = GetValidClaimsPrincipal();
+             var claimsPrincipal = new ClaimsPrincipal();
 
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
                 .ReturnsAsync(claimsPrincipal);
+            _authService
+                .Setup(o => o.AcquireUniqueUserId(It.Is<ClaimsPrincipal>(cp => cp == claimsPrincipal)))
+                .Returns("ValidUserId");
 
            _userRepository
                 .Setup(o => o.GetUserAsync(It.IsAny<string>()))
@@ -135,11 +141,14 @@ namespace BetterBookmarks.Functions.UnitTests.Services
         [Fact]
         public async Task GetOrCreateUserAsync_CreatesNewUserIfDbUserNotFound()
         {
-            var claimsPrincipal = GetValidClaimsPrincipal();
+            var claimsPrincipal = new ClaimsPrincipal();
 
             _authService
-                .Setup(o => o.ValidateTokenAsync(It.IsAny<string>()))
+                .Setup(o => o.AuthenticateRequestAsync(It.IsAny<HttpRequest>(), It.IsAny<ILogger>()))
                 .ReturnsAsync(claimsPrincipal);
+            _authService
+                .Setup(o => o.AcquireUniqueUserId(It.Is<ClaimsPrincipal>(cp => cp == claimsPrincipal)))
+                .Returns("ValidUserId");
 
             _userRepository
                 .Setup(o => o.GetUserAsync(It.IsAny<string>()))
@@ -155,17 +164,6 @@ namespace BetterBookmarks.Functions.UnitTests.Services
             await _userService.SaveUserAsync(_fakeUser);
             _userRepository
                 .Verify(o => o.SaveUserAsync(It.Is<User>(u => u == _fakeUser)), Times.Once);
-        }
-
-        private ClaimsPrincipal GetValidClaimsPrincipal()
-        {
-           var claims = new List<Claim>();
-            claims.Add(new Claim(ClaimTypes.NameIdentifier, "FakeName"));
-
-            var claimIdentities = new List<ClaimsIdentity>();
-            claimIdentities.Add(new ClaimsIdentity(claims));
-
-            return new ClaimsPrincipal(claimIdentities);
         }
     }
 }

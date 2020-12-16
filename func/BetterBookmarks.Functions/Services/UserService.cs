@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AzureFunctions.Security.Auth0;
 using BetterBookmarks.Extensions;
 using BetterBookmarks.Models;
 using BetterBookmarks.Repositories;
@@ -13,10 +12,10 @@ namespace BetterBookmarks.Services
 {
     public class UserService : IUserService
     {
-        private readonly IAuthenticationService _authService;
+        private readonly IAuthService _authService;
         private readonly IUserRepository _userRepository;
 
-        public UserService(IAuthenticationService authService, IUserRepository userRepository)
+        public UserService(IAuthService authService, IUserRepository userRepository)
         {
             _authService = authService;
             _userRepository = userRepository;
@@ -26,10 +25,14 @@ namespace BetterBookmarks.Services
         {
             try 
             {
-                var userIdClaim = await GetUserIdClaim(req);
-                if (userIdClaim == null)
+                var claimsPrincipal = await _authService.AuthenticateRequestAsync(req, log);
+                if (claimsPrincipal == null)
                     return false;
-                
+
+                var userId = _authService.AcquireUniqueUserId(claimsPrincipal);
+                if (string.IsNullOrWhiteSpace(userId))
+                    return false;
+
                 return true;
             }
             catch(Exception ex)
@@ -41,18 +44,22 @@ namespace BetterBookmarks.Services
 
         public async Task<User> GetOrCreateUserAsync(HttpRequest req, ILogger log)
         {
-            var userIdClaim = await GetUserIdClaim(req);
-            if (userIdClaim == null)
-                throw new ArgumentException("NameIdentifier claim not found.");
+            var claimsPrincipal = await _authService.AuthenticateRequestAsync(req, log);
+            if (claimsPrincipal == null)
+                throw new ArgumentException("ClaimsPrincipal not found.");
 
-            var user = await _userRepository.GetUserAsync(userIdClaim.Value);
+            var userId = _authService.AcquireUniqueUserId(claimsPrincipal);
+            if (string.IsNullOrWhiteSpace(userId))
+                throw new ArgumentException("userId could not be found in ClaimsPrincipal");
+
+            var user = await _userRepository.GetUserAsync(userId);
             if (user == null)
             {
-                log.LogInformation($"User ({userIdClaim.Value}) not found. Creating a new user.");
+                log.LogInformation($"User ({userId}) not found. Creating a new user.");
                 user = new User()
                 {
-                    Id = userIdClaim.Value,
-                    UserId = userIdClaim.Value
+                    Id = userId,
+                    UserId = userId
                 };
             }
 
@@ -62,12 +69,6 @@ namespace BetterBookmarks.Services
         public async Task SaveUserAsync(User user)
         {
             await _userRepository.SaveUserAsync(user);
-        }
-
-        private async Task<Claim> GetUserIdClaim(HttpRequest req)
-        {
-            var claimPrincipal = await _authService.ValidateTokenAsync(req.GetAuthToken());
-            return claimPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier);
         }
     }
 }

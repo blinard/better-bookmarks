@@ -1,18 +1,10 @@
 using System;
-using System.IO;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using AzureFunctions.Security.Auth0;
-using BetterBookmarks.Extensions;
 using BetterBookmarks.Repositories;
 using BetterBookmarks.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 
 namespace BetterBookmarks.Functions
 {

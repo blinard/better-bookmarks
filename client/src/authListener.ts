@@ -1,12 +1,12 @@
-import { injectable, inject, interfaces } from "inversify";
+import { injectable, inject } from "inversify";
 import "reflect-metadata";
 import TYPES from "./dependencyInjection/types";
 
-import { authConfig } from './auth.config';
-import Auth0Chrome from 'auth0-chrome';
-import { IBookmarkManager, BookmarkManager } from './bookmarkManager';
+import { IBookmarkManager } from './bookmarkManager';
 import { ISyncService } from './syncService';
 import { BrowserFacade } from './browserFacades/browserFacade';
+import { IOAuthResponse } from "./authentication/msaAuthHelper";
+import { IAuthManager, IAuthResult } from "./authentication/authManager";
 
 export interface IAuthListener {
     addAuthListener(): void;
@@ -14,15 +14,13 @@ export interface IAuthListener {
 
 @injectable()
 export class AuthListener implements IAuthListener {
-    private _auth0: Auth0Chrome;
 
     constructor(
         @inject(TYPES.BrowserFacade) private _browser: BrowserFacade, 
         @inject(TYPES.IBookmarkManager) private _bookmarkManager: IBookmarkManager, 
         @inject(TYPES.ISyncService) private _syncService: ISyncService,
-        @inject(TYPES.Auth0ChromeFactory) private _auth0Factory: () => Auth0Chrome) {
-            this._auth0 = _auth0Factory();
-        }
+        @inject(TYPES.IAuthManager) private _authManager: IAuthManager
+        ) { }
 
     addAuthListener(): void {
         this._browser.addOnMessageListener(this.onMessageHandler.bind(this));
@@ -30,40 +28,65 @@ export class AuthListener implements IAuthListener {
 
     private onMessageHandler(event: any) {
         const self = this;
-        if (!event || !event.type || event.type !== 'authenticate') {
+        if (!event || !event.type) {
             return;
         }
-    
-        // scope
-        //  - openid if you want an id_token returned
-        //  - offline_access if you want a refresh_token returned
-        //  - profile if you want an additional claims like name, nickname, picture and updated_at.
-        // device
-        //  - required if requesting the offline_access scope.
-        let options = {
-            scope: 'openid profile offline_access',
-            device: 'chrome-extension',
-            audience: authConfig.AUDIENCE
-        };
-    
-        self._auth0
-            .authenticate(options)
-            .then(function (authResult) {
-                // TODO: Store in chrome.storage rather than localStorage.
-                localStorage.authResult = JSON.stringify(authResult);
-                self._browser.setRefreshToken(<string>authResult.refresh_token);
-                self._browser.postNotification('Login Successful', 'Nice, you\'ve logged in!');
-    
-                console.log(`beginning bookmark sync`);
-                self._bookmarkManager.getBookmarks()
-                    .then((bookmarksArray) => {
-                        console.log(`initiating sync - ${bookmarksArray}`);
-                        self._syncService.synchronizeWithService(bookmarksArray);
-                    });
-            
-            })
-            .catch(function (err) {
-                self._browser.postNotification('Login Failed', err.message);
-            });
+
+        if (event.type === 'initiateInteractiveAuth') {
+            this._authManager.initiateInteractiveLogin();
+            return; 
+        }
+
+        if (event.type === 'acquireTokenSilent') {
+            this.getTokenSilent();
+            return; 
+        }
+
+        if(event.type === "interactiveAuthResponse") {
+            this.handleInteractiveAuthResponse(event);
+            console.log(`beginning bookmark sync`);
+            self._bookmarkManager.getBookmarks()
+                .then((bookmarksArray) => {
+                    console.log(`initiating sync - ${bookmarksArray}`);
+                    self._syncService.synchronizeWithService(bookmarksArray);
+                });
+        
+            return;
+        }
     }    
+
+    private async getTokenSilent() {
+        // TODO: Put acquireTokenSilent in try/catch and deal with errors (and send appropriate response in an error scenario)
+        const authResult = await this._authManager.acquireTokenSilent();
+        const getTokenSilentResp = {
+            type: "silentAuthResult"
+        }
+        if (authResult) {
+            getTokenSilentResp["authResult"] = {
+                ...authResult,
+                name: "Timmy!"
+            }
+        }
+
+        chrome.runtime.sendMessage(getTokenSilentResp); // TODO: Move to browserfacade.
+    }
+
+    // TODO: Move this function into the authManager
+    private handleInteractiveAuthResponse(event: any) {
+        const oauthResp: IOAuthResponse = JSON.parse(event.authResponse);;
+
+        const access_token_expiration = new Date();
+        // TODO: Parse token and acquire actual expiration time plus name
+        // Note: Padding the expiration by 5 minutes. Typically it's 1 hour expiration
+        access_token_expiration.setSeconds(access_token_expiration.getSeconds() + oauthResp.expires_in - 300);
+        const myResponse: IAuthResult = {
+            //bbUserId: "tbd", //tid+oid claims in the token
+            ...oauthResp,
+            access_token_expiration,
+            name: "tbd" // TODO: parse the access_token or id_token and acquire the name property.
+        };
+
+        this._browser.setCachedAuthResult(myResponse);
+        return myResponse;
+    }
 }
