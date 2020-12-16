@@ -26,38 +26,6 @@ variables:
 
 steps:
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'restore'
-    projects: './func/BetterBookmarks.Functions.sln'
-  displayName: 'Restore nuget packages'
-
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'test'
-    projects: './func/BetterBookmarks.Functions.sln'
-    publishTestResults: true
-  displayName: 'Run unit tests'
-  
-# - task: DotNetCoreCLI@2
-#   inputs:
-#     command: 'publish'
-#     arguments: '-c $(buildConfiguration)'
-#     projects: './func/BetterBookmarks.Functions/bb-funcs.csproj'
-#     zipAfterPublish: true
-#     versioningScheme: byBuildNumber
-#     publishWebProjects: false
-#   displayName: 'Build azure function'
-
-# - script: |
-#     dotnet publish ./func/BetterBookmarks.Functions/bb-funcs.csproj -c $(buildConfiguration) -o ./out /p:Version=$(Build.BuildNumber)
-#   displayName: 'Building azure function'  
-
-
-# - script: |
-#     ls -alR
-#   displayName: 'Get folder structure'  
-
 # Be sure that you have the 'coverlet.msbuild' package added to your unit test project for code coverage to work
 - script: docker build -f func/Dockerfile.build --build-arg VERSION=$(Build.BuildNumber) --build-arg BUILDCONFIG=$(buildConfiguration) -t $(dockerId)/dotnetcore-build:$(Build.BuildNumber) .
   displayName: 'Performing Docker build and test'
@@ -113,4 +81,4 @@ steps:
     appType: functionApp
     appName: bbfunction
     package: $(Build.ArtifactStagingDirectory)/package.zip
-    appSettings: -DbEndpoint https://betterbookmarks.documents.azure.com:443/ -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api
+    appSettings: -DbEndpoint https://betterbookmarks.documents.azure.com:443/ -DatabaseName BetterBookmarks -CollectionName UsersV2 -AuthIssuer https://betterbookmarks.auth0.com/ -AuthAudience https://betterbookmarks.com/api -AuthAuthority https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0 -AuthClientId ed176c3c-3ee4-4f0d-919d-6ff1e4f792aa -AuthValidIssuers https://login.microsoftonline.com/9188040d-6c67-4c5b-b112-36a304b66dad/v2.0
