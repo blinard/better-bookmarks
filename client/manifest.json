@@ -7,6 +7,9 @@
     "scripts": [ "backgroundServices.js" ]
   },
   "omnibox": { "keyword" : "bb" },
+  "icons": {
+    "16": "images/bb-icon-16.png"
+  },
   "browser_action": {
     "default_icon": "images/bb-icon-disabled.png",
     "default_popup": "browserAction/browserAction.html"
@@ -15,7 +18,6 @@
   "permissions": [
     "activeTab",
     "storage",
-    "identity",
     "notifications"
   ],
   "content_scripts": [
