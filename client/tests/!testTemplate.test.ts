@@ -3,7 +3,7 @@
 import { SyncService} from "../src/syncService"
 
 describe("SyncService -", () => {
-    const syncService = new SyncService(null);
+    const syncService = new SyncService(null, null, null);
 
     describe("functionName -", () => {
         it("does something", (done) => {
