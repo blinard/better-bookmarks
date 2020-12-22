@@ -1,7 +1,8 @@
 
 function logout() {
   // Remove the idToken from storage
-  localStorage.clear();
+  chrome.storage.local.remove("bb-refreshtoken", () => {});
+  chrome.storage.local.remove("bb-authresult", () => {});
   renderDefaultView();
   // TODO: Logout properly through AADv2 logout endpoint
 }
