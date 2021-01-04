@@ -1,4 +1,3 @@
-import auth0 from 'auth0-js';
 import { history } from './History';
 import { store } from '../store/configureStore';
 import { actionCreators } from '../store/User';
