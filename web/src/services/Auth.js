@@ -4,17 +4,9 @@ import { store } from '../store/configureStore';
 import { actionCreators } from '../store/User';
 
 export default class Auth {
-  auth0 = new auth0.WebAuth({
-    domain: 'betterbookmarks.auth0.com',
-    clientID: '0zcROlNg3IBulToh1PEAGSkjfYmfsrBT',
-    redirectUri: 'http://localhost:5000/auth',
-    responseType: 'token id_token',
-    scope: 'openid profile',
-    audience: 'https://betterbookmarks.com/api'
-  });
 
   login() {
-    this.auth0.authorize();
+    // Cleared and not re-implemented after removal of Auth0
   }
 
   constructor() {
@@ -27,23 +19,33 @@ export default class Auth {
   }
 
   handleAuthentication() {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-      } else if (err) {
-        history.replace('/');
-        console.log(err);
-        alert(`Error: ${err.error}. Check the console for further details.`);
-      }
-    });
+    // Cleared and not re-implemented after removal of Auth0
   }
 
   loginInChromeExtension() {
-    window.chrome.runtime.sendMessage({ type: "bb-getauth" }, (authResult) => {
-      authResult.accessToken = authResult.access_token;
-      authResult.idToken = authResult.id_token;
-      authResult.expiresAt = authResult.expires_in * 1000 + new Date().getTime();
-      store.dispatch(actionCreators.updateUser(authResult.accessToken, authResult.idToken, authResult.expiresAt));
+    let authResultPromise = new Promise((resolve, reject) => {
+        window.chrome.runtime.onMessage.addListener((event) => {
+          if (!event || !event.type || event.type !== "silentAuthResult") return;
+          console.log("web authResult received:");
+          console.log(event);
+    
+          if (event.authResult && event.authResult.name) {
+              resolve(event.authResult);
+              return;
+          }
+
+          reject();
+        });
+      })
+    
+    window.chrome.runtime.sendMessage({ type: "acquireTokenSilent" });
+    
+    authResultPromise
+      .then((authResult) => {
+        authResult.accessToken = authResult.access_token;
+        authResult.idToken = authResult.id_token;
+        authResult.expiresAt = authResult.expires_in * 1000 + new Date().getTime();
+        store.dispatch(actionCreators.updateUser(authResult.accessToken, authResult.idToken, authResult.expiresAt));
     });
   }
 
@@ -61,15 +63,7 @@ export default class Auth {
   }
 
   renewSession() {
-    this.auth0.checkSession({}, (err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        this.setSession(authResult);
-      } else if (err) {
-        this.logout();
-        console.log(err);
-        alert(`Could not get a new token (${err.error}: ${err.error_description}).`);
-      }
-    });
+    // Cleared and not re-implemented after removal of Auth0
   }
 
   logout() {
