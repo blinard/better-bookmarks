@@ -153,4 +153,8 @@ export class ChromeBrowser implements BrowserFacade {
     setBrowserActionIconEnabled(): void {
         chrome.browserAction.setIcon({ path: "../images/bb-icon.png" });
     }
+
+    getExtensionUrl(path: string): string {
+        return chrome.runtime.getURL(path);
+    }
 }

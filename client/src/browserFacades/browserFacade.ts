@@ -23,4 +23,5 @@ export interface BrowserFacade {
     setCachedAuthResult(authResult: IAuthResult): Promise<boolean>;
     setBrowserActionIconEnabled(): void;
     setBrowserActionIconDisabled(): void;
+    getExtensionUrl(path: string): string;
 }
