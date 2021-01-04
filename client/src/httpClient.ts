@@ -31,11 +31,13 @@ export class HttpClient implements IHttpClient {
     }
 
     async postAccessTokenRequestToService(refreshToken: string): Promise<Response> {
+        const allScopes = [...this._appSettings.Auth.MsaAuthorityScopes, ...this._appSettings.Auth.BetterBookmarkScopes];
+
         const refreshAccessTokenRequest = {
             RefreshToken: refreshToken,
             ClientId: this._appSettings.Auth.ClientId,
             RedirectUrl: this._appSettings.Auth.RedirectUrl,
-            Scopes: this._appSettings.Auth.BetterBookmarkScopes.join(" ")
+            Scopes: allScopes.join(" ")
         }
 
         let storageResp = await fetch(this._appSettings.Auth.RefreshAccessTokenUrl, {
