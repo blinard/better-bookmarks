@@ -44,6 +44,12 @@ export class OmniboxListener implements IOmniboxListener {
             return;
         }
 
+        if (commandTokens && commandTokens.length === 1 && commandTokens[0] === "manage") {
+            // Command: refresh
+            this._browser.navigateCurrentTab(this._browser.getExtensionUrl("options/index.html"));
+            return;
+        }
+
         if (commandTokens && commandTokens.length === 1 && commandTokens[0] !== "sv") {
             // Command: bookmarkkey
             this.performNavigation(commandTokens[0]);
